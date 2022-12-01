@@ -21,7 +21,7 @@
 #
 # - download a JSON file from Open Street Map that roughly corresponds to the target area. This is used only to get a list of tags to download with the `osmnx` package. The command `wget -nv -O victoriaosm.osm --post-file=victoriaosm.query "http://overpass-api.de/api/interpreter"` downloads a file named victoriaosm.osm using the query in the file victoriaosm.query. This procedure will be simplified in the future.
 
-import json
+import json, os
 import pandas as pd
 import numpy as np
 import geopandas as gpd
@@ -70,42 +70,43 @@ ox.settings.osm_xml_way_tags = way_tags
 
 # ### Download data
 
-# ok this actually looks pretty good. Takes out some of the non-bike options automatically. 
-# might want to include 'footway', but could edit the filter manually too.
-osmfilter = ox.downloader._get_osm_filter("bike")
-
-# keep the footway and construction tags - double the size of the dataset...
-osmfilter2 = '["highway"]["area"!~"yes"]["access"!~"private"]["highway"!~"abandoned|bus_guideway|corridor|elevator|escalator|motor|planned|platform|proposed|raceway|steps"]["bicycle"!~"no"]["service"!~"private"]'
+# create a filter to download selected data
+# this filter is based on osmfilter = ox.downloader._get_osm_filter("bike")
+# keeping the footway and construction tags
+osmfilter = '["highway"]["area"!~"yes"]["access"!~"private"]["highway"!~"abandoned|bus_guideway|corridor|elevator|escalator|motor|planned|platform|proposed|raceway|steps"]["bicycle"!~"no"]["service"!~"private"]'
 
 city = "Victoria"
 province = "British Columbia"
 
-# get bike network
-G = ox.graph_from_place(
-    "%s, %s, Canada" %(city, province),
-    retain_all=True,
-    truncate_by_edge=True,
-    simplify=False,
-    custom_filter=osmfilter2,
-)
+# check if data has already been downloaded; if not, download
+filepath = "data/%s.graphml" %city
+if os.path.exists(filepath):
+    # load graph
+    print("loading saved graph")
+    G = ox.load_graphml(filepath)
+else:
+    # download data - this can be slow
+    print("downloading data")
+    G = ox.graph_from_place(
+        "%s, %s, Canada" %(city, province),
+        retain_all=True,
+        truncate_by_edge=True,
+        simplify=False,
+        custom_filter=osmfilter2,
+    )
+    # save graph
+    print("saving graph")
+    ox.save_graphml(G, filepath)
 
-# save downloaded graph
-filepath = "./data/%s.graphml" %city
-ox.save_graphml(G, filepath)
-
-# load graph
-filepath = "./data/%s.graphml" %city
-G = ox.load_graphml(filepath)
-
-# this is slow for a large area
+# plot downloaded graph - this is slow for a large area
 fig, ax = ox.plot_graph(G, node_size=0, edge_color="w", edge_linewidth=0.2)
-
-# you can convert your graph to node and edge GeoPandas GeoDataFrames
-gdf_nodes, gdf_edges = ox.graph_to_gdfs(G)
 
 # ## Analyze LTS
 #
 # Start with is biking allowed, get edges where biking is not *not* allowed.
+
+# convert graph to node and edge GeoPandas GeoDataFrames
+gdf_nodes, gdf_edges = ox.graph_to_gdfs(G)
 
 print(gdf_edges.shape)
 gdf_allowed, gdf_not_allowed = biking_permitted(gdf_edges)
@@ -188,7 +189,7 @@ rule_message_dict = {'p2':'Cycling not permitted due to bicycle=\'no\' tag.',
                      'm10':'Setting LTS to 3 because maxspeed is up to 50 km/h and lanes are 3 or less on non-residential highway.', 
                      'm11':'Setting LTS to 4 because the number of lanes is greater than 3.', 
                      'm12':'Setting LTS to 4 because maxspeed is greater than 50 km/h.'}
-                     
+
 
 simplified_message_dict = {'p2':r'bicycle $=$ "no"', 
                      'p6':r'access $=$ "no"', 
