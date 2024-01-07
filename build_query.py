@@ -10,26 +10,26 @@ python build_query.py eastyork wikidata Q167585
 import argparse
 
 if __name__ == "__main__":
-    
+
     parser = argparse.ArgumentParser(description='Build OSM Overpass query file based on location')
     parser.add_argument('region', type=str, nargs='?',
                         help='Name of region (used for file saving)')
-    parser.add_argument('key', type=str, default="wikidata", nargs='?', 
+    parser.add_argument('key', type=str, default="wikidata", nargs='?',
                         help='OSM key for relation to download')
     parser.add_argument('value', type=str, nargs='?',
                         help='OSM value for relation to download')
-    
+
     args = parser.parse_args()
-    
+
     region = args.region
     key = args.key
     value = args.value
-    
+
     # build query file
-    
-    with open('%s.query' %region, 'w') as f:
+
+    with open(f'query\{region}.query', 'w') as f:
         f.write('[timeout:600][out:json][maxsize:2000000000];\narea\n')
-        f.write('  ["%s"="%s"];\n' %(key,value))
+        f.write(f'  ["{key}"="{value}"];\n')
         f.write('out body;\n')
         f.write('((way["highway"](area); - way[footway="sidewalk"](area););\n')
         f.write('  node(w)->.h;\n')

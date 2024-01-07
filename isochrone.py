@@ -1,25 +1,12 @@
-# ---
-# jupyter:
-#   jupytext:
-#     formats: ipynb,md,py:light
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.14.0
-#   kernelspec:
-#     display_name: Python 3 (ipykernel)
-#     language: python
-#     name: python3
-# ---
+'''
+Isochrone analysis
 
-# + [markdown] tags=[]
-# ## Isochrone analysis
-#
-# Plot isochrones from a starting location based on an LTS threshold. 
-#
-# Plotting code adapted from https://github.com/gboeing/osmnx-examples/blob/v0.13.0/notebooks/13-isolines-isochrones.ipynb
-# -
+Plot isochrones from a starting location based on an LTS threshold.
+
+Plotting code adapted from 
+https://github.com/gboeing/osmnx-examples/blob/v0.13.0/notebooks/13-isolines-isochrones.ipynb
+'''
+
 
 import geopandas as gpd
 import numpy as np
@@ -107,13 +94,13 @@ for i, G in enumerate(graphs):
     subgraph = nx.ego_graph(G, center_node, radius=trip_time, distance='time')
     for node in subgraph.nodes():
         node_colors[node] = iso_colors[i]
-        
+
 nc = [node_colors[node] if node in node_colors else 'none' for node in G4b.nodes()]
 ns = [5 if node in node_colors else 0 for node in G4b.nodes()]
 # -
 
 # get x and y in the correct projection
-point = (x,y) 
+point = (x,y)
 point_geom_proj, crs = ox.projection.project_geometry(
         Point(point), to_crs=G4b.graph['crs'])
 
@@ -146,6 +133,3 @@ cbar.set_ticklabels(labels)
 
 plt.savefig("%s_isochrone_times_lts_remove_nodes_%s_time_%s.pdf" %(city, remove_nodes, trip_time))
 plt.savefig("%s_isochrone_times_lts_remove_nodes_%s_time_%s.png" %(city, remove_nodes, trip_time), dpi = 300)
-# -
-
-

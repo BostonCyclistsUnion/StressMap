@@ -1,4 +1,4 @@
-import pytest
+# import pytest
 import pandas as pd
 import numpy as np
 
@@ -28,19 +28,19 @@ def biking_permitted(gdf_edges):
                   ((gdf_edges['footway'] == 'sidewalk') & ~(gdf_edges['bicycle'] == 'yes')
                     & ((gdf_edges['highway'] == 'footway') | (gdf_edges['highway'] == 'path'))) # p5
                  ]
-    
-    
+
+
     values = ['p2', 'p6', 'p3', 'p4', 'p7', 'p5']
-                  
+
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['rule'] = np.select(conditions, values, default='p0')
 
     # filter based on rule assignment
     gdf_allowed = gdf_edges[gdf_edges['rule'] == 'p0']
     gdf_not_allowed = gdf_edges[~(gdf_edges['rule'] == 'p0')]
-    
-    gdf_not_allowed = gdf_not_allowed
-                  
+
+    # gdf_not_allowed = gdf_not_allowed
+
     return gdf_allowed, gdf_not_allowed
 
 def is_separated_path(gdf_edges):
@@ -63,28 +63,28 @@ def is_separated_path(gdf_edges):
                    | ((gdf_edges['highway'] == 'construction') 
                       & ((gdf_edges['construction'] == 'path') | (gdf_edges['construction'] == 'footway') | (gdf_edges['construction'] == 'cycleway')))
     """
-    
 
-    
+
+
     # get the columns that start with 'cycleway'
     cycleway_tags = gdf_edges.columns[gdf_edges.columns.str.contains('cycleway')]
-    
+
     conditions = [(gdf_edges['highway'] == 'cycleway'), # s3
                   (gdf_edges['highway'] == 'path'), #s1
                   ((gdf_edges['highway'] == 'footway') & ~(gdf_edges['footway'] == 'crossing')), #s2
                   (np.any(gdf_edges[cycleway_tags] == 'track', axis = 1)) , # s7
                   (np.any(gdf_edges[cycleway_tags] == 'opposite_track', axis = 1)) # s8
                   ]
-    
+
     values = ['s3', 's1', 's2', 's7', 's8']
-    
+
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['rule'] = np.select(conditions, values, default='s0')
-    
+
     separated = gdf_edges[gdf_edges['rule'] != 's0']
     not_separated = gdf_edges[gdf_edges['rule'] == 's0']
     not_separated = not_separated.drop(columns = 'rule')
-    
+
     return separated, not_separated
 
 def is_bike_lane(gdf_edges):
@@ -94,16 +94,16 @@ def is_bike_lane(gdf_edges):
     # tags that start with 'cycleway'
     cycleway_tags = gdf_edges.columns[gdf_edges.columns.str.contains('cycleway')]
     lane_identifiers = ['crossing', 'lane', 'left', 'opposite', 'opposite_lane', 'right', 'yes']
-    
+
     if 'shoulder:access:bicycle' in gdf_edges.columns:
         lane_check = ((np.any(gdf_edges[cycleway_tags].isin(lane_identifiers), axis = 1))
                               | (gdf_edges['shoulder:access:bicycle'] == 'yes'))
-    else: 
+    else:
         lane_check = np.any(gdf_edges[cycleway_tags].isin(lane_identifiers), axis = 1)
-        
+
     to_analyze = gdf_edges[lane_check]
     no_lane = gdf_edges[~lane_check]
-    
+
     return to_analyze, no_lane
 
 def parking_present(gdf_edges):
@@ -114,21 +114,21 @@ def parking_present(gdf_edges):
     parking_tags = gdf_edges.columns[gdf_edges.columns.str.contains('parking')]
     parking_identifiers = ['yes', 'parallel', 'perpendicular', 'diagonal', 'marked']
     parking_check = np.any(gdf_edges[parking_tags].isin(parking_identifiers), axis = 1)
-    
+
     parking_detected = gdf_edges[parking_check]
     parking_not_detected = gdf_edges[~parking_check]
-    
+
     return parking_detected, parking_not_detected
 
 def get_lanes(gdf_edges, default_lanes = 2):
 
     # make new assumed lanes column for use in calculations
-    
+
     # fill na with default lanes
     # if multiple lane values present, use the largest one
     # this usually happens if multiple adjacent ways are included in the edge and there's a turning lane
     gdf_edges['lanes_assumed'] = gdf_edges['lanes'].fillna(default_lanes).apply(lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x)) 
-    
+
     return gdf_edges
 
 def get_max_speed(gdf_edges, national=40, local=50, motorway=100, primary=80, secondary=80):
@@ -153,7 +153,7 @@ def get_max_speed(gdf_edges, national=40, local=50, motorway=100, primary=80, se
 
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['maxspeed_assumed'] = np.select(conditions, values, default=gdf_edges['maxspeed'])
-    
+
     # if multiple speed values present, use the largest one
     gdf_edges['maxspeed_assumed'] = gdf_edges['maxspeed_assumed'].apply(lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x)) 
 
@@ -163,7 +163,7 @@ def bike_lane_analysis_with_parking(gdf_edges):
     # get lanes, width, speed
     gdf_edges = get_lanes(gdf_edges)
     gdf_edges = get_max_speed(gdf_edges)
-    
+
     # create a list of lts conditions
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
@@ -182,7 +182,7 @@ def bike_lane_analysis_with_parking(gdf_edges):
     gdf_edges['rule'] = np.select(conditions, values, default='b1')
     rule_dict = {'b1':1, 'b2':3, 'b3':3, 'b4':2, 'b5':2, 'b6':2, 'b7':3, 'b8':4, 'b9':3}
     gdf_edges['lts'] = gdf_edges['rule'].map(rule_dict)
-    
+
     return gdf_edges
 
 def bike_lane_analysis_no_parking(gdf_edges):
@@ -194,10 +194,10 @@ def bike_lane_analysis_no_parking(gdf_edges):
     # get lanes, width, speed
     gdf_edges = get_lanes(gdf_edges)
     gdf_edges = get_max_speed(gdf_edges)
-    
+
     # assign widths that are a string to nan
     gdf_edges.loc[gdf_edges[['width']].applymap(lambda x: isinstance(x, str))['width'], 'width'] = np.nan
-    
+
     # create a list of lts conditions
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
@@ -212,14 +212,14 @@ def bike_lane_analysis_no_parking(gdf_edges):
     gdf_edges['rule'] = np.select(conditions, values, default='c1')
     rule_dict = {'c1':1, 'c3':3, 'c4':2, 'c5':3, 'c6':4, 'c7':3}
     gdf_edges['lts'] = gdf_edges['rule'].map(rule_dict)
-    
+
     return gdf_edges
 
 def mixed_traffic(gdf_edges):
     # get lanes, width, speed
     gdf_edges = get_lanes(gdf_edges)
     gdf_edges = get_max_speed(gdf_edges)
-    
+
     # create a list of lts conditions
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
@@ -246,11 +246,11 @@ def mixed_traffic(gdf_edges):
 
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['rule'] = np.select(conditions, values, default='m0')
-              
+
     rule_dict = {'m17':1, 'm13':1, 'm14':2, 'm2':2, 'm15':2, 'm3':2, 'm4':2, 'm16':2, 'm5':2, 'm6':3, 'm7':3, 'm8':4, 'm9':2, 'm10':3, 'm11':4, 'm12':4}
-              
+
     gdf_edges['lts'] = gdf_edges['rule'].map(rule_dict)
-    
+
     return gdf_edges
 
 ### TESTS ###

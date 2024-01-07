@@ -1,22 +1,8 @@
-# ---
-# jupyter:
-#   jupytext:
-#     formats: ipynb,py:light,md
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.14.0
-#   kernelspec:
-#     display_name: Python 3 (ipykernel)
-#     language: python
-#     name: python3
-# ---
+'''
+Plotting Level of Traffic Stress
 
-# # Plotting Level of Traffic Stress
-#
-# This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
-
+This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
+'''
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -73,6 +59,3 @@ ax.set_xticks([])
 
 plt.savefig("LTS_%s_has_speed_has_lanes.pdf" %city)
 plt.savefig("LTS_%s_has_speed_has_lanes.png" %city, dpi = 300)
-# -
-
-
