@@ -33,30 +33,40 @@ from lts_functions import (biking_permitted, is_separated_path, is_bike_lane, pa
 # %% Extract OSM tags to use in download
 
 # load the data
-f = open("victoriaosm.osm") # a larger bounding box for the city
-data = json.load(f)
+dataFile = 'Cambridge'
+dataFolder = 'data'
+wayTagsCSV = os.path.join(dataFolder, f'{dataFile}_way_tags.csv')
 
-# make a dataframe of tags
-dfs = []
+if os.path.exists(wayTagsCSV):
+    way_tags_series = pd.read_csv(wayTagsCSV)
+else:
+    with open(os.path.join(dataFolder, f'{dataFile}.json'), 'r') as f:
+        data = json.load(f)
 
-for element in data['elements']:
-    if element['type'] != 'way':
-        continue
-    df = pd.DataFrame.from_dict(element['tags'], orient = 'index')
-    dfs.append(df)
+    # make a dataframe of tags
+    dfs = []
 
-tags_df = pd.concat(dfs).reset_index()
-tags_df.columns = ["tag", "tagvalue"]
+    for element in data['elements']:
+        if element['type'] != 'way':
+            continue
+        df = pd.DataFrame.from_dict(element['tags'], orient = 'index')
+        dfs.append(df)
 
-# count all the unique tag and value combinations
-tag_value_counts = tags_df.value_counts().reset_index()
-# count all the unique tags
-tag_counts = tags_df['tag'].value_counts().reset_index() 
+    tags_df = pd.concat(dfs).reset_index()
+    tags_df.columns = ["tag", "tagvalue"]
 
-# explore the tags that start with 'cycleway'
-print(tag_counts[tag_counts['index'].str.contains('cycleway')])
+    # count all the unique tag and value combinations
+    tag_value_counts = tags_df.value_counts().reset_index()
+    # count all the unique tags
+    tag_counts = tags_df['tag'].value_counts().reset_index()
 
-way_tags = list(tag_counts['index']) # all unique tags from the OSM download
+    # explore the tags that start with 'cycleway'
+    print(tag_counts[tag_counts['tag'].str.contains('cycleway')])
+
+    way_tags_series = tag_counts['tag'] # all unique tags from the OSM download
+    way_tags_series.to_csv(wayTagsCSV)
+
+way_tags = list(way_tags_series) 
 
 # add the above list to the global osmnx settings
 ox.settings.useful_tags_way += way_tags
@@ -69,11 +79,8 @@ ox.settings.osm_xml_way_tags = way_tags
 # keeping the footway and construction tags
 osmfilter = '["highway"]["area"!~"yes"]["access"!~"private"]["highway"!~"abandoned|bus_guideway|corridor|elevator|escalator|motor|planned|platform|proposed|raceway|steps"]["bicycle"!~"no"]["service"!~"private"]'
 
-city = "Victoria"
-province = "British Columbia"
-
 # check if data has already been downloaded; if not, download
-filepath = f"data/{city}.graphml"
+filepath = f"data/{dataFile}.graphml"
 if os.path.exists(filepath):
     # load graph
     print("loading saved graph")
@@ -82,7 +89,7 @@ else:
     # download data - this can be slow
     print("downloading data")
     G = ox.graph_from_place(
-        f"{city}, {province}, Canada",
+        f"{dataFile}, Massachusetts",
         retain_all=True,
         truncate_by_edge=True,
         simplify=False,
@@ -96,8 +103,7 @@ else:
 # plot downloaded graph - this is slow for a large area
 fig, ax = ox.plot_graph(G, node_size=0, edge_color="w", edge_linewidth=0.2)
 
-# ## Analyze LTS
-#
+# %% Analyze LTS
 # Start with is biking allowed, get edges where biking is not *not* allowed.
 
 # convert graph to node and edge GeoPandas GeoDataFrames
@@ -187,7 +193,6 @@ rule_message_dict = {'p2':'Cycling not permitted due to bicycle=\'no\' tag.',
                      'm11':'Setting LTS to 4 because the number of lanes is greater than 3.', 
                      'm12':'Setting LTS to 4 because maxspeed is greater than 50 km/h.'}
 
-
 simplified_message_dict = {'p2':r'bicycle $=$ "no"',
                      'p6':r'access $=$ "no"', 
                      'p3':r'highway $=$ "motorway"',
@@ -234,18 +239,18 @@ simplified_message_dict = {'p2':r'bicycle $=$ "no"',
 all_lts['message'] = all_lts['rule'].map(rule_message_dict)
 all_lts['short_message'] = all_lts['rule'].map(simplified_message_dict)
 
-# ## Node LTS
-#
-# Calculate node LTS.
-#
-# - An intersection without either was assigned the highest LTS of its intersecting roads.
-# - Stop signs reduced an otherwise LTS2 intersection to LTS1.
-# - A signalized intersection of two lowstress links was assigned LTS1.
-# - Assigned LTS2 to signalized intersections where a low-stress (LTS1/ 2) link crosses a high-stress (LTS3/4) link.
+# %% Node LTS
+'''
+Calculate node LTS.
+
+- An intersection without either was assigned the highest LTS of its intersecting roads.
+- Stop signs reduced an otherwise LTS2 intersection to LTS1.
+- A signalized intersection of two lowstress links was assigned LTS1.
+- Assigned LTS2 to signalized intersections where a low-stress (LTS1/ 2) link crosses a high-stress (LTS3/4) link.
+'''
 
 gdf_nodes['highway'].value_counts()
 
-# +
 gdf_nodes['lts'] = np.nan # make lts column
 gdf_nodes['message'] = np.nan # make message column
 
@@ -273,19 +278,18 @@ for node in tqdm(gdf_nodes.index):
 
     gdf_nodes.loc[node,'message'] = message
     gdf_nodes.loc[node,'lts'] = node_lts # assign node lts
-# -
 
-# ### Save data for plotting
+# %% Save data for plotting
 
-gdf_nodes.to_csv(f"data/gdf_nodes_{city}.csv")
+gdf_nodes.to_csv(f"data/{dataFile}_gdf_nodes.csv")
 
 all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'maxspeed', 'geometry', 'length', 'rule', 'lts',
                          'lanes_assumed', 'maxspeed_assumed', 'message', 'short_message']]
-all_lts_small.to_csv(f"data/all_lts_{city}.csv")
+all_lts_small.to_csv(f"data/{dataFile}_all_lts.csv")
 
 # make graph with LTS information
 G_lts = ox.graph_from_gdfs(gdf_nodes, all_lts_small)
 
 # save LTS graph
-filepath = f"data/{city}_lts.graphml"
+filepath = f"data/{dataFile}_lts.graphml"
 ox.save_graphml(G_lts, filepath)

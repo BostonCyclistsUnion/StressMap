@@ -2,6 +2,65 @@
 import pandas as pd
 import numpy as np
 
+# unit = 'metric'
+unit = 'english'
+
+ref =   {
+        # Speeds
+        's1': {
+            'metric': 35,
+            'english': 20
+        },
+        's2': {
+            'metric': 40,
+            'english': 25
+            },
+        's3': {
+            'metric': 50,
+            'english': 30
+        },
+        's4': {
+            'metric': 55,
+            'english': 35
+        },
+        's5': {
+            'metric': 65,
+            'english': 40
+        },
+        's6': {
+            'metric': 80,
+            'english': 50
+        },
+        's7': {
+            'metric': 100,
+            'english': 65
+        },
+        # Widths
+        'w1': {
+            'metric': 1.7,
+            'english': 5.5
+        },
+        'w2': {
+            'metric': 4.1,
+            'english': 13.45
+        },
+        'w3': {
+            'metric': 4.25,
+            'english': 13.95
+        },
+        'w4': {
+            'metric': 4.5,
+            'english': 14.75
+        },
+        }
+
+# Defaults
+national = ref['s2'][unit] # 40
+local = ref['s3'][unit] # 50
+motorway = ref['s7'][unit] # 100
+primary = ref['s6'][unit] # 80
+secondary = ref['s6'][unit] # 80
+
 def biking_permitted(gdf_edges):
     """
     Categorize ways as biking permitted or not permitted. 
@@ -57,11 +116,14 @@ def is_separated_path(gdf_edges):
             message.append('This way is a separated path because highway="construction"' 
                             + 'and construction="cycleway".') 
     
-    I'm not sure we actually want to keep the construction tag - this represents things under construction.
+    I'm not sure we actually want to keep the construction tag - this represents things 
+    under construction.
     
     construction bit:
                    | ((gdf_edges['highway'] == 'construction') 
-                      & ((gdf_edges['construction'] == 'path') | (gdf_edges['construction'] == 'footway') | (gdf_edges['construction'] == 'cycleway')))
+                      & ((gdf_edges['construction'] == 'path') | 
+                      (gdf_edges['construction'] == 'footway') | 
+                      (gdf_edges['construction'] == 'cycleway')))
     """
 
 
@@ -126,12 +188,14 @@ def get_lanes(gdf_edges, default_lanes = 2):
 
     # fill na with default lanes
     # if multiple lane values present, use the largest one
-    # this usually happens if multiple adjacent ways are included in the edge and there's a turning lane
-    gdf_edges['lanes_assumed'] = gdf_edges['lanes'].fillna(default_lanes).apply(lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x)) 
+    # this usually happens if multiple adjacent ways are included in the edge and 
+    # there's a turning lane
+    gdf_edges['lanes_assumed'] = gdf_edges['lanes'].fillna(default_lanes).apply(
+        lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x))
 
     return gdf_edges
 
-def get_max_speed(gdf_edges, national=40, local=50, motorway=100, primary=80, secondary=80):
+def get_max_speed(gdf_edges):
     """
     Get the speed limit for ways
     If not available, make assumptions based on road type
@@ -154,26 +218,49 @@ def get_max_speed(gdf_edges, national=40, local=50, motorway=100, primary=80, se
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['maxspeed_assumed'] = np.select(conditions, values, default=gdf_edges['maxspeed'])
 
+    # If mph
+    mph = gdf_edges['maxspeed_assumed'].str.contains('mph', na=False)
+    gdf_edges['maxspeed_assumed'].loc[mph] = gdf_edges['maxspeed_assumed'][mph].str.split(
+        ' ', expand=True)[0].apply(lambda x: np.array(x, dtype = 'int'))
+
     # if multiple speed values present, use the largest one
-    gdf_edges['maxspeed_assumed'] = gdf_edges['maxspeed_assumed'].apply(lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x)) 
+    gdf_edges['maxspeed_assumed'] = gdf_edges['maxspeed_assumed'].apply(
+        lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x))
 
     return gdf_edges
+
+def convert_feet_with_quotes(series):
+    quoteValues = series.str.contains('\'')
+    feetinch = series[quoteValues.fillna(False)].str.strip('"').str.split('\'', expand=True)
+    feetinch = feetinch.apply(lambda x: np.array(x, dtype = 'int'))
+    feet = feetinch[0] + feetinch[1] / 12
+    series[quoteValues.fillna(False)] = feet
+
+    series = series.apply(lambda x: np.array(x, dtype = 'float'))
+
+    return series
 
 def bike_lane_analysis_with_parking(gdf_edges):
     # get lanes, width, speed
     gdf_edges = get_lanes(gdf_edges)
     gdf_edges = get_max_speed(gdf_edges)
+    if unit == 'english':
+        gdf_edges['width'] = convert_feet_with_quotes(gdf_edges['width'])
 
     # create a list of lts conditions
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
-        (gdf_edges['lanes_assumed'] >= 3) & (gdf_edges['maxspeed_assumed'] <= 55),
-        (gdf_edges['width'] <= 4.1),
-        (gdf_edges['width'] <= 4.25),
-        (gdf_edges['width'] <= 4.5) & ((gdf_edges['maxspeed_assumed'] <= 40) & (gdf_edges['highway'] == 'residential')),
-        (gdf_edges['maxspeed_assumed'] > 40) & (gdf_edges['maxspeed_assumed'] <= 50),
-        (gdf_edges['maxspeed_assumed'] > 50) & (gdf_edges['maxspeed_assumed'] <= 55),
-        (gdf_edges['maxspeed_assumed'] > 55),
+        (gdf_edges['lanes_assumed'] >= 3) & (gdf_edges['maxspeed_assumed'] <= ref['s4'][unit]),
+        (gdf_edges['width'] <= ref['w2'][unit]),
+        (gdf_edges['width'] <= ref['w3'][unit]),
+        (gdf_edges['width'] <= ref['w4'][unit]) &
+            ((gdf_edges['maxspeed_assumed'] <= ref['s2'][unit]) &
+                (gdf_edges['highway'] == 'residential')),
+        (gdf_edges['maxspeed_assumed'] > ref['s2'][unit]) &
+            (gdf_edges['maxspeed_assumed'] <= ref['s3'][unit]),
+        (gdf_edges['maxspeed_assumed'] > ref['s3'][unit]) & 
+            (gdf_edges['maxspeed_assumed'] <= ref['s4'][unit]),
+        (gdf_edges['maxspeed_assumed'] > ref['s4'][unit]),
         (gdf_edges['highway'] != 'residential')
         ]
 
@@ -194,17 +281,21 @@ def bike_lane_analysis_no_parking(gdf_edges):
     # get lanes, width, speed
     gdf_edges = get_lanes(gdf_edges)
     gdf_edges = get_max_speed(gdf_edges)
+    if unit == 'english':
+        gdf_edges['width'] = convert_feet_with_quotes(gdf_edges['width'])
 
     # assign widths that are a string to nan
-    gdf_edges.loc[gdf_edges[['width']].applymap(lambda x: isinstance(x, str))['width'], 'width'] = np.nan
+    gdf_edges.loc[gdf_edges[['width']].applymap(
+        lambda x: isinstance(x, str))['width'], 'width'] = np.nan
 
     # create a list of lts conditions
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
-        (gdf_edges['lanes_assumed'] >= 3) & (gdf_edges['maxspeed_assumed'] <= 65),
-        (gdf_edges[['width']].applymap(lambda x: isinstance(x, float))['width']) & (gdf_edges['width'] <= 1.7),
-        (gdf_edges['maxspeed_assumed'] > 50) & (gdf_edges['maxspeed_assumed'] <= 65),
-        (gdf_edges['maxspeed_assumed'] > 65),
+        (gdf_edges['lanes_assumed'] >= 3) & (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),
+        (gdf_edges[['width']].applymap(lambda x: isinstance(x, float))['width']) &
+            (gdf_edges['width'] <= ref['w1'][unit]),
+        (gdf_edges['maxspeed_assumed'] > ref['s3'][unit]) & (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),
+        (gdf_edges['maxspeed_assumed'] > ref['s5'][unit]),
         (gdf_edges['highway'] != 'residential')
         ]
 
@@ -224,30 +315,36 @@ def mixed_traffic(gdf_edges):
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
         (gdf_edges['motor_vehicle'] == 'no'),
-         (gdf_edges['highway'] == 'pedestrian'),
+        (gdf_edges['highway'] == 'pedestrian'),
         (gdf_edges['highway'] == 'footway') & (gdf_edges['footway'] == 'crossing'),
         (gdf_edges['highway'] == 'service') & (gdf_edges['service'] == 'alley'),
         (gdf_edges['highway'] == 'track'),
-        (gdf_edges['maxspeed_assumed'] <= 50) & (gdf_edges['highway'] == 'service') & (gdf_edges['service'] == 'parking_aisle'),
-        (gdf_edges['maxspeed_assumed'] <= 50) & (gdf_edges['highway'] == 'service') & (gdf_edges['service'] == 'driveway'),
-        (gdf_edges['maxspeed_assumed'] <= 35) & (gdf_edges['highway'] == 'service'),
-        (gdf_edges['maxspeed_assumed'] <= 40) & (gdf_edges['lanes_assumed'] <= 3) & (gdf_edges['highway'] == 'residential'),
-        (gdf_edges['maxspeed_assumed'] <= 40) & (gdf_edges['lanes_assumed'] <= 3),
-        (gdf_edges['maxspeed_assumed'] <= 40) & (gdf_edges['lanes_assumed'] <= 5),
-        (gdf_edges['maxspeed_assumed'] <= 40) & (gdf_edges['lanes_assumed'] > 5),
-        (gdf_edges['maxspeed_assumed'] <= 50) & (gdf_edges['lanes_assumed'] < 3) & (gdf_edges['highway'] == 'residential'),
-        (gdf_edges['maxspeed_assumed'] <= 50) & (gdf_edges['lanes_assumed'] <= 3),
-        (gdf_edges['maxspeed_assumed'] <= 50) & (gdf_edges['lanes_assumed'] > 3),
-        (gdf_edges['maxspeed_assumed'] > 50)
+        (gdf_edges['maxspeed_assumed'] <= ref['s3'][unit]) & (gdf_edges['highway'] == 'service') &
+            (gdf_edges['service'] == 'parking_aisle'),
+        (gdf_edges['maxspeed_assumed'] <= ref['s3'][unit]) & (gdf_edges['highway'] == 'service') &
+            (gdf_edges['service'] == 'driveway'),
+        (gdf_edges['maxspeed_assumed'] <= ref['s1'][unit]) & (gdf_edges['highway'] == 'service'),
+        (gdf_edges['maxspeed_assumed'] <= ref['s2'][unit]) & (gdf_edges['lanes_assumed'] <= 3) &
+            (gdf_edges['highway'] == 'residential'),
+        (gdf_edges['maxspeed_assumed'] <= ref['s2'][unit]) & (gdf_edges['lanes_assumed'] <= 3),
+        (gdf_edges['maxspeed_assumed'] <= ref['s2'][unit]) & (gdf_edges['lanes_assumed'] <= 5),
+        (gdf_edges['maxspeed_assumed'] <= ref['s2'][unit]) & (gdf_edges['lanes_assumed'] > 5),
+        (gdf_edges['maxspeed_assumed'] <= ref['s3'][unit]) & (gdf_edges['lanes_assumed'] < 3) &
+            (gdf_edges['highway'] == 'residential'),
+        (gdf_edges['maxspeed_assumed'] <= ref['s3'][unit]) & (gdf_edges['lanes_assumed'] <= 3),
+        (gdf_edges['maxspeed_assumed'] <= ref['s3'][unit]) & (gdf_edges['lanes_assumed'] > 3),
+        (gdf_edges['maxspeed_assumed'] > ref['s3'][unit])
         ]
 
     # create a list of the values we want to assign for each condition
-    values = ['m17', 'm13', 'm14', 'm2', 'm15', 'm3', 'm4', 'm16', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12']
+    values = ['m17', 'm13', 'm14', 'm2', 'm15', 'm3', 'm4', 'm16', 'm5', 'm6', 'm7',
+              'm8', 'm9', 'm10', 'm11', 'm12']
 
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['rule'] = np.select(conditions, values, default='m0')
 
-    rule_dict = {'m17':1, 'm13':1, 'm14':2, 'm2':2, 'm15':2, 'm3':2, 'm4':2, 'm16':2, 'm5':2, 'm6':3, 'm7':3, 'm8':4, 'm9':2, 'm10':3, 'm11':4, 'm12':4}
+    rule_dict = {'m17':1, 'm13':1, 'm14':2, 'm2':2, 'm15':2, 'm3':2, 'm4':2, 'm16':2,
+                 'm5':2, 'm6':3, 'm7':3, 'm8':4, 'm9':2, 'm10':3, 'm11':4, 'm12':4}
 
     gdf_edges['lts'] = gdf_edges['rule'].map(rule_dict)
 
