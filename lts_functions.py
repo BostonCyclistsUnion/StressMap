@@ -230,11 +230,18 @@ def get_max_speed(gdf_edges):
     return gdf_edges
 
 def convert_feet_with_quotes(series):
+    # Calculate decimal feet and inches when each given separately
     quoteValues = series.str.contains('\'')
     feetinch = series[quoteValues.fillna(False)].str.strip('"').str.split('\'', expand=True)
     feetinch = feetinch.apply(lambda x: np.array(x, dtype = 'int'))
-    feet = feetinch[0] + feetinch[1] / 12
-    series[quoteValues.fillna(False)] = feet
+    if feetinch.shape[0] > 0:
+        feet = feetinch[0] + feetinch[1] / 12
+        series[quoteValues.fillna(False)] = feet
+
+    # Use larger value if given multiple
+    multiWidth = series.str.contains(';')
+    maxWidth = series[multiWidth.fillna(False)].str.split(';', expand=True).max(axis=1)
+    series[multiWidth.fillna(False)] = maxWidth
 
     series = series.apply(lambda x: np.array(x, dtype = 'float'))
 

@@ -3,6 +3,7 @@ Plotting Level of Traffic Stress
 
 This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 '''
+import os
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -10,7 +11,8 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 import shapely.geometry
 
-city = "Cambridge"
+# city = 'Cambridge'
+city = 'Boston'
 
 # %% Load and Prep Data
 all_lts_df = pd.read_csv(f"data/{city}_all_lts.csv")
@@ -40,94 +42,120 @@ values = ['green', 'blue', 'yellow', 'red', 'grey']
 all_lts['color'] = np.select(conditions, values)
 
 # %% Plot LTS
-# geo_df = all_lts
-lats = []
-lons = []
-names = []
-colors = []
-linegroup = []
-lts = []
-notes = []
+def plot_lts_plotly(all_lts):
+    mapDataPath = f'data/{city}_mapData.csv'
 
-for index, row in all_lts.iterrows():
-    feature = row.geometry
-    if index < 1000000:
-        if isinstance(feature, shapely.geometry.linestring.LineString):
-            linestrings = [feature]
-        elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
-            linestrings = feature.geoms
-        else:
-            continue
-        for linestring in linestrings:
-            if row.lts > 0:
-                x, y = linestring.xy
-                # Big speed improvement appending lists
-                lats.append(list(y))
-                lons.append(list(x))
-                names.append([row['name']]*len(y))
-                colors.append([row.color]*len(y))
-                linegroup.append([index]*len(y))
-                lts.append([f'LTS {row.lts}']*len(y))
-                notes.append([row.short_message]*len(y))
-
+    if os.path.exists(mapDataPath):
+        mapData = pd.read_csv(mapDataPath)
+        lats = mapData['lats']
+        lons = mapData['lons']
+        names = mapData['names']
+        colors = mapData['colors']
+        linegroup = mapData['linegroup']
+        lts = mapData['lts']
+        notes = mapData['notes']
     else:
-        break
+        lats = []
+        lons = []
+        names = []
+        colors = []
+        linegroup = []
+        lts = []
+        notes = []
 
-lats = np.array(lats).flatten()
-lons = np.array(lons).flatten()
-names = list(np.array(names).flatten())
-colors = list(np.array(colors).flatten())
-linegroup = list(np.array(linegroup).flatten())
-lts = list(np.array(lts).flatten())
-notes = list(np.array(notes).flatten())
+        for index, row in all_lts.iterrows():
+            feature = row.geometry
+            if index < 1000000:
+                if isinstance(feature, shapely.geometry.linestring.LineString):
+                    linestrings = [feature]
+                elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+                    linestrings = feature.geoms
+                else:
+                    continue
+                for linestring in linestrings:
+                    if row.lts > 0:
+                        x, y = linestring.xy
+                        # Big speed improvement appending lists
+                        lats.append(list(y))
+                        lons.append(list(x))
+                        names.append([row['name']]*len(y))
+                        colors.append([row.color]*len(y))
+                        linegroup.append([index]*len(y))
+                        lts.append([f'LTS {row.lts}']*len(y))
+                        notes.append([row.short_message]*len(y))
 
-mapData = pd.DataFrame()
-mapData['lats'] = lats
-mapData['lons'] = lons
-mapData['names'] = names
-mapData['colors'] = colors
-mapData['linegroup'] = linegroup
-mapData['lts'] = lts
-mapData['notes'] = notes
-mapData.to_csv(f'data/{city}_mapData.csv')
+            else:
+                break
 
-center = {
-        'lon': round((lons.max() + lons.min()) / 2, 6),
-        'lat': round((lats.max() + lats.min()) / 2, 6)
-        }
+        lats = np.array(lats).flatten()
+        lons = np.array(lons).flatten()
+        names = list(np.array(names).flatten())
+        colors = list(np.array(colors).flatten())
+        linegroup = list(np.array(linegroup).flatten())
+        lts = list(np.array(lts).flatten())
+        notes = list(np.array(notes).flatten())
 
-fig = px.line_geo(lat=lats, lon=lons,
-                  hover_name=names, #hover_data=notes,
-                  color=colors, color_discrete_map="identity",
-                  line_group=linegroup,
-                #   labels=lts,
-                  scope='usa', center=center, fitbounds="locations",
-                  title=f'Level of Biking Traffic Stress Map for {city}')
-fig.show()
-fig.write_html(f'plots/{city}_stressmap.html')
+        mapData = pd.DataFrame()
+        mapData['lats'] = lats
+        mapData['lons'] = lons
+        mapData['names'] = names
+        mapData['colors'] = colors
+        mapData['linegroup'] = linegroup
+        mapData['lts'] = lts
+        mapData['notes'] = notes
+        mapData.to_csv(mapDataPath)
 
-all_lts[all_lts['lts'] > 0].plot(
-    linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
+    center = {
+            'lon': round((lons.max() + lons.min()) / 2, 6),
+            'lat': round((lats.max() + lats.min()) / 2, 6)
+            }
 
-fig, ax = plt.subplots()
-all_lts[all_lts['lts'] > 0].plot(
-    ax = ax, linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
-# plt.savefig(f"plots/{city}_lts.pdf")
-plt.savefig(f"plots/{city}_lts.png", dpi = 300)
+    fig = px.line_geo(lat=lats, lon=lons,
+                    hover_name=names, #hover_data=notes,
+                    color=colors, color_discrete_map="identity",
+                    line_group=linegroup,
+                    #   labels=lts,
+                    scope='usa', center=center, fitbounds="locations",
+                    title=f'Level of Biking Traffic Stress Map for {city}')
+    fig.show()
+    fig.write_html(f'plots/{city}_stressmap.html')
+    print(f'Saved {city}_stressmap.html')
 
-# %% Plot segments that aren't missing speed and lane info
+def plot_lts_static(all_lts):
+    all_lts[all_lts['lts'] > 0].plot(
+        linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
 
-has_speed_lanes = all_lts[(~all_lts['maxspeed'].isna())
-       & (~all_lts['lanes'].isna())]
+    fig, ax = plt.subplots(figsize=(15,15))
+    all_lts[all_lts['lts'] > 0].plot(
+        ax = ax, linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
+    
+    ax.set_axis_off()
+    # ax.axis('equal')
+    fig.tight_layout()
 
-fig, ax = plt.subplots(figsize = (8,8))
-has_speed_lanes.plot(ax = ax, linewidth = 0.5, color = has_speed_lanes['color'])
+    # plt.savefig(f"plots/{city}_lts.pdf")
+    plt.savefig(f"plots/{city}_lts.png", dpi = 600)
+    plt.show()
+    print(f'Saved {city}_lts.png')
 
-ax.set_xlim(-79.43, -79.37)
-ax.set_ylim(43.645, 43.675)
+def plot_not_missing_data():
+    # Plot segments that aren't missing speed and lane info
+    has_speed_lanes = all_lts[(~all_lts['maxspeed'].isna())
+        & (~all_lts['lanes'].isna())]
 
-ax.set_yticks([])
-ax.set_xticks([])
+    fig, ax = plt.subplots(figsize = (8,8))
+    has_speed_lanes.plot(ax = ax, linewidth = 0.5, color = has_speed_lanes['color'])
 
-# plt.savefig(f"plots/LTS_{city}_has_speed_has_lanes.pdf")
-plt.savefig(f"plots/LTS_{city}_has_speed_has_lanes.png", dpi = 300)
+    ax.set_xlim(-79.43, -79.37)
+    ax.set_ylim(43.645, 43.675)
+
+    ax.set_yticks([])
+    ax.set_xticks([])
+
+    # plt.savefig(f"plots/LTS_{city}_has_speed_has_lanes.pdf")
+    plt.savefig(f"plots/LTS_{city}_has_speed_has_lanes.png", dpi = 300)
+    print(f'Saved LTS_{city}_has_speed_has_lanes.png')
+
+# %% Script
+plot_lts_static(all_lts)
+# plot_lts_plotly(all_lts)

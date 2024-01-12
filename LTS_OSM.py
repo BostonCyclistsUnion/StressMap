@@ -33,7 +33,9 @@ from lts_functions import (biking_permitted, is_separated_path, is_bike_lane, pa
 # %% Extract OSM tags to use in download
 
 # load the data
-dataFile = 'Cambridge'
+# dataFile = 'Cambridge'
+dataFile = 'Boston'
+
 dataFolder = 'data'
 wayTagsCSV = os.path.join(dataFolder, f'{dataFile}_way_tags.csv')
 
