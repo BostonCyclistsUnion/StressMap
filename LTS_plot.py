@@ -18,7 +18,7 @@ all_lts_df = pd.read_csv(f"data/{city}_all_lts.csv")
 # convert to a geodataframe for plotting
 all_lts = gpd.GeoDataFrame(
     all_lts_df.loc[:, [c for c in all_lts_df.columns if c != "geometry"]],
-    geometry=gpd.GeoSeries.from_wkt(all_lts_df["geometry"]), 
+    geometry=gpd.GeoSeries.from_wkt(all_lts_df["geometry"]),
     crs='wgs84') # projection from graph
 
 gdf_nodes = pd.read_csv(f"data/{city}_gdf_nodes.csv", index_col=0)
@@ -29,44 +29,82 @@ conditions = [
     (all_lts['lts'] == 2),
     (all_lts['lts'] == 3),
     (all_lts['lts'] == 4),
+    (all_lts['lts'] == 0),
     ]
 
 # create a list of the values we want to assign for each condition
-values = ['g', 'b', 'y', 'r']
+# values = ['g', 'b', 'y', 'r']
+values = ['green', 'blue', 'yellow', 'red', 'grey']
 
 # create a new column and use np.select to assign values to it using our lists as arguments
 all_lts['color'] = np.select(conditions, values)
 
 # %% Plot LTS
-geo_df = all_lts
+# geo_df = all_lts
 lats = []
 lons = []
 names = []
+colors = []
+linegroup = []
+lts = []
+notes = []
 
-for feature, name in zip(geo_df.geometry, geo_df.name):
-    if isinstance(feature, shapely.geometry.linestring.LineString):
-        linestrings = [feature]
-    elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
-        linestrings = feature.geoms
+for index, row in all_lts.iterrows():
+    feature = row.geometry
+    if index < 1000000:
+        if isinstance(feature, shapely.geometry.linestring.LineString):
+            linestrings = [feature]
+        elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+            linestrings = feature.geoms
+        else:
+            continue
+        for linestring in linestrings:
+            if row.lts > 0:
+                x, y = linestring.xy
+                # Big speed improvement appending lists
+                lats.append(list(y))
+                lons.append(list(x))
+                names.append([row['name']]*len(y))
+                colors.append([row.color]*len(y))
+                linegroup.append([index]*len(y))
+                lts.append([f'LTS {row.lts}']*len(y))
+                notes.append([row.short_message]*len(y))
+
     else:
-        continue
-    for linestring in linestrings:
-        x, y = linestring.xy
-        lats = np.append(lats, y)
-        lons = np.append(lons, x)
-        names = np.append(names, [name]*len(y))
-        lats = np.append(lats, None)
-        lons = np.append(lons, None)
-        names = np.append(names, None)
+        break
+
+lats = np.array(lats).flatten()
+lons = np.array(lons).flatten()
+names = list(np.array(names).flatten())
+colors = list(np.array(colors).flatten())
+linegroup = list(np.array(linegroup).flatten())
+lts = list(np.array(lts).flatten())
+notes = list(np.array(notes).flatten())
+
+mapData = pd.DataFrame()
+mapData['lats'] = lats
+mapData['lons'] = lons
+mapData['names'] = names
+mapData['colors'] = colors
+mapData['linegroup'] = linegroup
+mapData['lts'] = lts
+mapData['notes'] = notes
+mapData.to_csv(f'data/{city}_mapData.csv')
+
 center = {
-        'lon': round((max([v for v in lons if v is not None]) +
-                       min([v for v in lons if v is not None])) / 2, 6),
-        'lat': round((max([v for v in lats if v is not None]) +
-                       min([v for v in lats if v is not None])) / 2, 6)
+        'lon': round((lons.max() + lons.min()) / 2, 6),
+        'lat': round((lats.max() + lats.min()) / 2, 6)
         }
-fig = px.line_geo(lat=lats, lon=lons, hover_name=names, 
-                  scope='usa', center=center, fitbounds="locations")
+
+fig = px.line_geo(lat=lats, lon=lons,
+                  hover_name=names, #hover_data=notes,
+                  color=colors, color_discrete_map="identity",
+                  line_group=linegroup,
+                #   labels=lts,
+                  scope='usa', center=center, fitbounds="locations",
+                  title=f'Level of Biking Traffic Stress Map for {city}')
 fig.show()
+fig.write_html(f'plots/{city}_stressmap.html')
 
 all_lts[all_lts['lts'] > 0].plot(
     linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
