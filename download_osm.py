@@ -7,8 +7,8 @@ import requests
 import json
 import os
 
-# queryFile = 'Cambridge'
-queryFile = 'Boston'
+queryFile = 'Cambridge'
+# queryFile = 'Boston'
 
 overpass_url = "http://overpass-api.de/api/interpreter"
 

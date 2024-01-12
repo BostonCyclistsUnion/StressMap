@@ -10,9 +10,10 @@ import geopandas as gpd
 from matplotlib import pyplot as plt
 import plotly.express as px
 import shapely.geometry
+from matplotlib.lines import Line2D
 
-# city = 'Cambridge'
-city = 'Boston'
+city = 'Cambridge'
+# city = 'Boston'
 
 # %% Load and Prep Data
 all_lts_df = pd.read_csv(f"data/{city}_all_lts.csv")
@@ -129,13 +130,22 @@ def plot_lts_static(all_lts):
     all_lts[all_lts['lts'] > 0].plot(
         ax = ax, linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
     
+    ax.title.set_text(f'Level of Biking Traffic Stress Map for {city}')
+
+    legendLines = [Line2D([0], [0], color='green', lw=4),
+                   Line2D([0], [0], color='blue', lw=4),
+                   Line2D([0], [0], color='yellow', lw=4),
+                   Line2D([0], [0], color='red', lw=4),
+                   ]
+    ax.legend(legendLines, ['LTS 1', 'LTS 2', 'LTS 3', 'LTS 4'])
+    
     ax.set_axis_off()
     # ax.axis('equal')
     fig.tight_layout()
 
     # plt.savefig(f"plots/{city}_lts.pdf")
     plt.savefig(f"plots/{city}_lts.png", dpi = 600)
-    plt.show()
+    fig.show()
     print(f'Saved {city}_lts.png')
 
 def plot_not_missing_data():
