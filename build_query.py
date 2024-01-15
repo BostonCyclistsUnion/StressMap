@@ -8,6 +8,24 @@ python build_query.py eastyork wikidata Q167585
 """
 
 import argparse
+import os
+
+def build_query(region, key, value):
+    filepath = f'query/{region}.query'
+    if os.path.exists(filepath):
+        print(f"{region} query already exists")
+    else:
+        with open(filepath, 'w') as f:
+            f.write('[timeout:600][out:json][maxsize:2000000000];\n')
+            f.write(f'area["{key}"="{value}"];\n')
+            f.write('out body;\n')
+            f.write('((way["highway"][area]; - way[footway="sidewalk"][area];);\n')
+            f.write('  node(w)->.h;\n')
+            f.write('   (way[footway="sidewalk"][bicycle][area]; - way[footway="sidewalk"][bicycle="no"][area];);\n')
+            f.write('  node(w)->.s;\n')
+            f.write('  node.h.s;\n')
+            f.write(');\n')
+            f.write('out;\n')
 
 if __name__ == "__main__":
 
@@ -21,20 +39,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    region = args.region
-    key = args.key
-    value = args.value
+    regionIn = args.region
+    keyIn = args.key
+    valueIn = args.value
 
     # build query file
-
-    with open(f'query\{region}.query', 'w') as f:
-        f.write('[timeout:600][out:json][maxsize:2000000000];\narea\n')
-        f.write(f'  ["{key}"="{value}"];\n')
-        f.write('out body;\n')
-        f.write('((way["highway"](area); - way[footway="sidewalk"](area););\n')
-        f.write('  node(w)->.h;\n')
-        f.write('   (way[footway="sidewalk"][bicycle](area); - way[footway="sidewalk"][bicycle="no"](area););\n')
-        f.write('  node(w)->.s;\n')
-        f.write('  node.h.s;\n')
-        f.write(');\n')
-        f.write('out;\n')
+    build_query(regionIn, keyIn, valueIn)

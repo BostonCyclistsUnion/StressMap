@@ -37,7 +37,7 @@ conditions = [
 
 # create a list of the values we want to assign for each condition
 # values = ['g', 'b', 'y', 'r']
-values = ['green', 'blue', 'yellow', 'red', 'grey']
+values = ['green', 'blue', 'orange', 'red', 'grey']
 
 # create a new column and use np.select to assign values to it using our lists as arguments
 all_lts['color'] = np.select(conditions, values)
