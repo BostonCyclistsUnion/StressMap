@@ -1,16 +1,13 @@
 '''
-# Level of Traffic Stress maps with Open Street Map
+Level of Traffic Stress maps with Open Street Map
 
-This notebook calculates Level of Traffic Stress from Open Street Map data. It uses 
+This calculates Level of Traffic Stress from Open Street Map data. It uses 
 the [osmnx](https://osmnx.readthedocs.io/en/stable/) Python package to download a street network.
 
-### Setup
-
-- download a JSON file from Open Street Map that roughly corresponds to the target area. 
-    This is used only to get a list of tags to download with the `osmnx` package. The command 
-  wget -nv -O victoriaosm.osm --post-file=victoriaosm.query "http://overpass-api.de/api/interpreter"
-    downloads a file named victoriaosm.osm using the query in the file victoriaosm.query. This 
-    procedure will be simplified in the future.
+Each function that saves a file will check if it already exists. If a file does not exist, 
+subsequent files will also be overwritten. This means to rerun from a given point, you can
+just delete the file that is created at that stage. Files are numbered in the folder in order
+of generation.
 '''
 
 import json
@@ -19,7 +16,7 @@ import requests
 
 import pandas as pd
 import numpy as np
-# import geopandas as gpd
+import geopandas as gpd
 import osmnx as ox
 # from matplotlib import pyplot as plt
 # import networkx as nx
@@ -37,6 +34,22 @@ overpass_url = "http://overpass-api.de/api/interpreter"
 OVERWRITE = False
 
 # %% Functions
+def read_csv_as_geopandas(filepath):
+    df = pd.read_csv(filepath, low_memory=False)
+
+    # convert to a geodataframe for plotting
+    geodf = gpd.GeoDataFrame(
+        df.loc[:, [c for c in df.columns if c != "geometry"]],
+        geometry=gpd.GeoSeries.from_wkt(df["geometry"]),
+        crs='wgs84') # projection from graph
+
+    # Make some geo dataframes have the right index
+    geoIndex = ['u','v','key']
+    if set(geoIndex).issubset(geodf.columns):
+        geodf.set_index(geoIndex, inplace=True)
+
+    return geodf
+
 def download_osm(region):
     '''
 
@@ -76,12 +89,12 @@ def extract_tags(region):
     wayTagsCSV = os.path.join(dataFolder, f'{region}_2_way_tags.csv')
 
     if os.path.exists(wayTagsCSV) and (OVERWRITE is False):
-        way_tags_series = pd.read_csv(wayTagsCSV)
+        way_tags_series = pd.read_csv(wayTagsCSV, index_col=0)['tag']
         print(f'Read {wayTagsCSV}')
     else:
         OVERWRITE = True
         print(f'Finding way tags for {region}...')
-        with open(os.path.join(dataFolder, f'{region}.json'), 'r') as f:
+        with open(os.path.join(dataFolder, f'{region}_1.json'), 'r') as f:
             data = json.load(f)
 
         # make a dataframe of tags
@@ -113,7 +126,7 @@ def extract_tags(region):
     # add the above list to the global osmnx settings
     ox.settings.useful_tags_way += way_tags
     ox.settings.osm_xml_way_tags = way_tags
-    print('Way tags added to osmnx settings.\n')
+    print('Way tags added to osmnx settings.')
 
 
 def download_data(region):
@@ -172,7 +185,7 @@ def lts_edges(region, gdf_edges):
     if os.path.exists(filepathAll) and (OVERWRITE is False):
         # load graph
         print(f"Loading LTS for {region}")
-        all_lts = pd.read_csv(filepathAll)
+        all_lts = read_csv_as_geopandas(filepathAll)
     else:
         OVERWRITE = True
         # Start with is biking allowed, get edges where biking is not *not* allowed.
@@ -205,8 +218,13 @@ def lts_edges(region, gdf_edges):
 
         # final components: lts_no_lane, parking_lts, no_parking_lts, separated_edges
         # these should all add up to gdf_allowed
-        print(f'{gdf_allowed.shape}')
-        print(f'{lts_no_lane.shape[0] + parking_lts.shape[0] + no_parking_lts.shape[0] + separated_edges.shape[0]=}')
+        components = lts_no_lane.shape[0] + parking_lts.shape[0] +\
+                     no_parking_lts.shape[0] + separated_edges.shape[0]
+        compareStr = (f'gdf_allowed = {gdf_allowed.shape[0]}\nComponents  = {components}\n'
+                      f'\t{lts_no_lane.shape[0]=}\n\t{parking_lts.shape[0]=}\n'
+                      f'\t{no_parking_lts.shape[0]=}\n\t{separated_edges.shape[0]=}'
+                      )
+        print(compareStr)
 
         gdf_not_allowed['lts'] = 0
 
@@ -306,13 +324,13 @@ def lts_edges(region, gdf_edges):
         all_lts['short_message'] = all_lts['rule'].map(simplified_message_dict)
 
         # print(f'Saving LTS for {region}')
-        # all_lts.to_csv(filepathAll)
+        all_lts.to_csv(filepathAll)
         # https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_file.html
 
     if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
         # load graph
         print(f"Loading LTS_small for {region}")
-        all_lts_small = pd.read_csv(filepathSmall)
+        all_lts_small = read_csv_as_geopandas(filepathSmall)
     else:
         OVERWRITE = True
         all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'maxspeed', 'geometry',
@@ -339,7 +357,8 @@ def lts_nodes(region, gdf_nodes, all_lts):
 
     if os.path.exists(filepath) & (OVERWRITE is False):
         print(f'Loading {filepath}')
-        gdf_nodes = pd.read_csv(filepath)
+        gdf_nodes = read_csv_as_geopandas(filepath)
+        gdf_nodes.set_index('osmid', inplace=True)
 
     else:
         OVERWRITE = True
