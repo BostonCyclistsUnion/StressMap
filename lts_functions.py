@@ -301,7 +301,8 @@ def bike_lane_analysis_no_parking(gdf_edges):
         (gdf_edges['lanes_assumed'] >= 3) & (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),
         (gdf_edges[['width']].applymap(lambda x: isinstance(x, float))['width']) &
             (gdf_edges['width'] <= ref['w1'][unit]),
-        (gdf_edges['maxspeed_assumed'] > ref['s3'][unit]) & (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),
+        (gdf_edges['maxspeed_assumed'] > ref['s3'][unit]) &
+            (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),
         (gdf_edges['maxspeed_assumed'] > ref['s5'][unit]),
         (gdf_edges['highway'] != 'residential')
         ]

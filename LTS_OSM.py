@@ -197,20 +197,26 @@ def lts_edges(region, gdf_edges):
         separated_edges, unseparated_edges = lts.is_separated_path(gdf_allowed)
         # assign separated ways lts = 1
         separated_edges['lts'] = 1
-        print(f'{separated_edges.shape}')
-        print(f'{unseparated_edges.shape}')
+        print(f'{separated_edges.shape=}')
+        print(f'{unseparated_edges.shape=}')
 
         to_analyze, no_lane = lts.is_bike_lane(unseparated_edges)
-        print(f'{to_analyze.shape}')
-        print(f'{no_lane.shape}')
+        print(f'{to_analyze.shape=}')
+        print(f'{no_lane.shape=}')
 
         parking_detected, parking_not_detected = lts.parking_present(to_analyze)
-        print(f'{parking_detected.shape}')
-        print(f'{parking_not_detected.shape}')
+        print(f'{parking_detected.shape=}')
+        print(f'{parking_not_detected.shape=}')
 
-        parking_lts = lts.bike_lane_analysis_with_parking(parking_detected)
+        if parking_detected.shape[0] > 0:
+            parking_lts = lts.bike_lane_analysis_with_parking(parking_detected)
+        else:
+            parking_lts = parking_detected
 
-        no_parking_lts = lts.bike_lane_analysis_no_parking(parking_not_detected)
+        if parking_not_detected.shape[0] > 0:
+            no_parking_lts = lts.bike_lane_analysis_no_parking(parking_not_detected)
+        else:
+            no_parking_lts = parking_not_detected
 
         # Next, go to the last step - mixed traffic
 

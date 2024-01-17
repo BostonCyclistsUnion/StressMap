@@ -15,11 +15,15 @@ import LTS_plot
 # Query key and value can be determinined by inspecting regions
 # on OpenStreetMaps
 
-# city = ['Cambridge', 'wikidata', '1933745']
+# city = ['Arlington', 'wikipedia', 'en:Arlington, Massachusetts']
 # city = ['Boston', 'wikidata', '2315704']
-city = ['Somerville', 'wikipedia', 'en:Somerville, Massachusetts']
 # city = ['Brookline', 'wikipedia', 'en:Brookline, Massachusetts']
-# city = ['Medford', 'wikipedia', 'en:Medford, Massachusetts']
+# city = ['Cambridge', 'wikidata', '1933745']
+city = ['Medford', 'wikipedia', 'en:Medford, Massachusetts']
+# city = ['Somerville', 'wikipedia', 'en:Somerville, Massachusetts']
+# city = ['Watertown', 'wikipedia', 'en:Watertown, Massachusetts']
+
+# city = ['GreaterBoston', 'na', 'na']
 
 # Run LTS analysis and plotting
 build_query.build_query(*city)

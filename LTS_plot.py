@@ -4,48 +4,62 @@ Plotting Level of Traffic Stress
 This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 '''
 import os
+import glob
+
 import numpy as np
 import pandas as pd
 
 import geopandas as gpd
 import shapely.geometry
+import contextily as cx
 
 from matplotlib import pyplot as plt
 from matplotlib.lines import Line2D
 import plotly.express as px
+import lonboard
+from lonboard.colormap import apply_categorical_cmap
 
 dataFolder = 'data'
 queryFolder = 'query'
 plotFolder = 'plots'
 
 # create a list of the values we want to assign for each condition
-ltsColors = ['grey', 'green', 'blue', 'orange', 'red']
+ltsColors = ['grey', 'green', 'deepskyblue', 'orange', 'red']
 
 # %% Load and Prep Data
 def load_data(region):
-    all_lts_df = pd.read_csv(f"{dataFolder}/{region}_4_all_lts.csv", low_memory=False)
+
+    if type(region) == list:
+        df = pd.DataFrame()
+        for r in region:
+            dfr = pd.read_csv(f'{dataFolder}/{r}_4_all_lts.csv', low_memory=False)
+            df = pd.concat([df, dfr])
+            print(f'{dfr.shape=} | {df.shape=} | {r}')
+    else:
+        df = pd.read_csv(f'{dataFolder}/{region}_4_all_lts.csv', low_memory=False)
 
     # convert to a geodataframe for plotting
-    all_lts = gpd.GeoDataFrame(
-        all_lts_df.loc[:, [c for c in all_lts_df.columns if c != "geometry"]],
-        geometry=gpd.GeoSeries.from_wkt(all_lts_df["geometry"]),
+    geodf = gpd.GeoDataFrame(
+        df.loc[:, [c for c in df.columns if c != "geometry"]],
+        geometry=gpd.GeoSeries.from_wkt(df["geometry"]),
         crs='wgs84') # projection from graph
 
     # gdf_nodes = pd.read_csv(f"{dataFolder}/{region}_6_gdf_nodes.csv", index_col=0)
 
     # define lts colours for plotting
     conditions = [
-        (all_lts['lts'] == 0),
-        (all_lts['lts'] == 1),
-        (all_lts['lts'] == 2),
-        (all_lts['lts'] == 3),
-        (all_lts['lts'] == 4),
+        (geodf['lts'] == 0),
+        (geodf['lts'] == 1),
+        (geodf['lts'] == 2),
+        (geodf['lts'] == 3),
+        (geodf['lts'] == 4),
         ]
 
     # create a new column and use np.select to assign values to it using our lists as arguments
-    all_lts['color'] = np.select(conditions, ltsColors)
+    geodf['color'] = np.select(conditions, ltsColors)
 
-    return all_lts#, gdf_nodes
+    return geodf#, gdf_nodes
+
 
 # %% Plot LTS
 def plot_lts_plotly(region, all_lts):
@@ -131,7 +145,7 @@ def plot_lts_static(region, all_lts):
     all_lts[all_lts['lts'] > 0].plot(
         linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
 
-    fig, ax = plt.subplots(figsize=(15,15))
+    fig, ax = plt.subplots(figsize=(15,11))
     all_lts[all_lts['lts'] > 0].plot(
         ax = ax, linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
 
@@ -144,6 +158,8 @@ def plot_lts_static(region, all_lts):
                    ]
     ax.legend(legendLines, ['LTS 1', 'LTS 2', 'LTS 3', 'LTS 4'])
 
+    cx.add_basemap(ax, crs=all_lts.crs, zoom=15,
+                   source=cx.providers.CartoDB.DarkMatter)
     ax.set_axis_off()
     fig.tight_layout()
 
@@ -171,15 +187,53 @@ def plot_not_missing_data(region, all_lts):
     fig.show()
     print(f'Saved LTS_{region}_has_speed_has_lanes.png')
 
+def plot_lts_lonboard(region, all_lts):
+    lts = all_lts[all_lts['lts'] > 0]
+
+    layer = lonboard.PathLayer.from_geopandas(
+        gdf=lts[["geometry", "lts", "name"]], width_scale=2
+    )
+    layer.get_color = apply_categorical_cmap(
+        values=lts["lts"],
+        cmap={
+            0: [0, 0, 0],  # black
+            1: [0, 128, 0],  # green
+            2: [0, 0, 255],  # blue
+            3: [255, 165, 0],  # orange
+            4: [255, 0, 0],  # red
+        },
+    )
+
+    # Save map to HTML
+    plotFile = f'{plotFolder}/{region}_LTS_lonboard.html'
+    lonboard.Map(layers=[layer],
+                 basemap_style=lonboard.basemap.CartoBasemap.DarkMatter
+                 ).to_html(plotFile)
+
+    print(f'{plotFile} saved.')
+
+def plot_all_regions():
+    regionFiles = glob.glob(f'{dataFolder}/*_4_all_lts.csv')
+    regions = [os.path.basename(f).split('_')[0] for f in regionFiles]
+
+    all_lts = load_data(regions)
+
+    plot_lts_static('GreaterBoston', all_lts)
+    plot_lts_lonboard('GreaterBoston', all_lts)
+
+
 # %% Script
 def main(region):
     all_lts = load_data(region)
 
     plot_lts_static(region, all_lts)
-    # plot_lts_plotly(all_lts)
+    plot_lts_lonboard(region, all_lts)
 
 if __name__ == '__main__':
-    city = 'Cambridge'
+    # city = 'Cambridge'
     # city = 'Boston'
+    # city = 'Somerville'
 
-    main(city)
+    # main(city)
+
+    plot_all_regions()
