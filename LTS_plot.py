@@ -5,6 +5,7 @@ This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 '''
 import os
 import glob
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -224,6 +225,8 @@ def plot_all_regions():
 
 # %% Script
 def main(region):
+    Path(plotFolder).mkdir(exist_ok=True)
+
     all_lts = load_data(region)
 
     plot_lts_static(region, all_lts)

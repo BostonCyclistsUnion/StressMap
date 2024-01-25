@@ -9,13 +9,15 @@ python build_query.py eastyork wikidata Q167585
 
 import argparse
 import os
+from pathlib import Path
 
 def build_query(region, key, value):
-    filepath = f'query/{region}.query'
-    if os.path.exists(filepath):
+    filepath = Path('query') / (region + '.query')
+    filepath.parent.mkdir(exist_ok=True)
+    if filepath.exists():
         print(f"{region} query already exists")
     else:
-        with open(filepath, 'w') as f:
+        with filepath.open(mode='w') as f:
             f.write('[timeout:600][out:json][maxsize:2000000000];\n')
             f.write(f'area["{key}"="{value}"];\n')
             f.write('out body;\n')
