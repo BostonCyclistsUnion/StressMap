@@ -142,29 +142,30 @@ def plot_lts_plotly(region, all_lts):
     print(f'Saved {region}_stressmap.html')
 
 def plot_lts_static(region, all_lts):
-    all_lts[all_lts['lts'] > 0].plot(
-        linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
+    linewidth = 0.4
 
     fig, ax = plt.subplots(figsize=(15,11))
     all_lts[all_lts['lts'] > 0].plot(
-        ax = ax, linewidth = 0.1, color = all_lts[all_lts['lts'] > 0]['color'])
+        ax = ax, linewidth = linewidth, color = all_lts[all_lts['lts'] > 0]['color'])
 
     ax.title.set_text(f'Level of Biking Traffic Stress Map for {region}')
 
-    legendLines = [Line2D([0], [0], color=ltsColors[1], lw=4),
-                   Line2D([0], [0], color=ltsColors[2], lw=4),
-                   Line2D([0], [0], color=ltsColors[3], lw=4),
-                   Line2D([0], [0], color=ltsColors[4], lw=4),
+    lw = 5
+    legendLines = [Line2D([0], [0], color=ltsColors[1], lw=lw),
+                   Line2D([0], [0], color=ltsColors[2], lw=lw),
+                   Line2D([0], [0], color=ltsColors[3], lw=lw),
+                   Line2D([0], [0], color=ltsColors[4], lw=lw),
                    ]
     ax.legend(legendLines, ['LTS 1', 'LTS 2', 'LTS 3', 'LTS 4'])
 
-    cx.add_basemap(ax, crs=all_lts.crs, zoom=15,
+    cx.add_basemap(ax, crs=all_lts.crs, zoom=16,
+                #    source=cx.providers.CartoDB.Positron)
                    source=cx.providers.CartoDB.DarkMatter)
     ax.set_axis_off()
     fig.tight_layout()
 
     # plt.savefig(f"{plotFolder}/{region}_lts.pdf")
-    plt.savefig(f"{plotFolder}/{region}_lts.png", dpi = 600)
+    plt.savefig(f"{plotFolder}/{region}_lts.png", dpi = 300)
     fig.show()
     print(f'Saved {region}_lts.png')
 
@@ -198,7 +199,7 @@ def plot_lts_lonboard(region, all_lts):
         cmap={
             0: [0, 0, 0],  # black
             1: [0, 128, 0],  # green
-            2: [0, 0, 255],  # blue
+            2: [0, 191, 255],  # blue
             3: [255, 165, 0],  # orange
             4: [255, 0, 0],  # red
         },
@@ -207,7 +208,9 @@ def plot_lts_lonboard(region, all_lts):
     # Save map to HTML
     plotFile = f'{plotFolder}/{region}_LTS_lonboard.html'
     lonboard.Map(layers=[layer],
-                 basemap_style=lonboard.basemap.CartoBasemap.DarkMatter
+                #  basemap_style=lonboard.basemap.CartoBasemap.Positron,
+                 basemap_style=lonboard.basemap.CartoBasemap.DarkMatter,
+                 _height=800,
                  ).to_html(plotFile)
 
     print(f'{plotFile} saved.')
@@ -226,14 +229,14 @@ def plot_all_regions():
 def main(region):
     all_lts = load_data(region)
 
-    plot_lts_static(region, all_lts)
+    # plot_lts_static(region, all_lts)
     plot_lts_lonboard(region, all_lts)
 
 if __name__ == '__main__':
     # city = 'Cambridge'
     # city = 'Boston'
-    # city = 'Somerville'
+    city = 'Somerville'
 
-    # main(city)
+    main(city)
 
-    plot_all_regions()
+    # plot_all_regions()
