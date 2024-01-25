@@ -90,7 +90,7 @@ def biking_permitted(gdf_edges):
                  ]
 
 
-    values = ['p2', 'p6', 'p3', 'p4', 'p7', 'p5']
+    values = ['p1', 'p2', 'p6', 'p3', 'p4', 'p7', 'p5']
 
     # create a new column and use np.select to assign values to it using our lists as arguments
     gdf_edges['rule'] = np.select(conditions, values, default='p0')
