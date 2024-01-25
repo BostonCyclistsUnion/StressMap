@@ -284,7 +284,8 @@ def lts_edges(region, gdf_edges):
                             'm11':'Setting LTS to 4 because the number of lanes is greater than 3.', 
                             'm12':'Setting LTS to 4 because maxspeed is greater than 50 km/h.'}
 
-        simplified_message_dict = {'p2':r'bicycle $=$ "no"',
+        simplified_message_dict = {'p2':r'bicycle $=$ "dismount"',
+                            'p2':r'bicycle $=$ "no"',
                             'p6':r'access $=$ "no"', 
                             'p3':r'highway $=$ "motorway"',
                             'p4':r'highway $=$ "motorway_link"', 
