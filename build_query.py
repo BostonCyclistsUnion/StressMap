@@ -21,7 +21,7 @@ def build_query(region, key, value):
             f.write('out body;\n')
             f.write('((way["highway"][area]; - way[footway="sidewalk"][area];);\n')
             f.write('  node(w)->.h;\n')
-            f.write('   (way[footway="sidewalk"][bicycle][area]; - way[footway="sidewalk"][bicycle="no"][area];);\n')
+            f.write('   (way[footway="sidewalk"][bicycle][area]; - way[footway="sidewalk"][bicycle="no"][area]; - way[footway="sidewalk"][bicycle="dismount"][area];);\n')
             f.write('  node(w)->.s;\n')
             f.write('  node.h.s;\n')
             f.write(');\n')

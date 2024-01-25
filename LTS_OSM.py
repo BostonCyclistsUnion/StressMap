@@ -240,7 +240,8 @@ def lts_edges(region, gdf_edges):
         # decision rule glossary
         # these are from Bike Ottawa's stressmodel code
         # pylint: disable=line-too-long
-        rule_message_dict = {'p2':'Cycling not permitted due to bicycle=\'no\' tag.',
+        rule_message_dict = {'p1':'Cycling not permitted due to bicycle=\'dismount\' tag.',
+                            'p2':'Cycling not permitted due to bicycle=\'no\' tag.',
                             'p6':'Cycling not permitted due to access=\'no\' tag.', 
                             'p3':'Cycling not permitted due to highway=\'motorway\' tag.',
                             'p4':'Cycling not permitted due to highway=\'motorway_link\' tag.', 

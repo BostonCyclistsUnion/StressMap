@@ -79,7 +79,8 @@ def biking_permitted(gdf_edges):
     
     gdf_allowed and gdf_not_allowed together are the entire contents of gdf_edges.
     """
-    conditions = [(gdf_edges['bicycle'] == 'no'), # p2
+    conditions = [(gdf_edges['bicycle'] == 'dismount'), # p1
+                  (gdf_edges['bicycle'] == 'no'), # p2
                   (gdf_edges['access'] == 'no'), # p6
                   (gdf_edges['highway'] == 'motorway'), # p3
                   (gdf_edges['highway'] == 'motorway_link'), #p4
