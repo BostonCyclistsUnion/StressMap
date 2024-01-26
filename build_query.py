@@ -9,23 +9,25 @@ python build_query.py eastyork wikidata Q167585
 
 import argparse
 import os
+from pathlib import Path
 
 def build_query(region, key, value):
-    filepath = f'query/{region}.query'
-    if os.path.exists(filepath):
+    filepath = Path('query') / (region + '.query')
+    filepath.parent.mkdir(exist_ok=True)
+    if filepath.exists():
         print(f"{region} query already exists")
     else:
-        with open(filepath, 'w') as f:
+        with filepath.open(mode='w') as f:
             f.write('[timeout:600][out:json][maxsize:2000000000];\n')
-            f.write(f'area["{key}"="{value}"];\n')
-            f.write('out body;\n')
-            f.write('((way["highway"][area]; - way[footway="sidewalk"][area];);\n')
-            f.write('  node(w)->.h;\n')
-            f.write('   (way[footway="sidewalk"][bicycle][area]; - way[footway="sidewalk"][bicycle="no"][area]; - way[footway="sidewalk"][bicycle="dismount"][area];);\n')
-            f.write('  node(w)->.s;\n')
-            f.write('  node.h.s;\n')
-            f.write(');\n')
-            f.write('out;\n')
+            f.write(f'area["{key}"="{value}"]->.search_area;\n')
+            f.write('.search_area out body;\n')
+            f.write("""
+(
+    way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
+    way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
+);
+out;
+            """)
 
 if __name__ == "__main__":
 

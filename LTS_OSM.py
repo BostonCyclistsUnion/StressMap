@@ -12,6 +12,8 @@ of generation.
 
 import json
 import os
+from pathlib import Path
+
 import requests
 
 import pandas as pd
@@ -426,6 +428,8 @@ def save_LTS_graph(region, all_lts_small, gdf_nodes):
 
 # %% Run as Script
 def main(region):
+    Path(dataFolder).mkdir(exist_ok=True)
+
     download_osm(region)
     extract_tags(region)
     gdfNodes, gdfEdges = download_data(region)
