@@ -36,21 +36,45 @@ overpass_url = "http://overpass-api.de/api/interpreter"
 OVERWRITE = False
 
 # %% Functions
-def read_csv_as_geopandas(filepath):
-    df = pd.read_csv(filepath, low_memory=False)
+def check_files(region):
+    # WIP: plan to better check what files exist and skip steps without unessesary file loads
+    
+    fileList = {
+        'queryFile': Path('query') / (region + '.query'),
+        'osmjsonFile': '',
+        'waytagsFile': '',
+        'graphFile': '',
+        'allLtsFile': '',
+        'allLtsSmallFile': '',
+        'gdfNodeFile': '',
+        'ltsGraphFile': '',
+    }
 
-    # convert to a geodataframe for plotting
-    geodf = gpd.GeoDataFrame(
-        df.loc[:, [c for c in df.columns if c != "geometry"]],
-        geometry=gpd.GeoSeries.from_wkt(df["geometry"]),
-        crs='wgs84') # projection from graph
+    for file in fileList:
+        pass
+    
 
-    # Make some geo dataframes have the right index
-    geoIndex = ['u','v','key']
-    if set(geoIndex).issubset(geodf.columns):
-        geodf.set_index(geoIndex, inplace=True)
 
-    return geodf
+def build_query(region, key, value):
+    global OVERWRITE
+    filepath = Path('query') / (region + '.query')
+    filepath.parent.mkdir(exist_ok=True)
+    if filepath.exists():
+        print(f"{region} query already exists")
+    else:
+        OVERWRITE = True
+        with filepath.open(mode='w') as f:
+            f.write('[timeout:600][out:json][maxsize:2000000000];\n')
+            f.write(f'area["{key}"="{value}"]->.search_area;\n')
+            f.write('.search_area out body;\n')
+            f.write("""
+(
+    way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
+    way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
+);
+out;
+            """)
+        print(f'{filepath} created')
 
 def download_osm(region):
     '''
@@ -142,7 +166,9 @@ def download_data(region):
     osmfilter = ('["highway"]["area"!~"yes"]["access"!~"private"]'
                 '["highway"!~"abandoned|bus_guideway|corridor|elevator|escalator|motor|'
                 'planned|platform|proposed|raceway|steps"]'
-                '["bicycle"!~"no"]["service"!~"private"]')
+                '["bicycle"!~"no"]["service"!~"private"]'
+                '["indoor"!~"yes"]'
+                '["service"!="parking_aisle"]')
 
     # check if data has already been downloaded; if not, download
     filepath = f"{dataFolder}/{region}_3.graphml"
@@ -165,7 +191,7 @@ def download_data(region):
 
         # plot downloaded graph - this is slow for a large area
         # fig, ax = ox.plot_graph(G, node_size=0, edge_color="w", edge_linewidth=0.2)
-        ox.plot_graph(G, node_size=0, edge_color="w", edge_linewidth=0.2)
+        # ox.plot_graph(G, node_size=0, edge_color="w", edge_linewidth=0.2)
 
     # convert graph to node and edge GeoPandas GeoDataFrames
     gdf_nodes, gdf_edges = ox.graph_to_gdfs(G)
@@ -175,6 +201,21 @@ def download_data(region):
 
     return gdf_nodes, gdf_edges
 
+def read_csv_as_geopandas(filepath):
+    df = pd.read_csv(filepath, low_memory=False)
+
+    # convert to a geodataframe for plotting
+    geodf = gpd.GeoDataFrame(
+        df.loc[:, [c for c in df.columns if c != "geometry"]],
+        geometry=gpd.GeoSeries.from_wkt(df["geometry"]),
+        crs='wgs84') # projection from graph
+
+    # Make some geo dataframes have the right index
+    geoIndex = ['u','v','key']
+    if set(geoIndex).issubset(geodf.columns):
+        geodf.set_index(geoIndex, inplace=True)
+
+    return geodf
 
 def lts_edges(region, gdf_edges):
     '''
@@ -375,7 +416,7 @@ def lts_nodes(region, gdf_nodes, all_lts):
         gdf_nodes['highway'].value_counts()
 
         gdf_nodes['lts'] = np.nan # make lts column
-        gdf_nodes['message'] = np.nan # make message column
+        gdf_nodes['message'] = '' # make message column
 
         for node in tqdm(gdf_nodes.index):
             # pylint: disable=bare-except
@@ -427,9 +468,12 @@ def save_LTS_graph(region, all_lts_small, gdf_nodes):
         ox.save_graphml(G_lts, filepath)
 
 # %% Run as Script
-def main(region):
+def main(region, key, value, rebuild=False):
+    global OVERWRITE
+    OVERWRITE = rebuild
     Path(dataFolder).mkdir(exist_ok=True)
 
+    build_query(region, key, value)
     download_osm(region)
     extract_tags(region)
     gdfNodes, gdfEdges = download_data(region)
@@ -438,7 +482,7 @@ def main(region):
     save_LTS_graph(region, all_lts_small, gdf_nodes)
 
 if __name__ == '__main__':
-    city = 'Cambridge'
-    # city = 'Boston'
+    # city = ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts']
+    city = ['Boston', 'wikipedia', 'en:Boston,']
 
-    main(city)
+    main(*city, True)

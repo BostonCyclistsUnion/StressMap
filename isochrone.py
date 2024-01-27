@@ -5,6 +5,13 @@ Plot isochrones from a starting location based on an LTS threshold.
 
 Plotting code adapted from 
 https://github.com/gboeing/osmnx-examples/blob/v0.13.0/notebooks/13-isolines-isochrones.ipynb
+
+## Thoughts for making heatmap of isochrones
+area of a polygon
+    https://gis.stackexchange.com/questions/218450/getting-polygon-areas-using-geopandas
+equally spaced points on a polygon
+    https://stackoverflow.com/questions/66010964/fastest-way-to-produce-a-grid-of-points-that-fall-within-a-polygon-or-shape
+    
 '''
 
 
@@ -16,6 +23,7 @@ import networkx as nx
 import matplotlib
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from shapely.geometry import Point, LineString, Polygon
 
 city = "Victoria"
 

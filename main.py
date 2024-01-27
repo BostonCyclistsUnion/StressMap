@@ -6,26 +6,70 @@ Just delete the file you want to start from and everything after
 will be recreated.
 '''
 
-import build_query
 import LTS_OSM
 import LTS_plot
 
-# Choose the city to perform analysis on. 
-# [city name for documentaion, query key, query value]
 # Query key and value can be determinined by inspecting regions
 # on OpenStreetMaps
 
-# city = ['Arlington', 'wikipedia', 'en:Arlington, Massachusetts']
-# city = ['Boston', 'wikidata', '2315704']
-# city = ['Brookline', 'wikipedia', 'en:Brookline, Massachusetts']
-# city = ['Cambridge', 'wikidata', '1933745']
-city = ['Medford', 'wikipedia', 'en:Medford, Massachusetts']
-# city = ['Somerville', 'wikipedia', 'en:Somerville, Massachusetts']
-# city = ['Watertown', 'wikipedia', 'en:Watertown, Massachusetts']
+cities = {
+       'Arlington':
+              {'key': 'wikipedia',
+              'value': 'en:Arlington, Massachusetts'},
+       'Belmont':
+              {'key': 'wikipedia',
+              'value': 'en:Belmont, Massachusetts'},
+       'Boston':
+              {'key': 'wikipedia',
+              'value': 'en:Boston'},
+       'Brookline':
+              {'key': 'wikipedia',
+              'value': 'en:Brookline, Massachusetts'},
+       'Cambridge':
+              {'key': 'wikipedia',
+              'value': 'en:Cambridge, Massachusetts'},
+       'Chelsea':
+              {'key': 'wikipedia',
+              'value': 'en:Chelsea, Massachusetts'},
+       'Everett':
+              {'key': 'wikipedia',
+              'value': 'en:Everett, Massachusetts'},
+       'Malden':
+              {'key': 'wikipedia',
+              'value': 'en:Malden, Massachusetts'},
+       'Medford':
+              {'key': 'wikipedia',
+              'value': 'en:Medford, Massachusetts'},
+       'Newton':
+              {'key': 'wikipedia',
+              'value': 'en:Newton, Massachusetts'},
+       'Lexington':
+              {'key': 'wikipedia',
+              'value': 'en:Lexington, Massachusetts'},
+       'Somerville':
+              {'key': 'wikipedia',
+              'value': 'en:Somerville, Massachusetts'},
+       'Waltham':
+              {'key': 'wikipedia',
+              'value': 'en:Waltham, Massachusetts'},
+       'Watertown':
+              {'key': 'wikipedia',
+              'value': 'en:Watertown, Massachusetts'},
+       }
 
-# city = ['GreaterBoston', 'na', 'na']
+# city = 'Cambridge'
+# city = 'Boston'
+# city = 'Somerville'
 
 # Run LTS analysis and plotting
-build_query.build_query(*city)
-LTS_OSM.main(city[0])
-LTS_plot.main(city[0])
+rebuild = False
+
+# LTS_OSM.main(city, cities[city]['key'], cities[city]['value'], rebuild)
+# LTS_plot.main(city)
+
+for city in cities:
+    LTS_OSM.main(city, cities[city]['key'], cities[city]['value'], rebuild)
+    LTS_plot.main(city)
+
+# Create a combined map from all cities analyzed
+LTS_plot.plot_all_regions()

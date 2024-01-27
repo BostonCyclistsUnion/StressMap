@@ -1,10 +1,10 @@
 [timeout:600][out:json][maxsize:2000000000];
-area["wikidata"="1933745"];
-out body;
-((way["highway"][area]; - way[footway="sidewalk"][area];);
-  node(w)->.h;
-   (way[footway="sidewalk"][bicycle][area]; - way[footway="sidewalk"][bicycle="no"][area];);
-  node(w)->.s;
-  node.h.s;
+area["wikipedia"="en:Cambridge, Massachusetts"]->.search_area;
+.search_area out body;
+
+(
+    way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
+    way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
 );
 out;
+            

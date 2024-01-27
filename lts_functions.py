@@ -1,6 +1,7 @@
 # import pytest
 import pandas as pd
 import numpy as np
+import re
 
 # unit = 'metric'
 unit = 'english'
@@ -192,7 +193,8 @@ def get_lanes(gdf_edges, default_lanes = 2):
     # this usually happens if multiple adjacent ways are included in the edge and 
     # there's a turning lane
     gdf_edges['lanes_assumed'] = gdf_edges['lanes'].fillna(default_lanes).apply(
-        lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x))
+        lambda x: np.array(re.split('; |, |\*|\n', str(x)), dtype = 'int')).apply(
+            lambda x: np.max(x))
 
     return gdf_edges
 
@@ -220,9 +222,10 @@ def get_max_speed(gdf_edges):
     gdf_edges['maxspeed_assumed'] = np.select(conditions, values, default=gdf_edges['maxspeed'])
 
     # If mph
-    mph = gdf_edges['maxspeed_assumed'].str.contains('mph', na=False)
-    gdf_edges['maxspeed_assumed'].loc[mph] = gdf_edges['maxspeed_assumed'][mph].str.split(
-        ' ', expand=True)[0].apply(lambda x: np.array(x, dtype = 'int'))
+    if gdf_edges[gdf_edges['maxspeed_assumed'].astype(str).str.contains('mph')].shape[0] > 0:
+        mph = gdf_edges['maxspeed_assumed'].str.contains('mph', na=False)
+        gdf_edges['maxspeed_assumed'].loc[mph] = gdf_edges['maxspeed_assumed'][mph].str.split(
+            ' ', expand=True)[0].apply(lambda x: np.array(x, dtype = 'int'))
 
     # if multiple speed values present, use the largest one
     gdf_edges['maxspeed_assumed'] = gdf_edges['maxspeed_assumed'].apply(
@@ -293,14 +296,14 @@ def bike_lane_analysis_no_parking(gdf_edges):
         gdf_edges['width'] = convert_feet_with_quotes(gdf_edges['width'])
 
     # assign widths that are a string to nan
-    gdf_edges.loc[gdf_edges[['width']].applymap(
+    gdf_edges.loc[gdf_edges[['width']].map( # applymap depreciated
         lambda x: isinstance(x, str))['width'], 'width'] = np.nan
 
     # create a list of lts conditions
     # When multiple conditions are satisfied, the first one encountered in conditions is used
     conditions = [
         (gdf_edges['lanes_assumed'] >= 3) & (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),
-        (gdf_edges[['width']].applymap(lambda x: isinstance(x, float))['width']) &
+        (gdf_edges[['width']].map(lambda x: isinstance(x, float))['width']) & # applymap depreciated
             (gdf_edges['width'] <= ref['w1'][unit]),
         (gdf_edges['maxspeed_assumed'] > ref['s3'][unit]) &
             (gdf_edges['maxspeed_assumed'] <= ref['s5'][unit]),

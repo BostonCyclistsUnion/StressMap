@@ -222,7 +222,7 @@ def plot_all_regions():
 
     all_lts = load_data(regions)
 
-    plot_lts_static('GreaterBoston', all_lts)
+    # plot_lts_static('GreaterBoston', all_lts) # This is slow
     plot_lts_lonboard('GreaterBoston', all_lts)
 
 
@@ -237,8 +237,8 @@ def main(region):
 
 if __name__ == '__main__':
     # city = 'Cambridge'
-    # city = 'Boston'
-    city = 'Somerville'
+    city = 'Boston'
+    # city = 'Somerville'
 
     main(city)
 

@@ -1,5 +1,5 @@
 [timeout:600][out:json][maxsize:2000000000];
-area["wikipedia"="en:Medford, Massachusetts"]->.search_area;
+area["wikipedia"="en:Belmont, Massachusetts"]->.search_area;
 .search_area out body;
 
 (
