@@ -13,18 +13,25 @@ of generation.
 import json
 import os
 from pathlib import Path
+from collections import defaultdict
+import datetime
 
 import requests
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from pandas.api.types import CategoricalDtype
+
+
 import geopandas as gpd
 import osmnx as ox
-# from matplotlib import pyplot as plt
-# import networkx as nx
-from tqdm import tqdm
-# from mpl_toolkits.axes_grid1 import make_axes_locatable
+import networkx as nx
+
 # import matplotlib
+# from matplotlib import pyplot as plt
+# from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+from tqdm import tqdm
 
 import lts_functions as lts
 
@@ -201,8 +208,78 @@ def download_data(region):
 
     return gdf_nodes, gdf_edges
 
-def read_csv_as_geopandas(filepath):
-    df = pd.read_csv(filepath, low_memory=False)
+def read_lts_csv(filepath):
+
+    loadCols = ['u','v','key', 'osmid', 'geometry', 'access_aisle', 'access:conditional', 
+            'access:disabled', 'access', 'aeroway', 'alt_name', 'area:highway', 
+            'area', 'barrier', 'bicycle', 'bridge:movable', 'bridge:name', 
+            'bridge', 'bus:conditional', 'bus:lanes:conditional', 'bus', 
+            'busway:left', 'busway:right', 'busway', 'change:lanes:forward', 
+            'change', 'class:bicycle', 'construction', 'covered', 'crossing_ref', 
+            'crossing:island', 'crossing:markings', 'crossing:signals', 'crossing', 
+            'cycleway:both:buffer', 'cycleway:both:lane', 'cycleway:both', 
+            'cycleway:buffer', 'cycleway:lane', 'cycleway:left:buffer', 
+            'cycleway:left:lane', 'cycleway:left:oneway', 'cycleway:left', 
+            'cycleway:right:buffer', 'cycleway:right:lane', 'cycleway:right:oneway', 
+            'cycleway:right', 'cycleway:surface', 'cycleway', 'description', 
+            'designated_direction', 'designation', 'direction', 'disused', 
+            'embedded_rails', 'emergency', 'entrance', 'exit', 'expressway', 
+            'fee', 'flashing_lights', 'floating', 'foot', 'footway:surface', 
+            'footway', 'highway:conditional', 'highway', 'incline', 'indoor', 
+            'informal', 'junction', 'kerb', 'landing', 'lane_markings', 
+            'lanes:backward', 'lanes:bus:backward', 'lanes:bus:forward',
+            'lanes:conditional', 'lanes:forward', 'lanes', 'layer', 'level', 
+            'light_rail', 'location', 'man_made', 'material', 'maxlength', 
+            'maxspeed:advisory', 'maxspeed:bus', 'maxspeed:hgv', 'maxspeed:type', 
+            'maxspeed:variable', 'maxspeed', 'motor_vehicle:conditional', 
+            'motor_vehicle', 'motorcar', 'mtb:scale', 'name:en', 'name', 
+            'natural', 'noexit', 'noname', 'official_name', 'oneway:bicycle', 
+            'oneway:bus', 'oneway:conditional', 'oneway', 'opening_date', 
+            'parking:both:orientation', 'parking:both', 'parking:condition:both:customers', 
+            'parking:condition:both:maxstay', 'parking:condition:both:time_interval', 
+            'parking:condition:both', 'parking:condition:left:maxstay', 
+            'parking:condition:left:time_interval', 'parking:condition:left', 
+            'parking:condition:right:maxstay', 'parking:condition:right:time_interval', 
+            'parking:condition:right', 'parking:lane:both_1', 'parking:lane:both:parallel', 
+            'parking:lane:both', 'parking:lane:left:parallel', 'parking:lane:left', 
+            'parking:lane:right:parallel', 'parking:lane:right', 'parking:lane', 
+            'parking:left:orientation', 'parking:left', 'parking:right:both', 
+            'parking:right:orientation', 'parking:right', 'place', 'placement', 
+            'protected', 'psv', 'public_transport', 'railway', 'ramp:bicycle', 
+            'ramp:wheelchair', 'ramp', 'ruined', 'sac_scale', 'segregated', 
+            'service', 'short_name', 'shoulder:right', 'shoulder', 'sidewalk:both:surface', 
+            'sidewalk:both', 'sidewalk:left', 'sidewalk:right:surface', 
+            'sidewalk:right', 'sidewalk', 'signal', 'stairs', 'start_date', 
+            'step_count', 'subway', 'surface', 'tracktype', 'traffic_calming', 
+            'traffic_island', 'traffic_signals:countdown', 'traffic_signals:sound', 
+            'traffic_signals:vibration', 'traffic_signals', 'trail_visibility', 
+            'trolley_wire', 'trolleybus', 'tunnel', 'turn:lanes:backward', 
+            'turn:lanes:conditional', 'turn:lanes:forward', 'turn:lanes', 
+            'turn', 'vehicle', 'was:bridge:movable', 'width:feet', 'width',
+            ]
+    
+    dtypeDict = {'u': 'Int64',
+                 'v': 'Int64',
+                 'key': 'Int32',
+                #  'level': 'float32',
+                 'level': 'object',
+                 'osmid': 'Int64',
+                #  'lanes': 'Int32',
+                #  'lanes:forward': 'Int32',
+                #  'lanes:backward': 'Int32',
+                 'lanes': 'object',
+                 'lanes:forward': 'object',
+                 'lanes:backward': 'object',
+                 'layer': 'Int32',
+                 'oneway': 'bool',
+                 'geometry': 'object',
+                }
+    
+    dtypes = defaultdict(CategoricalDtype, dtypeDict)
+    df = pd.read_csv(filepath, usecols=lambda x: x in loadCols, 
+                    dtype=dtypes, 
+                    keep_default_na=True, na_values="''",
+                    low_memory=False)
 
     # convert to a geodataframe for plotting
     geodf = gpd.GeoDataFrame(
@@ -217,6 +294,31 @@ def read_csv_as_geopandas(filepath):
 
     return geodf
 
+def read_gdf_nodes_csv(filepath):
+
+    dtypeDict = {'x': 'float64',
+                 'y': 'float64',
+                 'osmid': 'Int64',
+                 'street_count': 'Int32',
+                 'highway': 'category',
+                 'ref': 'category',
+                 'geometry': 'object',
+                 'lts': 'Int32',
+                 'message': 'category',                 
+                }
+    
+    df = pd.read_csv(filepath, dtype=dtypeDict, 
+                     keep_default_na=True, na_values="''",
+                     low_memory=False)
+
+    # convert to a geodataframe for plotting
+    geodf = gpd.GeoDataFrame(
+        df.loc[:, [c for c in df.columns if c != "geometry"]],
+        geometry=gpd.GeoSeries.from_wkt(df["geometry"]),
+        crs='wgs84') # projection from graph
+
+    return geodf
+
 def lts_edges(region, gdf_edges):
     '''
     Calculate the LTS for all edges
@@ -228,7 +330,7 @@ def lts_edges(region, gdf_edges):
     if os.path.exists(filepathAll) and (OVERWRITE is False):
         # load graph
         print(f"Loading LTS for {region}")
-        all_lts = read_csv_as_geopandas(filepathAll)
+        all_lts = read_lts_csv(filepathAll)
     else:
         OVERWRITE = True
         # Start with is biking allowed, get edges where biking is not *not* allowed.
@@ -381,7 +483,7 @@ def lts_edges(region, gdf_edges):
     if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
         # load graph
         print(f"Loading LTS_small for {region}")
-        all_lts_small = read_csv_as_geopandas(filepathSmall)
+        all_lts_small = read_lts_csv(filepathSmall)
     else:
         OVERWRITE = True
         all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'maxspeed', 'geometry',
@@ -408,7 +510,7 @@ def lts_nodes(region, gdf_nodes, all_lts):
 
     if os.path.exists(filepath) & (OVERWRITE is False):
         print(f'Loading {filepath}')
-        gdf_nodes = read_csv_as_geopandas(filepath)
+        gdf_nodes = read_gdf_nodes_csv(filepath)
         gdf_nodes.set_index('osmid', inplace=True)
 
     else:
@@ -454,7 +556,7 @@ def save_LTS_graph(region, all_lts_small, gdf_nodes):
     Save LTS graph for plotting
     '''
     global OVERWRITE
-    filepath = f"{dataFolder}/{region}_7_lts.graphml"
+    filepath = f'{dataFolder}/{region}_7_lts.graphml'
 
     if os.path.exists(filepath) & (OVERWRITE is False):
         print(f'{region} LTS graph already exists')
@@ -466,6 +568,46 @@ def save_LTS_graph(region, all_lts_small, gdf_nodes):
         # save LTS graph
         print(f'Saving {region} LTS graph')
         ox.save_graphml(G_lts, filepath)
+
+def combine_data(fullRegion, regionList):
+
+    def combine_all_lts(fullRegion, regionList):
+        print('All LTS - 4')
+        allLTSpathCombined = f'{dataFolder}/{fullRegion}_4_all_lts.csv'
+        allLTS = pd.DataFrame()
+        for region in regionList:
+            print(f'\t{region}')
+            allLTSpath = f'{dataFolder}/{region}_4_all_lts.csv'
+            allLTS = pd.concat([allLTS, read_lts_csv(allLTSpath)])
+        allLTS.to_csv(allLTSpathCombined)
+
+    def combine_gdf_nodes(fullRegion, regionList):
+        print('GDF Nodes - 6')
+        gdfNodesPathCombined = f'{dataFolder}/{fullRegion}_6_gdf_nodes.csv'
+        gdfNodes = pd.DataFrame()
+        for region in regionList:
+            print(f'\t{region}')
+            gdfNodesPath = f'{dataFolder}/{region}_6_gdf_nodes.csv'
+            gdfNodes = pd.concat([gdfNodes, pd.read_csv(gdfNodesPath, index_col=0)])
+        gdfNodes.to_csv(gdfNodesPathCombined)
+
+    def combine_lts_graph(fullRegion, regionList):
+        print('LTS Graph - 7')
+        print(datetime.datetime.now())
+        graphPathCombined = f'{dataFolder}/{fullRegion}_7_lts.graphml'
+        G_lts = []
+        for region in regionList:
+            print(f'\t{region}')
+            graphPath = f'{dataFolder}/{region}_7_lts.graphml'
+            G_lts.append(ox.load_graphml(graphPath))
+        G_lts_all = nx.compose_all(G_lts)
+        ox.save_graphml(G_lts_all, graphPathCombined)
+        print(datetime.datetime.now())
+
+    combine_all_lts(fullRegion, regionList)
+    combine_gdf_nodes(fullRegion, regionList)
+    combine_lts_graph(fullRegion, regionList)
+
 
 # %% Run as Script
 def main(region, key, value, rebuild=False):

@@ -3,3 +3,4 @@ data/
 plots/
 cache/
 __pycache__/
+test.py
