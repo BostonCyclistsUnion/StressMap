@@ -25,14 +25,16 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from shapely.geometry import Point, LineString, Polygon
 
-city = "Victoria"
+city = "GreaterBoston"
 
-gdf_nodes = pd.read_csv("data/gdf_nodes_%s.csv" %city, index_col=0)
+gdf_nodes = pd.read_csv(f"data/{city}_6_gdf_nodes.csv", index_col=0, 
+                      low_memory=False) # solve DtypeWarning columns having mixed types
 
-all_lts = pd.read_csv("data/all_lts_%s.csv" %city, index_col=[0,1,2])
+all_lts = pd.read_csv(f"data/{city}_4_all_lts.csv", index_col=[0,1,2], 
+                      low_memory=False) # solve DtypeWarning columns having mixed types
 
 # load graph
-filepath = "data/%s_lts.graphml" %city
+filepath = f"data/{city}_7_lts.graphml"
 G_lts = ox.load_graphml(filepath)
 
 # whether to remove nodes by lts or not
@@ -52,15 +54,15 @@ G3.remove_edges_from(all_lts[(all_lts['lts'] > 3)
                             & (all_lts['lts'] == 0)].index)
 G4.remove_edges_from(all_lts[(all_lts['lts'] == 0)].index)
 
-if remove_nodes == True:
+if remove_nodes is True:
     G1.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] != 1].index)
     G2.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 2].index)
     G3.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 3].index)
 
 # +
 # point to start isochrone plot from
-y = 48.4378 # start of galloping goose
-x = -123.383
+y = 42.3732
+x = -71.1108
 
 center_node = ox.distance.nearest_nodes(G1, x ,y) # use the same starting node for each graph
 G1b = ox.project_graph(G1) # this is slow - do we have to do this?
@@ -73,7 +75,7 @@ iso_colors = ox.plot.get_colors(n=4, cmap='plasma', start=0, return_hex=True)
 
 #trip_times = [10] 
 travel_speed = 15 #biking speed in km/hour
-trip_time = 30 #in minutes
+trip_time = 15 #in minutes
 
 # +
 # add an edge attribute for time in minutes required to traverse each edge
@@ -117,7 +119,9 @@ G4b.graph['crs']
 # +
 # color the nodes according to isochrone then plot the street network
 fig, ax = ox.plot_graph(G4b, node_color=nc, node_size=ns, node_alpha=0.4, node_zorder=0,
-                        bgcolor='w', edge_linewidth=0.05, edge_color='#999999', show=False, close=False)
+                        bgcolor='w', edge_linewidth=0.05, edge_color='#999999', 
+                        figsize=(15, 15),
+                        show=False, close=False)
 
 ax.scatter([point_geom_proj.x], [point_geom_proj.y], marker = '*', s = 50, color = 'k', zorder = 2)
 
@@ -139,5 +143,6 @@ loc = labels - 0.5
 cbar.set_ticks(loc)
 cbar.set_ticklabels(labels)
 
-plt.savefig("%s_isochrone_times_lts_remove_nodes_%s_time_%s.pdf" %(city, remove_nodes, trip_time))
-plt.savefig("%s_isochrone_times_lts_remove_nodes_%s_time_%s.png" %(city, remove_nodes, trip_time), dpi = 300)
+plotPath = f'plots/{city}_isochrone_times_lts_remove_nodes_{remove_nodes}_time_{trip_time}'
+# plt.savefig(plotPath + '.pdf')
+plt.savefig(plotPath + '.png', dpi = 300)
