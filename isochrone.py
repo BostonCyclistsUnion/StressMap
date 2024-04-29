@@ -24,8 +24,12 @@ import matplotlib
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from shapely.geometry import Point, LineString, Polygon
+from shapely.prepared import prep
+import alphashape
+import cartopy.crs as ccrs
 
 import LTS_OSM
+import LTS_plot
 
 # %% Settings
 # whether to remove nodes by lts or not
@@ -40,8 +44,9 @@ def load_files(city):
     
     gdf_nodes = LTS_OSM.read_gdf_nodes_csv(f"data/{city}_6_gdf_nodes.csv")
 
-    all_lts = pd.read_csv(f"data/{city}_4_all_lts.csv", index_col=[0,1,2], 
-                        low_memory=False) # solve DtypeWarning columns having mixed types
+    # all_lts = pd.read_csv(f"data/{city}_4_all_lts.csv", index_col=[0,1,2], 
+    #                     low_memory=False) # solve DtypeWarning columns having mixed types
+    all_lts = LTS_plot.load_data(city)
 
     # load graph
     lts_graphml = ox.load_graphml(f"data/{city}_7_lts.graphml")
@@ -50,29 +55,52 @@ def load_files(city):
 
 # %% Create Map-Graphs by LTS
 def lts_map_graphs(G_lts, all_lts, gdf_nodes, remove_nodes=True):
-    G1 = G_lts.copy()
-    G2 = G_lts.copy()
-    G3 = G_lts.copy()
-    G4 = G_lts.copy()
+    Glts = G_lts.copy()
+    S = [Glts.subgraph(c).copy() for c in nx.weakly_connected_components(Glts)][0]
+
+    G1 = S.copy()
+    G2 = S.copy()
+    G3 = S.copy()
+    G4 = S.copy()
+
+    lts1 = all_lts[(all_lts['lts'] > 1) | (all_lts['lts'] == 0)]
+    lts2 = all_lts[(all_lts['lts'] > 2) | (all_lts['lts'] == 0)]
+    lts3 = all_lts[(all_lts['lts'] > 3) | (all_lts['lts'] == 0)]
+    lts4 = all_lts[all_lts['lts'] == 0]
 
     # delete edges and nodes by lts level
-    G1.remove_edges_from(all_lts[(all_lts['lts'] > 1)
-                                | (all_lts['lts'] == 0)].index)
-    G2.remove_edges_from(all_lts[(all_lts['lts'] > 2)
-                                | (all_lts['lts'] == 0)].index)
-    G3.remove_edges_from(all_lts[(all_lts['lts'] > 3)
-                                | (all_lts['lts'] == 0)].index)
-    G4.remove_edges_from(all_lts[(all_lts['lts'] == 0)].index)
+    G1.remove_edges_from(zip(lts1['u'].values, lts1['v'].values))
+    G2.remove_edges_from(zip(lts2['u'].values, lts2['v'].values))
+    G3.remove_edges_from(zip(lts3['u'].values, lts3['v'].values))
+    G4.remove_edges_from(zip(lts4['u'].values, lts4['v'].values))
 
     if remove_nodes is True:
-        G1.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 1].index)
-        G2.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 2].index)
-        G3.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 3].index)
+        G1.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 1]['osmid'])
+        G2.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 2]['osmid'])
+        G3.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] > 3]['osmid'])
+        G1.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] == 0]['osmid'])
+        G2.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] == 0]['osmid'])
+        G3.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] == 0]['osmid'])
+        G4.remove_nodes_from(gdf_nodes[gdf_nodes['lts'] == 0]['osmid'])
+
+    # Remove independent graphs
+    G1 = [G1.subgraph(c).copy() for c in nx.weakly_connected_components(G4)][0]
+    G2 = [G2.subgraph(c).copy() for c in nx.weakly_connected_components(G4)][0]
+    G3 = [G3.subgraph(c).copy() for c in nx.weakly_connected_components(G4)][0]
+    G4 = [G4.subgraph(c).copy() for c in nx.weakly_connected_components(G4)][0]
+    # Remove isolates
+    isolates = list(nx.isolates(G4))
+    # print(f'{len(isolates)=}')
+    for G in [G1, G2, G3, G4]:
+        # print(G.number_of_nodes())
+        G.remove_nodes_from(isolates)
+        # print(G.number_of_nodes())
+        # print()
 
 
     G1b = ox.project_graph(G1) # this is slow - do we have to do this?
-    G2b = ox.project_graph(G2)
-    G3b = ox.project_graph(G3)
+    G2b = ox.project_graph(G2) # This might be better as subgraphs? Need to understand those better
+    G3b = ox.project_graph(G3) # https://networkx.org/documentation/stable/reference/classes/generated/networkx.classes.graphviews.subgraph_view.html
     G4b = ox.project_graph(G4)
 
     return G1, G2, G3, G4, G1b, G2b, G3b, G4b
@@ -101,13 +129,15 @@ def point_isochrone(nodeID, trip_time, G1b, G2b, G3b, G4b):
     graphs = [G4b, G3b, G2b, G1b]
 
     node_colors = {}
+    node_count = []
     for i, G in enumerate(graphs):
         subgraph = nx.ego_graph(G, nodeID, radius=trip_time, distance='time')
         for node in subgraph.nodes():
             node_colors[node] = iso_colors[i]
-        print(f'LTS {4-i}: {list(node_colors.values()).count(iso_colors[i])} nodes')
+        node_count.append(list(node_colors.values()).count(iso_colors[i]))
+        print(f'LTS {4-i}: {node_count[-1]} nodes')
 
-    return node_colors
+    return node_colors, node_count
 
 def point_isochrone_plot(city, point, node_colors, trip_time, G4b):
 
@@ -155,6 +185,61 @@ def nearest_node(x, y, G):
 
     return Point(x, y), nodeID
 
+def boundry_polygon(gdf_nodes, alpha=200):
+    alpha_shape = alphashape.alphashape(gdf_nodes, alpha=alpha)
+
+    return alpha_shape
+
+def grid_points(alpha_shape, gridCount=25):
+    
+
+    alpha_polygon = alpha_shape.iloc[0,0]
+
+    # determine maximum edges
+    latmin, lonmin, latmax, lonmax = alpha_polygon.bounds
+    latres = (latmax - latmin) / (gridCount + 1)
+    lonres = (lonmax - lonmin) / (gridCount + 1)
+
+    # create prepared polygon
+    prep_polygon = prep(alpha_polygon)
+
+    # construct a rectangular mesh
+    points = []
+    for lat in np.arange(latmin, latmax, latres):
+        for lon in np.arange(lonmin, lonmax, lonres):
+            points.append(Point((round(lat,4), round(lon,4))))
+
+    # validate if each point falls inside shape using
+    # the prepared polygon
+    valid_points = list(filter(prep_polygon.contains, points))
+
+    print(f'{len(valid_points)} grid points in boundary region.')
+
+    return valid_points
+
+def plot_grid_boundary(gdf_nodes, alpha_shape, valid_points):
+     # Initialize plot
+    ax = plt.axes(projection=ccrs.PlateCarree())
+
+    # Plot input points
+    gdf_proj = gdf_nodes.to_crs(ccrs.Robinson().proj4_init)
+    ax.scatter([p.x for p in gdf_proj['geometry']],
+                [p.y for p in gdf_proj['geometry']],
+                transform=ccrs.Robinson(),
+                marker='.', s=1)
+
+    ax.scatter([p.x for p in valid_points],
+                [p.y for p in valid_points],
+            #   transform=ccrs.Robinson(),
+                marker='.', s=10, c='r')
+
+    # Plot alpha shape
+    ax.add_geometries(
+        alpha_shape.to_crs(ccrs.Robinson().proj4_init)['geometry'],
+        crs=ccrs.Robinson(), alpha=.2)
+
+    plt.show()
+
 # %% Run as script
 def main(city, trip_time, travel_speed, x, y):
     # Load files and prep for calcs
@@ -168,9 +253,14 @@ def main(city, trip_time, travel_speed, x, y):
     # Use the node closest to the given point
     point, nodeID = nearest_node(x, y, G1)
 
-    node_colors = point_isochrone(nodeID, trip_time, G1b, G2b, G3b, G4b)
+    node_colors, node_count = point_isochrone(nodeID, trip_time, G1b, G2b, G3b, G4b)
 
     point_isochrone_plot(city, point, node_colors, trip_time, G4b)
+
+    # Create sampling points for heatmap
+    alpha_shape = boundry_polygon(gdf_nodes, 200)
+    valid_points = grid_points(alpha_shape, 25)
+    plot_grid_boundary(gdf_nodes, alpha_shape, valid_points)
 
 if __name__ == '__main__':
     # Settings
