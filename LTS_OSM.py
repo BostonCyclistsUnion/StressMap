@@ -472,6 +472,181 @@ def lts_edges(region, gdf_edges):
                             'm10':r'mixed traffic, speed $\leq$ 50 km/h, highway $\neq$ "residential", $\leq$ 3 lanes', 
                             'm11':r'mixed traffic, speed $\leq$ 50 km/h, lanes $>$ 3', 
                             'm12':r'mixed traffic, speed $>$ 50 km/h'}
+        
+        rating_dict = {
+            'p1':{
+                'rule_message': 'Cycling not permitted due to bicycle=\'dismount\' tag.',
+                'simple_message': r'bicycle $=$ "dismount"',
+                },
+            'p2':{
+                'rule_message': 'Cycling not permitted due to bicycle=\'no\' tag.',
+                'simple_message': r'bicycle $=$ "no"',
+                },
+            'p6':{
+                'rule_message': 'Cycling not permitted due to access=\'no\' tag.',
+                'simple_message': r'access $=$ "no"',
+                },
+            'p3':{
+                'rule_message': 'Cycling not permitted due to highway=\'motorway\' tag.',
+                'simple_message': r'highway $=$ "motorway"',
+                },
+            'p4':{
+                'rule_message': 'Cycling not permitted due to highway=\'motorway_link\' tag.',
+                'simple_message': r'highway $=$ "motorway_link"',
+                },
+            'p7':{
+                'rule_message': 'Cycling not permitted due to highway=\'proposed\' tag.',
+                'simple_message': r'highway $=$ "proposed"',
+                },
+            'p5':{
+                'rule_message': 'Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".',
+                'simple_message': r'footway $=$ "sidewalk", bicycle$\neq$"yes"',
+                },
+            's3':{
+                'rule_message': 'This way is a separated path because highway=\'cycleway\'.',
+                'simple_message': r'highway $=$ "cycleway"',
+                },
+            's1':{
+                'rule_message': 'This way is a separated path because highway=\'path\'.',
+                'simple_message': r'highway $=$" path"',
+                },
+            's2':{
+                'rule_message': 'This way is a separated path because highway=\'footway\' but it is not a crossing.',
+                'simple_message': r'separated, highway $=$" footway", not a crossing',
+                },
+            's7':{
+                'rule_message': 'This way is a separated path because cycleway* is defined as \'track\'.',
+                'simple_message': r'cycleway* $=$ "track"',
+                },
+            's8':{
+                'rule_message': 'This way is a separated path because cycleway* is defined as \'opposite_track\'.',
+                'simple_message': r'cycleway* $=$ "opposite_track"',
+                },
+            'b1':{
+                'rule_message': 'LTS is 1 because there is parking present, the maxspeed is less than or equal to 40, highway="residential", and there are 2 lanes or less.',
+                'simple_message': r'bike lane w/ parking, $\leq$ 40 km/h, highway $=$ "residential", $\leq$ 2 lanes',
+                },
+            'b2':{
+                'rule_message': 'Increasing LTS to 3 because there are 3 or more lanes and parking present.',
+                'simple_message': r'bike lane w/ parking, 3 or more lanes',
+                },
+            'b3':{
+                'rule_message': 'Increasing LTS to 3 because the bike lane width is less than 4.1m and parking present.',
+                'simple_message': r'bike lane width $<$ 4.1m, parking',
+                },
+            'b4':{
+                'rule_message': 'Increasing LTS to 2 because the bike lane width is less than 4.25m and parking present.',
+                'simple_message': r'bike lane width $<$ 4.25m, parking',
+                },
+            'b5':{
+                'rule_message': 'Increasing LTS to 2 because the bike lane width is less than 4.5m, maxspeed is less than 40 on a residential street and parking present.',
+                'simple_message': r'bike lane width $<$ 4.5m, $\leq$ 40 km/h, residential, parking',
+                },
+            'b6':{
+                'rule_message': 'Increasing LTS to 2 because the maxspeed is between 41-50 km/h and parking present.',
+                'simple_message': r'bike lane w/ parking, speed 41-50 km/h',
+                },
+            'b7':{
+                'rule_message': 'Increasing LTS to 3 because the maxspeed is between 51-54 km/h and parking present.',
+                'simple_message': r'bike lane w/ parking, speed 51-54 km/h',
+                },
+            'b8':{
+                'rule_message': 'Increasing LTS to 4 because the maxspeed is over 55 km/h and parking present.',
+                'simple_message': r'bike lane w/ parking, speed $>$ 55 km/h',
+                },
+            'b9':{
+                'rule_message': 'Increasing LTS to 3 because highway is not \'residential\'.',
+                'simple_message': r'bike lane w/ parking, highway $\neq$ "residential"',
+                },
+            'c1':{
+                'rule_message': 'LTS is 1 because there is no parking, maxspeed is less than or equal to 50, highway=\'residential\', and there are 2 lanes or less.',
+                'simple_message': r'bike lane no parking, $\leq$ 50 km/h, highway $=$ "residential", $\leq$ 2 lanes',
+                },
+            'c3':{
+                'rule_message': 'Increasing LTS to 3 because there are 3 or more lanes and no parking.',
+                'simple_message': r'bike lane no parking, $\leq$ 65 km/h, $\geq$ 3 lanes',
+                },
+            'c4':{
+                'rule_message': 'Increasing LTS to 2 because the bike lane width is less than 1.7 metres and no parking.',
+                'simple_message': r'bike lane width $<$ 1.7m, no parking',
+                },
+            'c5':{
+                'rule_message': 'Increasing LTS to 3 because the maxspeed is between 51-64 km/h and no parking.',
+                'simple_message': r'bike lane no parking, speed 51-64 km/h',
+                },
+            'c6':{
+                'rule_message': 'Increasing LTS to 4 because the maxspeed is over 65 km/h and no parking.',
+                'simple_message': r'bike lane no parking, speed $>$ 65 km/h',
+                },
+            'c7':{
+                'rule_message': 'Increasing LTS to 3 because highway with bike lane is not \'residential\' and no parking.',
+                'simple_message': r'bike lane no parking, highway $\neq$ "residential"',
+                },
+            'm17':{
+                'rule_message': 'Setting LTS to 1 because motor_vehicle=\'no\'.',
+                'simple_message': r'mixed traffic, motor_vehicle $=$ "no"',
+                },
+            'm13':{
+                'rule_message': 'Setting LTS to 1 because highway=\'pedestrian\'.',
+                'simple_message': r'mixed traffic, highway $=$ "pedestrian"',
+                },
+            'm14':{
+                'rule_message': 'Setting LTS to 2 because highway=\'footway\' and footway=\'crossing\'.',
+                'simple_message': r'mixed traffic, highway $=$ "footway", footway $=$ "crossing"',
+                },
+            'm2':{
+                'rule_message': 'Setting LTS to 2 because highway=\'service\' and service=\'alley\'.',
+                'simple_message': r'mixed traffic, highway $=$ "service", service $=$ "alley"',
+                },
+            'm15':{
+                'rule_message': 'Setting LTS to 2 because highway=\'track\'.',
+                'simple_message': r'mixed traffic, highway $=$ "track"',
+                },
+            'm3':{
+                'rule_message': 'Setting LTS to 2 because maxspeed is 50 km/h or less and service is \'parking_aisle\'.',
+                'simple_message': r'mixed traffic, speed $\leq$ 50 km/h, service $=$ "parking_aisle"',
+                },
+            'm4':{
+                'rule_message': 'Setting LTS to 2 because maxspeed is 50 km/h or less and service is \'driveway\'.',
+                'simple_message': r'mixed traffic, speed $\leq$ 50 km/h, service $=$ "driveway"',
+                },
+            'm16':{
+                'rule_message': 'Setting LTS to 2 because maxspeed is less than 35 km/h and highway=\'service\'.',
+                'simple_message': r'mixed traffic, speed $\leq$ 35 km/h, highway $=$ "service"',
+                },
+            'm5':{
+                'rule_message': 'Setting LTS to 2 because maxspeed is up to 40 km/h, 3 or fewer lanes and highway=\'residential\'.',
+                'simple_message': r'mixed traffic, speed $\leq$ 40 km/h, highway $=$ "residential", $\leq$ 3 lanes',
+                },
+            'm6':{
+                'rule_message': 'Setting LTS to 3 because maxspeed is up to 40 km/h and 3 or fewer lanes on non-residential highway.',
+                'simple_message': r'mixed traffic, speed $\leq$ 40 km/h, highway $\neq$ "residential", $\leq$ 3 lanes',
+                },
+            'm7':{
+                'rule_message': 'Setting LTS to 3 because maxspeed is up to 40 km/h and 4 or 5 lanes.',
+                'simple_message': r'mixed traffic, speed $\leq$ 40 km/h, 4 or 5 lanes',
+                },
+            'm8':{
+                'rule_message': 'Setting LTS to 4 because maxspeed is up to 40 km/h and the number of lanes is greater than 5.',
+                'simple_message': r'mixed traffic, speed $\leq$ 40 km/h, lanes $>$ 5',
+                },
+            'm9':{
+                'rule_message': 'Setting LTS to 2 because maxspeed is up to 50 km/h and lanes are 2 or less and highway=\'residential\'.',
+                'simple_message': r'mixed traffic, speed $\leq$ 50 km/h, highway $=$ "residential",$\leq$ 2 lanes',
+                },
+            'm10':{
+                'rule_message': 'Setting LTS to 3 because maxspeed is up to 50 km/h and lanes are 3 or less on non-residential highway.',
+                'simple_message': r'mixed traffic, speed $\leq$ 50 km/h, highway $\neq$ "residential", $\leq$ 3 lanes',
+                },
+            'm11':{
+                'rule_message': 'Setting LTS to 4 because the number of lanes is greater than 3.',
+                'simple_message': r'mixed traffic, speed $\leq$ 50 km/h, lanes $>$ 3',
+                },
+            'm12':{
+                'rule_message': 'Setting LTS to 4 because maxspeed is greater than 50 km/h.',
+                'simple_message': r'mixed traffic, speed $>$ 50 km/h',
+                },
+            }
 
         all_lts['message'] = all_lts['rule'].map(rule_message_dict)
         all_lts['short_message'] = all_lts['rule'].map(simplified_message_dict)
