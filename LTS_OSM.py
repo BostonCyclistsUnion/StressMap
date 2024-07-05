@@ -434,43 +434,53 @@ def lts_edges(region, gdf_edges):
                             'm12':r'mixed traffic, speed $>$ 50 km/h'}
         
         rating_dict = {
+            # Biking Permitted Rules - biking_permitted()
             'p1':{
+                'bicycle': 'dismount',
                 'rule_message': 'Cycling not permitted due to bicycle=\'dismount\' tag.',
                 'simple_message': r'bicycle $=$ "dismount"',
                 },
             'p2':{
+                'bicycle': 'no',
                 'rule_message': 'Cycling not permitted due to bicycle=\'no\' tag.',
                 'simple_message': r'bicycle $=$ "no"',
                 },
             'p6':{
+                'access': 'no',
                 'rule_message': 'Cycling not permitted due to access=\'no\' tag.',
                 'simple_message': r'access $=$ "no"',
                 },
             'p3':{
+                'highway': 'motorway',
                 'rule_message': 'Cycling not permitted due to highway=\'motorway\' tag.',
                 'simple_message': r'highway $=$ "motorway"',
                 },
             'p4':{
+                'highway': 'motorway_link',
                 'rule_message': 'Cycling not permitted due to highway=\'motorway_link\' tag.',
                 'simple_message': r'highway $=$ "motorway_link"',
                 },
             'p7':{
+                'highway': 'proposed',
                 'rule_message': 'Cycling not permitted due to highway=\'proposed\' tag.',
                 'simple_message': r'highway $=$ "proposed"',
                 },
-            'p5':{
+            'p5':{ # Multiple combos, should split?
                 'rule_message': 'Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".',
                 'simple_message': r'footway $=$ "sidewalk", bicycle$\neq$"yes"',
                 },
+            # Separated Paths - is_separated_path()
             's3':{
+                'highway': 'cycleway',
                 'rule_message': 'This way is a separated path because highway=\'cycleway\'.',
                 'simple_message': r'highway $=$ "cycleway"',
                 },
             's1':{
+                'highway': 'path',
                 'rule_message': 'This way is a separated path because highway=\'path\'.',
                 'simple_message': r'highway $=$" path"',
                 },
-            's2':{
+            's2':{ # 
                 'rule_message': 'This way is a separated path because highway=\'footway\' but it is not a crossing.',
                 'simple_message': r'separated, highway $=$" footway", not a crossing',
                 },
@@ -482,6 +492,7 @@ def lts_edges(region, gdf_edges):
                 'rule_message': 'This way is a separated path because cycleway* is defined as \'opposite_track\'.',
                 'simple_message': r'cycleway* $=$ "opposite_track"',
                 },
+            # Bike Lanes - is_bike_lane()
             'b1':{
                 'rule_message': 'LTS is 1 because there is parking present, the maxspeed is less than or equal to 40, highway="residential", and there are 2 lanes or less.',
                 'simple_message': r'bike lane w/ parking, $\leq$ 40 km/h, highway $=$ "residential", $\leq$ 2 lanes',
