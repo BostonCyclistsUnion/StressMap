@@ -35,7 +35,8 @@ b8: # Fix Speed
 b9:
   rule_message: Increasing LTS to 3 because highway is not 'residential'.
   simple_message: bike lane w/ parking, highway $\neq$ "residential"
-# 
+
+# Bike lanes with no parking - bike_lane_analysis_no_parking()
 c1: # Fix Speed
   rule_message: LTS is 1 because there is no parking, maxspeed is less than or equal
     to 50, highway='residential', and there are 2 lanes or less.
@@ -59,33 +60,8 @@ c7:
   rule_message: Increasing LTS to 3 because highway with bike lane is not 'residential'
     and no parking.
   simple_message: bike lane no parking, highway $\neq$ "residential"
-# 
-m10: # Fix Speed
-  rule_message: Setting LTS to 3 because maxspeed is up to 50 km/h and lanes are 3
-    or less on non-residential highway.
-  simple_message: mixed traffic, speed $\leq$ 50 km/h, highway $\neq$ "residential",
-    $\leq$ 3 lanes
-m11: # Fix Speed
-  rule_message: Setting LTS to 4 because the number of lanes is greater than 3.
-  simple_message: mixed traffic, speed $\leq$ 50 km/h, lanes $>$ 3
-m12: # Fix Speed
-  rule_message: Setting LTS to 4 because maxspeed is greater than 50 km/h.
-  simple_message: mixed traffic, speed $>$ 50 km/h
-m13:
-  rule_message: Setting LTS to 1 because highway='pedestrian'.
-  simple_message: mixed traffic, highway $=$ "pedestrian"
-m14:
-  rule_message: Setting LTS to 2 because highway='footway' and footway='crossing'.
-  simple_message: mixed traffic, highway $=$ "footway", footway $=$ "crossing"
-m15:
-  rule_message: Setting LTS to 2 because highway='track'.
-  simple_message: mixed traffic, highway $=$ "track"
-m16: # Fix Speed
-  rule_message: Setting LTS to 2 because maxspeed is less than 35 km/h and highway='service'.
-  simple_message: mixed traffic, speed $\leq$ 35 km/h, highway $=$ "service"
-m17:
-  rule_message: Setting LTS to 1 because motor_vehicle='no'.
-  simple_message: mixed traffic, motor_vehicle $=$ "no"
+
+# Mixed Traffic - mixed_traffic()
 m2:
   rule_message: Setting LTS to 2 because highway='service' and service='alley'.
   simple_message: mixed traffic, highway $=$ "service", service $=$ "alley"
@@ -119,6 +95,33 @@ m9: # Fix Speed
     or less and highway='residential'.
   simple_message: mixed traffic, speed $\leq$ 50 km/h, highway $=$ "residential",$\leq$
     2 lanes
+m10: # Fix Speed
+  rule_message: Setting LTS to 3 because maxspeed is up to 50 km/h and lanes are 3
+    or less on non-residential highway.
+  simple_message: mixed traffic, speed $\leq$ 50 km/h, highway $\neq$ "residential",
+    $\leq$ 3 lanes
+m11: # Fix Speed
+  rule_message: Setting LTS to 4 because the number of lanes is greater than 3.
+  simple_message: mixed traffic, speed $\leq$ 50 km/h, lanes $>$ 3
+m12: # Fix Speed
+  rule_message: Setting LTS to 4 because maxspeed is greater than 50 km/h.
+  simple_message: mixed traffic, speed $>$ 50 km/h
+m13:
+  rule_message: Setting LTS to 1 because highway='pedestrian'.
+  simple_message: mixed traffic, highway $=$ "pedestrian"
+m14:
+  rule_message: Setting LTS to 2 because highway='footway' and footway='crossing'.
+  simple_message: mixed traffic, highway $=$ "footway", footway $=$ "crossing"
+m15:
+  rule_message: Setting LTS to 2 because highway='track'.
+  simple_message: mixed traffic, highway $=$ "track"
+m16: # Fix Speed
+  rule_message: Setting LTS to 2 because maxspeed is less than 35 km/h and highway='service'.
+  simple_message: mixed traffic, speed $\leq$ 35 km/h, highway $=$ "service"
+m17:
+  rule_message: Setting LTS to 1 because motor_vehicle='no'.
+  simple_message: mixed traffic, motor_vehicle $=$ "no"
+
 # Biking Permitted Rules - biking_permitted()
 p1:
   bicycle: dismount
@@ -148,6 +151,7 @@ p7:
   highway: proposed
   rule_message: Cycling not permitted due to highway='proposed' tag.
   simple_message: highway $=$ "proposed"
+  
 # Separated Paths - is_separated_path()
 s1:
   highway: path
