@@ -388,51 +388,12 @@ def lts_edges(region, gdf_edges):
         with open('rules/rule_message.yml', 'r') as yml_file:
             rule_message_dict = yaml.safe_load(yml_file)
 
+        with open('rules/simplified_message_dict.yml', 'r') as yml_file:
+            simplified_message_dict = yaml.safe_load(yml_file)
 
-        simplified_message_dict = {'p1':r'bicycle $=$ "dismount"',
-                            'p2':r'bicycle $=$ "no"',
-                            'p6':r'access $=$ "no"', 
-                            'p3':r'highway $=$ "motorway"',
-                            'p4':r'highway $=$ "motorway_link"', 
-                            'p7':r'highway $=$ "proposed"', 
-                            'p5':r'footway $=$ "sidewalk", bicycle$\neq$"yes"', 
-                            's3':r'highway $=$ "cycleway"',
-                            's1':r'highway $=$" path"', 
-                            's2':r'separated, highway $=$" footway", not a crossing', 
-                            's7':r'cycleway* $=$ "track"', 
-                            's8':r'cycleway* $=$ "opposite_track"', 
-                            'b1':r'bike lane w/ parking, $\leq$ 40 km/h, highway $=$ "residential", $\leq$ 2 lanes',
-                            'b2':r'bike lane w/ parking, 3 or more lanes', 
-                            'b3':r'bike lane width $<$ 4.1m, parking', 
-                            'b4':r'bike lane width $<$ 4.25m, parking', 
-                            'b5':r'bike lane width $<$ 4.5m, $\leq$ 40 km/h, residential, parking',
-                            'b6':r'bike lane w/ parking, speed 41-50 km/h', 
-                            'b7':r'bike lane w/ parking, speed 51-54 km/h', 
-                            'b8':r'bike lane w/ parking, speed $>$ 55 km/h', 
-                            'b9':r'bike lane w/ parking, highway $\neq$ "residential"', 
-                            'c1':r'bike lane no parking, $\leq$ 50 km/h, highway $=$ "residential", $\leq$ 2 lanes',
-                            'c3':r'bike lane no parking, $\leq$ 65 km/h, $\geq$ 3 lanes',
-                            'c4':r'bike lane width $<$ 1.7m, no parking', 
-                            'c5':r'bike lane no parking, speed 51-64 km/h', 
-                            'c6':r'bike lane no parking, speed $>$ 65 km/h', 
-                            'c7':r'bike lane no parking, highway $\neq$ "residential"', 
-                            'm17':r'mixed traffic, motor_vehicle $=$ "no"', 
-                            'm13':r'mixed traffic, highway $=$ "pedestrian"', 
-                            'm14':r'mixed traffic, highway $=$ "footway", footway $=$ "crossing"', 
-                            'm2':r'mixed traffic, highway $=$ "service", service $=$ "alley"', 
-                            'm15':r'mixed traffic, highway $=$ "track"', 
-                            'm3':r'mixed traffic, speed $\leq$ 50 km/h, service $=$ "parking_aisle"', 
-                            'm4':r'mixed traffic, speed $\leq$ 50 km/h, service $=$ "driveway"', 
-                            'm16':r'mixed traffic, speed $\leq$ 35 km/h, highway $=$ "service"', 
-                            'm5':r'mixed traffic, speed $\leq$ 40 km/h, highway $=$ "residential", $\leq$ 3 lanes', 
-                            'm6':r'mixed traffic, speed $\leq$ 40 km/h, highway $\neq$ "residential", $\leq$ 3 lanes', 
-                            'm7':r'mixed traffic, speed $\leq$ 40 km/h, 4 or 5 lanes', 
-                            'm8':r'mixed traffic, speed $\leq$ 40 km/h, lanes $>$ 5', 
-                            'm9':r'mixed traffic, speed $\leq$ 50 km/h, highway $=$ "residential",$\leq$ 2 lanes', 
-                            'm10':r'mixed traffic, speed $\leq$ 50 km/h, highway $\neq$ "residential", $\leq$ 3 lanes', 
-                            'm11':r'mixed traffic, speed $\leq$ 50 km/h, lanes $>$ 3', 
-                            'm12':r'mixed traffic, speed $>$ 50 km/h'}
-        
+        with open('rules/rating_dict.yml', 'r') as yml_file:
+            rating_dict = yaml.safe_load(yml_file)
+
         rating_dict = {
             # Biking Permitted Rules - biking_permitted()
             'p1':{
