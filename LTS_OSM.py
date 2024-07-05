@@ -10,7 +10,7 @@ just delete the file that is created at that stage. Files are numbered in the fo
 of generation.
 '''
 
-import json
+import json, yaml
 import os
 from pathlib import Path
 from collections import defaultdict
@@ -385,49 +385,9 @@ def lts_edges(region, gdf_edges):
         # decision rule glossary
         # these are from Bike Ottawa's stressmodel code
         # pylint: disable=line-too-long
-        rule_message_dict = {'p1':'Cycling not permitted due to bicycle=\'dismount\' tag.',
-                            'p2':'Cycling not permitted due to bicycle=\'no\' tag.',
-                            'p6':'Cycling not permitted due to access=\'no\' tag.', 
-                            'p3':'Cycling not permitted due to highway=\'motorway\' tag.',
-                            'p4':'Cycling not permitted due to highway=\'motorway_link\' tag.', 
-                            'p7':'Cycling not permitted due to highway=\'proposed\' tag.', 
-                            'p5':'Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".', 
-                            's3':'This way is a separated path because highway=\'cycleway\'.',
-                            's1':'This way is a separated path because highway=\'path\'.', 
-                            's2':'This way is a separated path because highway=\'footway\' but it is not a crossing.', 
-                            's7':'This way is a separated path because cycleway* is defined as \'track\'.', 
-                            's8':'This way is a separated path because cycleway* is defined as \'opposite_track\'.', 
-                            'b1':'LTS is 1 because there is parking present, the maxspeed is less than or equal to 40, highway="residential", and there are 2 lanes or less.',
-                            'b2':'Increasing LTS to 3 because there are 3 or more lanes and parking present.', 
-                            'b3':'Increasing LTS to 3 because the bike lane width is less than 4.1m and parking present.', 
-                            'b4':'Increasing LTS to 2 because the bike lane width is less than 4.25m and parking present.', 
-                            'b5':'Increasing LTS to 2 because the bike lane width is less than 4.5m, maxspeed is less than 40 on a residential street and parking present.',
-                            'b6':'Increasing LTS to 2 because the maxspeed is between 41-50 km/h and parking present.', 
-                            'b7':'Increasing LTS to 3 because the maxspeed is between 51-54 km/h and parking present.', 
-                            'b8':'Increasing LTS to 4 because the maxspeed is over 55 km/h and parking present.', 
-                            'b9':'Increasing LTS to 3 because highway is not \'residential\'.', 
-                            'c1':'LTS is 1 because there is no parking, maxspeed is less than or equal to 50, highway=\'residential\', and there are 2 lanes or less.',
-                            'c3':'Increasing LTS to 3 because there are 3 or more lanes and no parking.',
-                            'c4':'Increasing LTS to 2 because the bike lane width is less than 1.7 metres and no parking.', 
-                            'c5':'Increasing LTS to 3 because the maxspeed is between 51-64 km/h and no parking.', 
-                            'c6':'Increasing LTS to 4 because the maxspeed is over 65 km/h and no parking.', 
-                            'c7':'Increasing LTS to 3 because highway with bike lane is not \'residential\' and no parking.', 
-                            'm17':'Setting LTS to 1 because motor_vehicle=\'no\'.', 
-                            'm13':'Setting LTS to 1 because highway=\'pedestrian\'.', 
-                            'm14':'Setting LTS to 2 because highway=\'footway\' and footway=\'crossing\'.', 
-                            'm2':'Setting LTS to 2 because highway=\'service\' and service=\'alley\'.', 
-                            'm15':'Setting LTS to 2 because highway=\'track\'.', 
-                            'm3':'Setting LTS to 2 because maxspeed is 50 km/h or less and service is \'parking_aisle\'.', 
-                            'm4':'Setting LTS to 2 because maxspeed is 50 km/h or less and service is \'driveway\'.', 
-                            'm16':'Setting LTS to 2 because maxspeed is less than 35 km/h and highway=\'service\'.', 
-                            'm5':'Setting LTS to 2 because maxspeed is up to 40 km/h, 3 or fewer lanes and highway=\'residential\'.', 
-                            'm6':'Setting LTS to 3 because maxspeed is up to 40 km/h and 3 or fewer lanes on non-residential highway.', 
-                            'm7':'Setting LTS to 3 because maxspeed is up to 40 km/h and 4 or 5 lanes.', 
-                            'm8':'Setting LTS to 4 because maxspeed is up to 40 km/h and the number of lanes is greater than 5.', 
-                            'm9':'Setting LTS to 2 because maxspeed is up to 50 km/h and lanes are 2 or less and highway=\'residential\'.', 
-                            'm10':'Setting LTS to 3 because maxspeed is up to 50 km/h and lanes are 3 or less on non-residential highway.', 
-                            'm11':'Setting LTS to 4 because the number of lanes is greater than 3.', 
-                            'm12':'Setting LTS to 4 because maxspeed is greater than 50 km/h.'}
+        with open('rules/rule_message.yml', 'r') as yml_file:
+            rule_message_dict = yaml.safe_load(yml_file)
+
 
         simplified_message_dict = {'p1':r'bicycle $=$ "dismount"',
                             'p2':r'bicycle $=$ "no"',
