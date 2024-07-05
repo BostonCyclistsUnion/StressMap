@@ -57,7 +57,7 @@ def load_data(region):
         ]
 
     # create a new column and use np.select to assign values to it using our lists as arguments
-    geodf['color'] = np.select(conditions, ltsColors)
+    geodf['color'] = np.select(conditions, ltsColors, default='grey')
 
     return geodf#, gdf_nodes
 
