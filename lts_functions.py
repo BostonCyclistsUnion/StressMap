@@ -349,7 +349,8 @@ def mixed_traffic(gdf_edges):
         ]
 
     # create a list of the values we want to assign for each condition
-    values = ['m17', 'm13', 'm14', 'm2', 'm15', 'm3', 'm4', 'm16', 'm5', 'm6', 'm7',
+    values = ['m17', 'm13', 'm14', 'm2', 'm15', 'm3', 
+              'm4', 'm16', 'm5', 'm6', 'm7',
               'm8', 'm9', 'm10', 'm11', 'm12']
 
     # create a new column and use np.select to assign values to it using our lists as arguments
