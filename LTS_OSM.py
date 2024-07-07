@@ -386,13 +386,13 @@ def lts_edges(region, gdf_edges):
         # these are from Bike Ottawa's stressmodel code
         # pylint: disable=line-too-long
 
-        # with open('rules/rule_message.yml', 'r') as yml_file:
+        # with open('config/rule_message.yml', 'r') as yml_file:
         #     rule_message_dict = yaml.safe_load(yml_file)
 
-        # with open('rules/simplified_message_dict.yml', 'r') as yml_file:
+        # with open('config/simplified_message_dict.yml', 'r') as yml_file:
         #     simplified_message_dict = yaml.safe_load(yml_file)
 
-        with open('rules/rating_dict.yml', 'r') as yml_file:
+        with open('config/rating_dict.yml', 'r') as yml_file:
             rating_dict = yaml.safe_load(yml_file)
 
         rule_message_dict = {key:rating_dict[key]['rule_message'] for key in rating_dict}
