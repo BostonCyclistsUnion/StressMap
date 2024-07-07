@@ -104,6 +104,21 @@ def biking_permitted(gdf_edges):
 
     return gdf_allowed, gdf_not_allowed
 
+def biking_permitted_yaml(gdf_edges, rating_dict):
+    prefix = 'p'
+    bikingPermittedRules = {k:v for (k,v) in rating_dict.items() if prefix in k}
+
+    gdf_edges['rule'] = 'p0'
+
+    for key, value in bikingPermittedRules.items():
+        gdf_edges.loc[gdf_edges.eval(value['condition']), 'rule'] = key
+
+    # Split ways by biking premitted and not permitted
+    gdf_allowed = gdf_edges[gdf_edges['rule'] == 'p0']
+    gdf_not_allowed = gdf_edges[~(gdf_edges['rule'] == 'p0')]
+
+    return gdf_allowed, gdf_not_allowed
+
 def is_separated_path(gdf_edges):
     """
     Bike Ottawa's code includes a construction filter:

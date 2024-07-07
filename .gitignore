@@ -5,3 +5,5 @@ cache/
 __pycache__/
 test.py
 temp.py
+temp.ipynb
+test.ipynb
