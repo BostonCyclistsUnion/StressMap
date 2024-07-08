@@ -341,7 +341,7 @@ def lts_edges(region, gdf_edges):
         # check for separated path
         separated_edges, unseparated_edges = lts.is_separated_path(gdf_allowed)
         # assign separated ways lts = 1
-        separated_edges['lts'] = 1
+        separated_edges['lts'] = 1 # FIXME change this to use the LTS value for each rule in the config file
         print(f'{separated_edges.shape=}')
         print(f'{unseparated_edges.shape=}')
 

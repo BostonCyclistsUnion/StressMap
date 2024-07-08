@@ -230,13 +230,63 @@ s3:
   highway: cycleway
   rule_message: This way is a separated path because highway='cycleway'.
   simple_message: highway $=$ "cycleway"
-s7:
+s9:
   LTS: 1
-  condition: # np.any(gdf_edges[cycleway_tags] == 'track', axis = 1)
-  rule_message: This way is a separated path because cycleway* is defined as 'track'.
+  condition: (`cycleway:both` == 'track') | (`cycleway:both` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
-s8:
+s10:
   LTS: 1
-  condition: # np.any(gdf_edges[cycleway_tags] == 'opposite_track', axis = 1)
-  rule_message: This way is a separated path because cycleway* is defined as 'opposite_track'.
-  simple_message: cycleway* $=$ "opposite_track"
+  condition: (`cycleway:both:lane` == 'track') | (`cycleway:both:lane` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s11:
+  LTS: 1
+  condition: (`cycleway` == 'track') | (`cycleway` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s12:
+  LTS: 1
+  condition: (`cycleway:right` == 'track') | (`cycleway:right` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s13:
+  LTS: 1
+  condition: (`cycleway:right:lane` == 'track') | (`cycleway:right:lane` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s14:
+  LTS: 1
+  condition: (`cycleway:left` == 'track') | (`cycleway:left` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s15:
+  LTS: 1
+  condition: (`cycleway:left:lane` == 'track') | (`cycleway:left:lane` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s16:
+  LTS: 1
+  condition: (`cycleway:lanes:backward` == 'track') | (`cycleway:lanes:backward` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s17:
+  LTS: 1
+  condition: (`cycleway:left:oneway` == 'track') | (`cycleway:left:oneway` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s18:
+  LTS: 1
+  condition: (`cycleway:left:separation` == 'track') | (`cycleway:left:separation` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s19:
+  LTS: 1
+  condition: (`cycleway:right:separation` == 'track') | (`cycleway:right:separation` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"
+s20:
+  LTS: 1
+  condition: (`cycleway:right:oneway` == 'track') | (`cycleway:right:oneway` == 'opposite_track')
+  rule_message: This way is a separated path because cycleway is defined as 'track'.
+  simple_message: cycleway* $=$ "track"

@@ -107,15 +107,16 @@ def biking_permitted(gdf_edges):
 def biking_permitted_yaml(gdf_edges, rating_dict):
     prefix = 'p'
     bikingPermittedRules = {k:v for (k,v) in rating_dict.items() if prefix in k}
+    defaultRule = f'{prefix}0'
 
-    gdf_edges['rule'] = 'p0'
+    gdf_edges['rule'] = defaultRule
 
     for key, value in bikingPermittedRules.items():
         gdf_edges.loc[gdf_edges.eval(value['condition']), 'rule'] = key
 
     # Split ways by biking premitted and not permitted
-    gdf_allowed = gdf_edges[gdf_edges['rule'] == 'p0']
-    gdf_not_allowed = gdf_edges[~(gdf_edges['rule'] == 'p0')]
+    gdf_allowed = gdf_edges[gdf_edges['rule'] == defaultRule]
+    gdf_not_allowed = gdf_edges[~(gdf_edges['rule'] == defaultRule)]
 
     return gdf_allowed, gdf_not_allowed
 
@@ -166,6 +167,27 @@ def is_separated_path(gdf_edges):
 
     return separated, not_separated
 
+def is_separated_path_yaml(gdf_edges, rating_dict):   
+    prefix = 's'
+    separatedPathRules = {k:v for (k,v) in rating_dict.items() if prefix in k}
+    defaultRule = f'{prefix}0'
+
+    gdf_edges['rule'] = defaultRule
+
+    # get the columns that start with 'cycleway'
+    # cycleway_tags = gdf_edges.columns[gdf_edges.columns.str.contains('cycleway')]
+
+    for key, value in separatedPathRules.items():
+        # print(key, value['condition'])
+        gdf_edges.loc[gdf_edges.eval(value['condition']), 'rule'] = key
+
+    # Split ways by spearated and not separate ways
+    separated = gdf_edges[gdf_edges['rule'] != defaultRule]
+    not_separated = gdf_edges[gdf_edges['rule'] == defaultRule]
+    not_separated = not_separated.drop(columns = 'rule')
+
+    return separated, not_separated
+
 def is_bike_lane(gdf_edges):
     """
     Check if there's a bike lane, use road features to assign LTS
@@ -208,7 +230,9 @@ def get_lanes(gdf_edges, default_lanes = 2):
     # this usually happens if multiple adjacent ways are included in the edge and 
     # there's a turning lane
     gdf_edges['lanes_assumed'] = gdf_edges['lanes'].fillna(default_lanes).apply(
-        lambda x: np.array(re.split('; |, |\*|\n', str(x)), dtype = 'int')).apply(
+        lambda x: np.array(re.split(r'; |, |\*|\n', str(x)), dtype = 'int')).apply( 
+            # Converted to a raw string to avoid 'SyntaxWarning: invalid escape sequence '\*' python re',
+            # check that this is doing the right thing
             lambda x: np.max(x))
 
     return gdf_edges
