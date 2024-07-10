@@ -1,4 +1,4 @@
-# Bike Lanes - is_bike_lane()
+# Bike Lanes - bike_lane_analysis_with_parking()
 b1: # Fix Speed
   LTS: 1
   rule_message: LTS is 1 because there is parking present, the maxspeed is less than

@@ -1,0 +1,370 @@
+# Speeds
+s1:
+  english: 20
+  metric: 35
+s2:
+  english: 25
+  metric: 40
+s3:
+  english: 30
+  metric: 50
+s4:
+  english: 35
+  metric: 55
+s5:
+  english: 40
+  metric: 65
+s6:
+  english: 50
+  metric: 80
+s7:
+  english: 65
+  metric: 100
+
+# Widths
+w1:
+  english: 5.5
+  metric: 1.7
+w2:
+  english: 13.45
+  metric: 4.1
+w3:
+  english: 13.95
+  metric: 4.25
+w4:
+  english: 14.75
+  metric: 4.5
+
+# Default speeds (mph)
+national: 25 # s2
+local: 30 # s3
+motorway: 65 # s7
+primary: 50 # s6
+secondary: 50 # s6
+
+# LTS Tables v2.2
+# https://bpb-us-w2.wpmucdn.com/sites.northeastern.edu/dist/e/618/files/2014/05/LTS-Tables-v2.2.pdf
+
+# Table 1: Bikes in mixed traffic
+table1:
+  # Unlanned 2-way street w/out centerline
+  r1c1:
+    LTS: 1
+    speed_min: 0
+    speed_max: 23.5
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r1c2:
+    LTS: 1
+    speed_min: 23.5
+    speed_max: 28.5
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r1c3:
+    LTS: 2
+    speed_min: 28.5
+    speed_max: 33.5
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r1c4:
+    LTS: 2
+    speed_min: 33.5
+    speed_max: 38.5
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r1c5:
+    LTS: 3
+    speed_min: 38.5
+    speed_max: 43.5
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r1c6:
+    LTS: 3
+    speed_min: 43.5
+    speed_max: 48.5
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r1c7:
+    LTS: 3
+    speed_min: 48.5
+    speed_max: 100
+    ADT_min: 0
+    ADT_max: 750
+    centerline: false
+    lane_count: 2
+  r2c1:
+    LTS: 2
+    speed_min: 0
+    speed_max: 23.5
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r2c2:
+    LTS: 2
+    speed_min: 23.5
+    speed_max: 28.5
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r2c3:
+    LTS: 2
+    speed_min: 28.5
+    speed_max: 33.5
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r2c4:
+    LTS: 3
+    speed_min: 33.5
+    speed_max: 38.5
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r2c5:
+    LTS: 3
+    speed_min: 38.5
+    speed_max: 43.5
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r2c6:
+    LTS: 3
+    speed_min: 43.5
+    speed_max: 48.5
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r2c7:
+    LTS: 3
+    speed_min: 48.5
+    speed_max: 100
+    ADT_min: 751
+    ADT_max: 1500
+    centerline: false
+    lane_count: 2
+  r3c1:
+    LTS: 1
+    speed_min: 0
+    speed_max: 23.5
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r3c2:
+    LTS: 1
+    speed_min: 23.5
+    speed_max: 28.5
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r3c3:
+    LTS: 2
+    speed_min: 28.5
+    speed_max: 33.5
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r3c4:
+    LTS: 3
+    speed_min: 33.5
+    speed_max: 38.5
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r3c5:
+    LTS: 3
+    speed_min: 38.5
+    speed_max: 43.5
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r3c6:
+    LTS: 4
+    speed_min: 43.5
+    speed_max: 48.5
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r3c7:
+    LTS: 4
+    speed_min: 48.5
+    speed_max: 100
+    ADT_min: 1501
+    ADT_max: 3000
+    centerline: false
+    lane_count: 2
+  r4c1:
+    LTS: 2
+    speed_min: 0
+    speed_max: 23.5
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+  r4c2:
+    LTS: 2
+    speed_min: 23.5
+    speed_max: 28.5
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+  r4c3:
+    LTS: 3
+    speed_min: 28.5
+    speed_max: 33.5
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+  r4c4:
+    LTS: 3
+    speed_min: 33.5
+    speed_max: 38.5
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+  r4c5:
+    LTS: 4
+    speed_min: 38.5
+    speed_max: 43.5
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+  r4c6:
+    LTS: 4
+    speed_min: 43.5
+    speed_max: 48.5
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+  r4c7:
+    LTS: 4
+    speed_min: 48.5
+    speed_max: 100
+    ADT_min: 3001
+    ADT_max: inf
+    centerline: false
+    lane_count: 2
+
+table_speeds:
+  min: [0, 23.5, 28.5, 33.5, 38.5, 43.5, 48.5]
+  max: [23.5, 28.5, 33.5, 38.5, 43.5, 48.5, 100]
+
+# Table 1: Bikes in mixed traffic
+table_1:
+  conditions: 
+    condition_1: mixed_traffic
+  table_1a:
+    # Unlanned 2-way street w/out centerline
+    condtions:
+      condition_1:
+        centerline: false
+        lane_count: 2
+        one_way: false
+    # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
+    table:
+      - [0, 750, 1, 1, 2, 2, 3, 3, 3]
+      - [751, 1500, 1, 1, 2, 3, 3, 3, 3]
+      - [1501, 3000, 2, 2, 2, 3, 3, 4, 4]
+      - [3001, inf, 2, 2, 3, 3, 4, 4, 4]
+  table_1b:
+    conditions:
+      condition_1:
+        centerline: true
+        lane_count: 2
+        one_way: false
+      condition_2:
+        one_way: true
+        lane_count: 1
+        lane_type: wide # FIXME link to wide/narrow defintion
+    table:
+      - [0, 1000, 1, 1, 2, 2, 3, 3, 3]
+      - [1001, 1500, 2, 2, 2, 3, 3, 4, 4]
+      - [1501, inf, 2, 3, 3, 3, 4, 4, 4]
+  table_1c:
+    conditions:
+      condition_1:
+        lane_type: narrow
+        lane_count: 1
+        one_way: true
+    table:
+      - [0, 600, 1, 1, 2, 2, 3, 3, 3]
+      - [601, 1000, 2, 2, 2, 3, 3, 4, 4]
+      - [1001, inf, 2, 3, 3, 3, 4, 4, 4]
+
+# Table 2: Conventional bike lanes, advisory bike lanes, and shoulders not adjacent to a parking lane
+table_2:
+  conditions:
+    parking: false
+    condition_1: bike_lane
+    condition_2: advisory_bike_lane
+    condition_3: shoulder_no_parking
+  # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
+  table_2a:
+    conditions:
+      condition_1:
+        one_way: false
+        lane_count: 2
+      condition_2:
+        one_way: true
+        countraflow: true
+        lane_count: 1
+    table:
+      - [6, inf, 1, 1, 1, 2, 3, 3, 3]
+      - [0, 6, 2, 2, 2, 2, 3, 3, 4]
+  table_2b:
+    conditions:
+      condition_1:
+        lane_count: 4
+        one_way: false
+    table:
+      - [6, inf, 2, 2, 2, 2, 3, 3, 3]
+      - [0, 6, 2, 2, 2, 2, 3, 4, 4]
+  table_2c:
+    conditions:
+      condition_1:
+        lane_count: 6
+    table:
+      - [0, inf, 3, 3, 3, 3, 4, 4, 4]
+
+# Table 3: Conventional bike lanes and advisory bike lanes alongside a parking lane
+table_3:
+  conditions:
+    parking: true
+    condition_1: bike_lane
+    condition_2: advisory_bike_lane
+  table_3a:
+    conditions:
+      condition_1:
+        lane_count: 2
+        one_way: false
+      condition_2:
+        lane_count: 
+    
