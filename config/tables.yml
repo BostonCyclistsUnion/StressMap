@@ -45,237 +45,22 @@ secondary: 50 # s6
 # LTS Tables v2.2
 # https://bpb-us-w2.wpmucdn.com/sites.northeastern.edu/dist/e/618/files/2014/05/LTS-Tables-v2.2.pdf
 
-# Table 1: Bikes in mixed traffic
-table1:
-  # Unlanned 2-way street w/out centerline
-  r1c1:
-    LTS: 1
-    speed_min: 0
-    speed_max: 23.5
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r1c2:
-    LTS: 1
-    speed_min: 23.5
-    speed_max: 28.5
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r1c3:
-    LTS: 2
-    speed_min: 28.5
-    speed_max: 33.5
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r1c4:
-    LTS: 2
-    speed_min: 33.5
-    speed_max: 38.5
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r1c5:
-    LTS: 3
-    speed_min: 38.5
-    speed_max: 43.5
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r1c6:
-    LTS: 3
-    speed_min: 43.5
-    speed_max: 48.5
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r1c7:
-    LTS: 3
-    speed_min: 48.5
-    speed_max: 100
-    ADT_min: 0
-    ADT_max: 750
-    centerline: false
-    lane_count: 2
-  r2c1:
-    LTS: 2
-    speed_min: 0
-    speed_max: 23.5
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r2c2:
-    LTS: 2
-    speed_min: 23.5
-    speed_max: 28.5
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r2c3:
-    LTS: 2
-    speed_min: 28.5
-    speed_max: 33.5
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r2c4:
-    LTS: 3
-    speed_min: 33.5
-    speed_max: 38.5
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r2c5:
-    LTS: 3
-    speed_min: 38.5
-    speed_max: 43.5
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r2c6:
-    LTS: 3
-    speed_min: 43.5
-    speed_max: 48.5
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r2c7:
-    LTS: 3
-    speed_min: 48.5
-    speed_max: 100
-    ADT_min: 751
-    ADT_max: 1500
-    centerline: false
-    lane_count: 2
-  r3c1:
-    LTS: 1
-    speed_min: 0
-    speed_max: 23.5
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r3c2:
-    LTS: 1
-    speed_min: 23.5
-    speed_max: 28.5
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r3c3:
-    LTS: 2
-    speed_min: 28.5
-    speed_max: 33.5
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r3c4:
-    LTS: 3
-    speed_min: 33.5
-    speed_max: 38.5
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r3c5:
-    LTS: 3
-    speed_min: 38.5
-    speed_max: 43.5
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r3c6:
-    LTS: 4
-    speed_min: 43.5
-    speed_max: 48.5
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r3c7:
-    LTS: 4
-    speed_min: 48.5
-    speed_max: 100
-    ADT_min: 1501
-    ADT_max: 3000
-    centerline: false
-    lane_count: 2
-  r4c1:
-    LTS: 2
-    speed_min: 0
-    speed_max: 23.5
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-  r4c2:
-    LTS: 2
-    speed_min: 23.5
-    speed_max: 28.5
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-  r4c3:
-    LTS: 3
-    speed_min: 28.5
-    speed_max: 33.5
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-  r4c4:
-    LTS: 3
-    speed_min: 33.5
-    speed_max: 38.5
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-  r4c5:
-    LTS: 4
-    speed_min: 38.5
-    speed_max: 43.5
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-  r4c6:
-    LTS: 4
-    speed_min: 43.5
-    speed_max: 48.5
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-  r4c7:
-    LTS: 4
-    speed_min: 48.5
-    speed_max: 100
-    ADT_min: 3001
-    ADT_max: inf
-    centerline: false
-    lane_count: 2
-
-table_speeds:
+# Prevailing speeds (mph), with no data use speed limit
+table_speeds: 
   min: [0, 23.5, 28.5, 33.5, 38.5, 43.5, 48.5]
   max: [23.5, 28.5, 33.5, 38.5, 43.5, 48.5, 100]
+
+# Lane Width Classification (lane_nw)
+lane_narrow: # Otherwise lane is 'wide'
+  condition_1:
+    width_max: 30 # ft
+    parking: both
+  condition_2:
+    width_max: 22 # ft
+    parking: one
+  condition_3:
+    width_max: 15 # ft
+    parking: none
 
 # Table 1: Bikes in mixed traffic
 table_1:
@@ -288,8 +73,7 @@ table_1:
         centerline: false
         lane_count: 2
         one_way: false
-    # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
-    table:
+    table: # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [0, 750, 1, 1, 2, 2, 3, 3, 3]
       - [751, 1500, 1, 1, 2, 3, 3, 3, 3]
       - [1501, 3000, 2, 2, 2, 3, 3, 4, 4]
@@ -303,18 +87,18 @@ table_1:
       condition_2:
         one_way: true
         lane_count: 1
-        lane_type: wide # FIXME link to wide/narrow defintion
-    table:
+        lane_nw: wide
+    table: # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [0, 1000, 1, 1, 2, 2, 3, 3, 3]
       - [1001, 1500, 2, 2, 2, 3, 3, 4, 4]
       - [1501, inf, 2, 3, 3, 3, 4, 4, 4]
   table_1c:
     conditions:
       condition_1:
-        lane_type: narrow
+        lane_nw: narrow
         lane_count: 1
         one_way: true
-    table:
+    table: # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [0, 600, 1, 1, 2, 2, 3, 3, 3]
       - [601, 1000, 2, 2, 2, 3, 3, 4, 4]
       - [1001, inf, 2, 3, 3, 3, 4, 4, 4]
@@ -326,7 +110,6 @@ table_2:
     condition_1: bike_lane
     condition_2: advisory_bike_lane
     condition_3: shoulder_no_parking
-  # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
   table_2a:
     conditions:
       condition_1:
@@ -336,7 +119,7 @@ table_2:
         one_way: true
         countraflow: true
         lane_count: 1
-    table:
+    table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [6, inf, 1, 1, 1, 2, 3, 3, 3]
       - [0, 6, 2, 2, 2, 2, 3, 3, 4]
   table_2b:
@@ -344,18 +127,19 @@ table_2:
       condition_1:
         lane_count: 4
         one_way: false
-    table:
+    table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [6, inf, 2, 2, 2, 2, 3, 3, 3]
       - [0, 6, 2, 2, 2, 2, 3, 4, 4]
   table_2c:
     conditions:
       condition_1:
         lane_count: 6
-    table:
+    table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [0, inf, 3, 3, 3, 3, 4, 4, 4]
 
 # Table 3: Conventional bike lanes and advisory bike lanes alongside a parking lane
 table_3:
+  # BLR: [Bike Lane Reach] = [bike lane width] + [parking lane width]
   conditions:
     parking: true
     condition_1: bike_lane
@@ -366,5 +150,25 @@ table_3:
         lane_count: 2
         one_way: false
       condition_2:
-        lane_count: 
-    
+        lane_count: 1
+        one_way: true
+        contraflow: true
+    table: # [BLR_min, BLR_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [15, inf, 1, 1, 2, 2, 3, 3, 3]
+      - [0, 15, 2, 2, 2, 3, 3, 3, 3]
+  table_3b:
+    conditions:
+      condition_1:
+        lane_count: (2, inf)
+        one_way: true
+    table: # [BLR_min, BLR_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [15, inf, 2, 2, 3, 3, 3, 3, 3]
+      - [0, 15, 3, 3, 3, 3, 3, 3, 3]
+  table_3c:
+    conditions:
+      condition_1:
+        lane_count: 4
+        one_way: false
+    table: # [BLR_min, BLR_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [15, inf, 2, 2, 3, 3, 3, 3, 3]
+      - [0, 15, 3, 3, 3, 3, 3, 3, 3]

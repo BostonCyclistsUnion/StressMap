@@ -178,37 +178,44 @@ m17:
 p1:
   LTS: 0
   condition: bicycle == 'dismount'
+  biking_permitted: dismount
   rule_message: Cycling not permitted due to bicycle='dismount' tag.
   simple_message: bicycle $=$ "dismount"
 p2:
   LTS: 0
   condition: bicycle == 'no'
+  biking_permitted: no
   rule_message: Cycling not permitted due to bicycle='no' tag.
   simple_message: bicycle $=$ "no"
 p3:
   LTS: 0
   condition: highway == 'motorway'
+  biking_permitted: no
   rule_message: Cycling not permitted due to highway='motorway' tag.
   simple_message: highway $=$ "motorway"
 p4:
   LTS: 0
   condition: highway == 'motorway_link'
+  biking_permitted: no
   rule_message: Cycling not permitted due to highway='motorway_link' tag.
   simple_message: highway $=$ "motorway_link"
 p5: # Complex condition, should split?
   LTS: 0
   condition: footway == 'sidewalk' & ~(bicycle == 'yes') & (highway == 'footway' | highway == 'path')
+  biking_permitted: no
   rule_message: Cycling not permitted. When footway="sidewalk" is present, there must
     be a bicycle="yes" when the highway is "footway" or "path".
   simple_message: footway $=$ "sidewalk", bicycle$\neq$"yes"
 p6:
   LTS: 0
   condition: access == 'no'
+  biking_permitted: no
   rule_message: Cycling not permitted due to access='no' tag.
   simple_message: access $=$ "no"
 p7:
   LTS: 0
   condition: highway == 'proposed'
+  biking_permitted: no
   rule_message: Cycling not permitted due to highway='proposed' tag.
   simple_message: highway $=$ "proposed"
 
@@ -216,77 +223,91 @@ p7:
 s1:
   LTS: 1
   condition: highway == 'path'
+  bike_lane_separation: yes
   rule_message: This way is a separated path because highway='path'.
   simple_message: highway $=$" path"
 s2:
   LTS: 1
   condition: highway == 'footway' & ~(footway== 'crossing')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because highway='footway' but it is not
     a crossing.
   simple_message: separated, highway $=$" footway", not a crossing
 s3:
   LTS: 1
   condition: highway == 'cycleway'
-  highway: cycleway
+  bike_lane_separation: yes
   rule_message: This way is a separated path because highway='cycleway'.
   simple_message: highway $=$ "cycleway"
 s9:
   LTS: 1
   condition: (`cycleway:both` == 'track') | (`cycleway:both` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s10:
   LTS: 1
   condition: (`cycleway:both:lane` == 'track') | (`cycleway:both:lane` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s11:
   LTS: 1
   condition: (`cycleway` == 'track') | (`cycleway` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s12:
   LTS: 1
   condition: (`cycleway:right` == 'track') | (`cycleway:right` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s13:
   LTS: 1
   condition: (`cycleway:right:lane` == 'track') | (`cycleway:right:lane` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s14:
   LTS: 1
   condition: (`cycleway:left` == 'track') | (`cycleway:left` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s15:
   LTS: 1
   condition: (`cycleway:left:lane` == 'track') | (`cycleway:left:lane` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s16:
   LTS: 1
   condition: (`cycleway:lanes:backward` == 'track') | (`cycleway:lanes:backward` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s17:
   LTS: 1
   condition: (`cycleway:left:oneway` == 'track') | (`cycleway:left:oneway` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s18:
   LTS: 1
   condition: (`cycleway:left:separation` == 'track') | (`cycleway:left:separation` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s19:
   LTS: 1
   condition: (`cycleway:right:separation` == 'track') | (`cycleway:right:separation` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
 s20:
   LTS: 1
   condition: (`cycleway:right:oneway` == 'track') | (`cycleway:right:oneway` == 'opposite_track')
+  bike_lane_separation: yes
   rule_message: This way is a separated path because cycleway is defined as 'track'.
   simple_message: cycleway* $=$ "track"
