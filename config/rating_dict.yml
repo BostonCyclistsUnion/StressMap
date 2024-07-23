@@ -433,13 +433,17 @@ ADT4:
   ADT: 3001
   rule_message: Unlaned non-residential has moderate traffic
 ADT5:
-  condition: (`lane_count` == 1) & (`highway` == 'residential') # & (`oneway` == 'yes') removed oneway as it is likely duplicative
+  condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == 'yes') 
   ADT: 599
   rule_message: Oneway residential has low traffic
 ADT6:
-  condition: (`lane_count` == 1) # & (`oneway` == 'yes') removed oneway as it is likely duplicative
+  condition: (`lane_count` == 1) & (`oneway` == 'yes') 
   ADT: 1001
   rule_message: Oneway non-residential has moderate traffic
+ADT7:
+  condition: (`lane_count` == 1) & (`highway` == 'residential')
+  ADT: 599
+  rule_message: 2 way, 1 lane residential has low traffic
 
 # ADT1:
 #   condition: (`highway` == 'primary')

@@ -27,6 +27,7 @@ table_mixed:
     # Unlanned 2-way street w/out centerline
     conditions:
       condition_1: (`centerline` == 'no') & (`lane_count` == 2) & (`oneway` == False)
+      condition_2: (`centerline` == 'no') & (`lane_count` == 1) & (`oneway` == False)
     table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [1, 1, 2, 2, 3, 3, 3]
       - [1, 1, 2, 3, 3, 3, 3]
@@ -67,7 +68,8 @@ table_mixed:
   table_mixed_4:
     # 2 thru lanes per direction
     conditions:
-      condition_1: (`lane_count` == 4)
+      condition_1: (`lane_count` >= 4)
+      condition_1: (`lane_count` >= 2) & (`oneway` == True)
     table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [3, 3, 3, 3, 4, 4, 4]
       - [3, 3, 4, 4, 4, 4, 4]
