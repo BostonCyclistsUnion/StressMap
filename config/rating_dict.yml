@@ -21,201 +21,48 @@ bike_lane_exist4:
 #   rule_message: Bike lane because 'shoulder:access:bicycle'='yes'.
 
 
-# Bike Lanes - bike_lane_analysis_with_parking()
-b1: # Fix Speed
-  LTS: 1
-  rule_message: LTS is 1 because there is parking present, the maxspeed is less than
-    or equal to 40, highway="residential", and there are 2 lanes or less.
-  simple_message: bike lane w/ parking, $\leq$ 40 km/h, highway $=$ "residential",
-    $\leq$ 2 lanes
-b2:
-  LTS: 3
-  rule_message: Increasing LTS to 3 because there are 3 or more lanes and parking
-    present.
-  simple_message: bike lane w/ parking, 3 or more lanes
-b3:
-  LTS: 3
-  rule_message: Increasing LTS to 3 because the bike lane width is less than 4.1m
-    and parking present.
-  simple_message: bike lane width $<$ 4.1m, parking
-b4:
-  LTS: 2
-  rule_message: Increasing LTS to 2 because the bike lane width is less than 4.25m
-    and parking present.
-  simple_message: bike lane width $<$ 4.25m, parking
-b5: # Fix Speed
-  LTS: 2
-  rule_message: Increasing LTS to 2 because the bike lane width is less than 4.5m,
-    maxspeed is less than 40 on a residential street and parking present.
-  simple_message: bike lane width $<$ 4.5m, $\leq$ 40 km/h, residential, parking
-b6: # Fix Speed
-  LTS: 2
-  rule_message: Increasing LTS to 2 because the maxspeed is between 41-50 km/h and
-    parking present.
-  simple_message: bike lane w/ parking, speed 41-50 km/h
-b7: # Fix Speed
-  LTS: 3
-  rule_message: Increasing LTS to 3 because the maxspeed is between 51-54 km/h and
-    parking present.
-  simple_message: bike lane w/ parking, speed 51-54 km/h
-b8: # Fix Speed
-  LTS: 4
-  rule_message: Increasing LTS to 4 because the maxspeed is over 55 km/h and parking
-    present.
-  simple_message: bike lane w/ parking, speed $>$ 55 km/h
-b9:
-  LTS: 3
-  rule_message: Increasing LTS to 3 because highway is not 'residential'.
-  simple_message: bike lane w/ parking, highway $\neq$ "residential"
-
-# Bike lanes with no parking - bike_lane_analysis_no_parking()
-c1: # Fix Speed
-  LTS: 1
-  rule_message: LTS is 1 because there is no parking, maxspeed is less than or equal
-    to 50, highway='residential', and there are 2 lanes or less.
-  simple_message: bike lane no parking, $\leq$ 50 km/h, highway $=$ "residential",
-    $\leq$ 2 lanes
-c3: # Fix Speed
-  LTS: 3
-  condition: (lanes_assumed >= 3) & (maxspeed_assumed <= @ref['s5'][unit])
-  rule_message: Increasing LTS to 3 because there are 3 or more lanes and no parking.
-  simple_message: bike lane no parking, $\leq$ 65 km/h, $\geq$ 3 lanes
-c4:
-  LTS: 2
-  condition: #(gdf_edges[['width']].map(lambda x: isinstance(x, float))['width']) & (gdf_edges['width'] <= ref['w1'][unit])
-  rule_message: Increasing LTS to 2 because the bike lane width is less than 1.7 metres
-    and no parking.
-  simple_message: bike lane width $<$ 1.7m, no parking
-c5: # Fix Speed
-  LTS: 3
-  condition: (maxspeed_assumed > @ref['s3'][unit]) & (maxspeed_assumed <= @ref['s5'][unit])
-  rule_message: Increasing LTS to 3 because the maxspeed is between 51-64 km/h and
-    no parking.
-  simple_message: bike lane no parking, speed 51-64 km/h
-c6: # Fix Speed
-  LTS: 4
-  condition: maxspeed_assumed > @ref['s5'][unit]
-  rule_message: Increasing LTS to 4 because the maxspeed is over 65 km/h and no parking.
-  simple_message: bike lane no parking, speed $>$ 65 km/h
-c7:
-  LTS: 3
-  condition: highway != 'residential'
-  rule_message: Increasing LTS to 3 because highway with bike lane is not 'residential'
-    and no parking.
-  simple_message: bike lane no parking, highway $\neq$ "residential"
-
-# Mixed Traffic - mixed_traffic()
-m2:
-  LTS: 2
-  condition: highway == 'service' & service == 'alley'
-  rule_message: Setting LTS to 2 because highway='service' and service='alley'.
-m13:
-  LTS: 1
-  condition: highway = 'pedestrian'
-  rule_message: Setting LTS to 1 because highway='pedestrian'.
-m14:
-  LTS: 2
-  condition: highway = 'footway' & footway == 'crossing'
-  rule_message: Setting LTS to 2 because highway='footway' and footway='crossing'.
-m17:
-  LTS: 1
-  condition: motor_vehicle == 'no'
-  rule_message: Setting LTS to 1 because motor_vehicle='no'.
-m15:
-  LTS: 2
-  condition: highway == 'track'
-  rule_message: Setting LTS to 2 because highway='track'.
-
-m3: # Fix Speed
-  LTS: 2
-  condition: maxspeed_assumed <= @ref['s3'][unit] & highway == 'service' & service == 'parking_aisle'
-  rule_message: Setting LTS to 2 because maxspeed is 50 km/h or less and service is
-    'parking_aisle'.
-m4: # Fix Speed
-  LTS: 2
-  condition: maxspeed_assumed <= @ref['s3'][unit] & highway == 'service' & service == 'driveway'
-  rule_message: Setting LTS to 2 because maxspeed is 50 km/h or less and service is
-    'driveway'.
-m5: # Fix Speed
-  LTS: 2
-  condition: maxspeed_assumed <= @ref['s2'][unit] & lanes_assumed <= 3 & highway == 'residential'
-  rule_message: Setting LTS to 2 because maxspeed is up to 40 km/h, 3 or fewer lanes
-    and highway='residential'.
-m6: # Fix Speed
-  LTS: 3
-  condition: maxspeed_assumed <= @ref['s2'][unit] & lanes_assumed <= 3
-  rule_message: Setting LTS to 3 because maxspeed is up to 40 km/h and 3 or fewer
-    lanes on non-residential highway.
-m7: # Fix Speed
-  LTS: 3
-  condition: maxspeed_assumed <= @ref['s2'][unit] & lanes_assumed <= 5
-  rule_message: Setting LTS to 3 because maxspeed is up to 40 km/h and 4 or 5 lanes.
-m8: # Fix Speed
-  LTS: 4
-  condition: maxspeed_assumed <= @ref['s2'][unit] & lanes_assumed > 5
-  rule_message: Setting LTS to 4 because maxspeed is up to 40 km/h and the number
-    of lanes is greater than 5.
-m9: # Fix Speed
-  LTS: 2
-  condition: maxspeed_assumed <= @ref['s3'][unit] & lanes_assumed < 3 & highway == 'residential'
-  rule_message: Setting LTS to 2 because maxspeed is up to 50 km/h and lanes are 2
-    or less and highway='residential'.
-m10: # Fix Speed
-  LTS: 3
-  condition: maxspeed_assumed <= @ref['s3'][unit] & lanes_assumed <= 3
-  rule_message: Setting LTS to 3 because maxspeed is up to 50 km/h and lanes are 3
-    or less on non-residential highway.
-m11: # Fix Speed
-  LTS: 4
-  condition: maxspeed_assumed <= @ref['s3'][unit] & lanes_assumed > 3
-  rule_message: Setting LTS to 4 because the number of lanes is greater than 3.
-m12: # Fix Speed
-  LTS: 4
-  condition: maxspeed_assumed > @ref['s3'][unit]
-  rule_message: Setting LTS to 4 because maxspeed is greater than 50 km/h.
-m16: # Fix Speed
-  LTS: 2
-  condition: maxspeed_assumed <= @ref['s1'][unit] & highway == 'service'
-  rule_message: Setting LTS to 2 because maxspeed is less than 35 km/h and highway='service'.
-
 
 # Biking Permitted Rules - biking_permitted()
 biking_permitted1:
   LTS: 0
-  condition: bicycle == 'dismount'
-  biking_permitted: dismount
+  condition: (`bicycle` == 'dismount')
+  biking_permitted: 'no' # FUTURE classify dismount separately to include in some analyses specially
   rule_message: Cyclists must walk bike due to bicycle='dismount' tag.
 biking_permitted2:
   LTS: 0
-  condition: bicycle == 'no'
+  condition: (`bicycle` == 'no')
   biking_permitted: 'no'
   rule_message: Cycling not permitted due to bicycle='no' tag.
 biking_permitted3:
   LTS: 0
-  condition: highway == 'motorway'
+  condition: (`highway` == 'motorway')
   biking_permitted: 'no'
   rule_message: Cycling not permitted due to highway='motorway' tag.
 biking_permitted4:
   LTS: 0
-  condition: highway == 'motorway_link'
+  condition: (`highway` == 'motorway_link')
   biking_permitted: 'no'
   rule_message: Cycling not permitted due to highway='motorway_link' tag.
-biking_permitted5: # Complex condition, should split?
+biking_permitted5:
   LTS: 0
-  condition: footway == 'sidewalk' & ~(bicycle == 'yes') & (highway == 'footway' | highway == 'path')
-  biking_permitted: 'no'
-  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must
-    be a bicycle="yes" when the highway is "footway" or "path".
-biking_permitted6:
-  LTS: 0
-  condition: access == 'no'
+  condition: (`access` == 'no')
   biking_permitted: 'no'
   rule_message: Cycling not permitted due to access='no' tag.
-biking_permitted7:
+biking_permitted6:
   LTS: 0
-  condition: highway == 'proposed'
+  condition: (`highway` == 'proposed')
   biking_permitted: 'no'
   rule_message: Cycling not permitted due to highway='proposed' tag.
+biking_permitted7:
+  LTS: 0
+  condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'footway')
+  biking_permitted: 'no'
+  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".
+biking_permitted8:
+  LTS: 0
+  condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'path')
+  biking_permitted: 'no'
+  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".
 # Moved from mixed_traffic
 # biking_permitted:
 #   LTS: 1
@@ -226,10 +73,21 @@ biking_permitted7:
 #   condition: motor_vehicle == 'no'
 #   rule_message: Setting LTS to 1 because motor_vehicle='no'.
 
-# biking_permitted:
-#   LTS: 2
-#   condition: highway == 'service' & service == 'alley'
-#   rule_message: Setting LTS to 2 because highway='service' and service='alley'.
+biking_permitted9:
+  LTS: 2
+  condition: (highway == 'service') & (service == 'alley')
+  biking_permitted: 'yes'
+  rule_message: Service alley
+biking_permitted10:
+  LTS: 2
+  condition: (highway == 'service') & (service == 'driveway')
+  biking_permitted: 'yes'
+  rule_message: Driveway
+biking_permitted11:
+  LTS: 2
+  condition: (highway == 'service')
+  biking_permitted: 'yes'
+  rule_message: Service road
 # biking_permitted:
 #   LTS: 2
 #   condition: highway = 'footway' & footway == 'crossing'
@@ -557,52 +415,77 @@ centerline14:
   rule_message: Assume doesn't have centerline where 'highway'='living_street'.
 
 # Average Daily Traffic - get_adt()
-# FIXME actually make reasonable ADT assumptions and update rule_message accordingly. Use email from Furth as guidance.
+# Assumptions are based on an email for Prof. Furth
 ADT1:
-  condition: (`highway` == 'primary')
-  ADT: 1500
-  rule_message: Assume ADT of 50 where 'highway'='primary'.
+  condition: (`lane_count` >= 3)
+  ADT: 8001
+  rule_message: Traffic is high on large roads.
 ADT2:
-  condition: (`highway` == 'primary_link')
-  ADT: 1500
-  rule_message: Assume ADT of 50 where 'highway'='primary_link'.
+  condition: (`lane_count` == 2) & (`centerline` == 'yes')
+  ADT: 1501
+  rule_message: Why would there be a centerline unless traffic is high?
 ADT3:
-  condition: (`highway` == 'trunk')
-  ADT: 1500
-  rule_message: Assume ADT of 50 where 'highway'='trunk'.
+  condition: (`lane_count` == 2) & (`centerline` == 'no') & (`highway` == 'residential')
+  ADT: 749
+  rule_message: Unlaned residential has low traffic
 ADT4:
-  condition: (`highway` == 'trunk_link')
-  ADT: 1500
-  rule_message: Assume ADT of 50 where 'highway'='trunk_link'.
+  condition: (`lane_count` == 2) & (`centerline` == 'no')
+  ADT: 3001
+  rule_message: Unlaned non-residential has moderate traffic
 ADT5:
-  condition: (`highway` == 'secondary')
-  ADT: 1500
-  rule_message: Assume ADT of 35 where 'highway'='secondary'.
+  condition: (`lane_count` == 1) & (`highway` == 'residential') # & (`oneway` == 'yes') removed oneway as it is likely duplicative
+  ADT: 599
+  rule_message: Oneway residential has low traffic
 ADT6:
-  condition: (`highway` == 'residential')
-  ADT: 1500
-  rule_message: Assume ADT of 25 where 'highway'='secondary'.
-ADT7:
-  condition: (`highway` == 'footway')
-  ADT: 1500
-  rule_message: Assume ADT of 25 where 'highway'='footway'.
-ADT8:
-  condition: (`highway` == 'unclassified')
-  ADT: 1500
-  rule_message: Assume ADT of 40 where 'highway'='unclassified'.
-ADT9:
-  condition: (`highway` == 'service')
-  ADT: 1500
-  rule_message: Assume ADT of 30 where 'highway'='service'.
-ADT10:
-  condition: (`highway` == 'tertiary')
-  ADT: 1500
-  rule_message: Assume ADT of 25 where 'highway'='tertiary'.
-ADT11:
-  condition: (`highway` == 'tertiary_link')
-  ADT: 1500
-  rule_message: Assume ADT of 25 where 'highway'='tertiary_link'.
-ADT12:
-  condition: (`highway` == 'living_street')
-  ADT: 1500
-  rule_message: Assume ADT of 25 where 'highway'='living_street'.
+  condition: (`lane_count` == 1) # & (`oneway` == 'yes') removed oneway as it is likely duplicative
+  ADT: 1001
+  rule_message: Oneway non-residential has moderate traffic
+
+# ADT1:
+#   condition: (`highway` == 'primary')
+#   ADT: 1500
+#   rule_message: Assume ADT of 50 where 'highway'='primary'.
+# ADT2:
+#   condition: (`highway` == 'primary_link')
+#   ADT: 1500
+#   rule_message: Assume ADT of 50 where 'highway'='primary_link'.
+# ADT3:
+#   condition: (`highway` == 'trunk')
+#   ADT: 1500
+#   rule_message: Assume ADT of 50 where 'highway'='trunk'.
+# ADT4:
+#   condition: (`highway` == 'trunk_link')
+#   ADT: 1500
+#   rule_message: Assume ADT of 50 where 'highway'='trunk_link'.
+# ADT5:
+#   condition: (`highway` == 'secondary')
+#   ADT: 1500
+#   rule_message: Assume ADT of 35 where 'highway'='secondary'.
+# ADT6:
+#   condition: (`highway` == 'residential')
+#   ADT: 1500
+#   rule_message: Assume ADT of 25 where 'highway'='secondary'.
+# ADT7:
+#   condition: (`highway` == 'footway')
+#   ADT: 1500
+#   rule_message: Assume ADT of 25 where 'highway'='footway'.
+# ADT8:
+#   condition: (`highway` == 'unclassified')
+#   ADT: 1500
+#   rule_message: Assume ADT of 40 where 'highway'='unclassified'.
+# ADT9:
+#   condition: (`highway` == 'service')
+#   ADT: 1500
+#   rule_message: Assume ADT of 30 where 'highway'='service'.
+# ADT10:
+#   condition: (`highway` == 'tertiary')
+#   ADT: 1500
+#   rule_message: Assume ADT of 25 where 'highway'='tertiary'.
+# ADT11:
+#   condition: (`highway` == 'tertiary_link')
+#   ADT: 1500
+#   rule_message: Assume ADT of 25 where 'highway'='tertiary_link'.
+# ADT12:
+#   condition: (`highway` == 'living_street')
+#   ADT: 1500
+#   rule_message: Assume ADT of 25 where 'highway'='living_street'.

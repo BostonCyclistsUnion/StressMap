@@ -31,7 +31,7 @@ def apply_rules(gdf_edges, rating_dict, prefix):
         gdf_edges.loc[gdf_filter, f'{prefix}_rule'] = value['rule_message']
         gdf_edges.loc[gdf_filter, f'{prefix}_condition'] = value['condition']
         if 'LTS' in value:
-            gdf_edges.loc[gdf_filter, 'LTS'] = value['LTS']
+            gdf_edges.loc[gdf_filter, f'LTS_{prefix}'] = value['LTS']
 
     # Save memory by setting as category, need to set categories first
     for col in [
@@ -301,7 +301,7 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
     conditionTable = table['conditions']
 
     for subTable in subTables:
-        print(f'\n{subTable=}')
+        # print(f'\n{subTable=}')
         # print(f'{table[subTable]['conditions']=}')
         for conditionTableName in table['conditions']:
             conditionTable = table['conditions'][conditionTableName]
