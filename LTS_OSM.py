@@ -256,6 +256,7 @@ def read_lts_csv(filepath):
             'trolley_wire', 'trolleybus', 'tunnel', 'turn:lanes:backward', 
             'turn:lanes:conditional', 'turn:lanes:forward', 'turn:lanes', 
             'turn', 'vehicle', 'was:bridge:movable', 'width:feet', 'width',
+            'LTS',
             ]
     
     dtypeDict = {'u': 'Int64',
@@ -303,7 +304,7 @@ def read_gdf_nodes_csv(filepath):
                  'highway': 'category',
                  'ref': 'category',
                  'geometry': 'object',
-                 'lts': 'Int32',
+                 'LTS': 'Int32',
                  'message': 'category',                 
                 }
     
@@ -331,6 +332,7 @@ def lts_edges(region, gdf_edges):
         # load graph
         print(f"Loading LTS for {region}")
         all_lts = read_lts_csv(filepathAll)
+        # print(f'{all_lts['LTS'].unique()=}')
     else:
         OVERWRITE = True
 
@@ -351,6 +353,8 @@ def lts_edges(region, gdf_edges):
         gdf_edges = lts.define_adt(gdf_edges, rating_dict)
 
         all_lts = lts.calculate_lts(gdf_edges, tables)
+
+        # print(f'{all_lts['LTS'].unique()=}')
         
         # print(f'Saving LTS for {region}')
         all_lts.to_csv(filepathAll)
@@ -362,9 +366,10 @@ def lts_edges(region, gdf_edges):
         all_lts_small = read_lts_csv(filepathSmall)
     else:
         OVERWRITE = True
-        all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'maxspeed', 'geometry',
-                                'length', 'rule', 'lts', 'lanes_assumed', 'maxspeed_assumed',
-                                'message', 'short_message']]
+        # FIXME need to figure out exactly what columns we want to save
+        all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'geometry',
+                                'length', 'LTS',
+                                ]]
         print(f'Saving LTS_small for {region}')
         all_lts_small.to_csv(filepathSmall)
 
@@ -393,7 +398,7 @@ def lts_nodes(region, gdf_nodes, all_lts):
         OVERWRITE = True
         gdf_nodes['highway'].value_counts()
 
-        gdf_nodes['lts'] = np.nan # make lts column
+        gdf_nodes['LTS'] = np.nan # make lts column
         gdf_nodes['message'] = '' # make message column
 
         for node in tqdm(gdf_nodes.index):
@@ -406,7 +411,9 @@ def lts_nodes(region, gdf_nodes, all_lts):
                 continue
             # pylint: enable=bare-except
             control = gdf_nodes.loc[node,'highway'] # if there is a traffic control
-            max_lts = edges['lts'].max()
+            max_lts = edges['LTS'].astype(float).dropna().max(skipna=True, numeric_only=True)
+            if np.isnan(max_lts):
+                max_lts = 0
             node_lts = int(max_lts) # set to max of intersecting roads
             message = "Node LTS is max intersecting LTS"
             if node_lts > 2:
@@ -419,7 +426,7 @@ def lts_nodes(region, gdf_nodes, all_lts):
                     message = "LTS 1-2 with traffic signals or stop"
 
             gdf_nodes.loc[node,'message'] = message
-            gdf_nodes.loc[node,'lts'] = node_lts # assign node lts
+            gdf_nodes.loc[node,'LTS'] = node_lts # assign node lts
 
         gdf_nodes.to_csv(filepath)
         print(f'Saved LTS nodes for {region}')

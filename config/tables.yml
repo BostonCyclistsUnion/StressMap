@@ -21,6 +21,7 @@ lane_narrow: # Otherwise lane is 'wide'
 # Table 1: Bikes in mixed traffic
 table_mixed:
   conditions: # Mixed traffic
+    condition_1: (`biking_permitted` == 'yes')
   bucketColumn: ADT
   table_mixed_1:
     # Unlanned 2-way street w/out centerline
@@ -85,10 +86,10 @@ table_mixed:
 # Table 2: Conventional bike lanes, advisory bike lanes, and shoulders not adjacent to a parking lane
 table_bikelane_noparking:
   conditions:
-    condition_1: (`cycleway` == 'lane') & (`parking' == 'no')
-    condition_2: (`cycleway` == 'shared_lane') & (`parking' == 'no')
-    condition_3: (`cycleway` == 'shared') & (`parking' == 'no')
-    # condition_4: shoulder_no_parking & (`parking' == 'no') # FIXME shoulder access?
+    condition_1: (`cycleway` == 'lane') & (`parking` == 'no')
+    condition_2: (`cycleway` == 'shared_lane') & (`parking` == 'no')
+    condition_3: (`cycleway` == 'shared') & (`parking` == 'no')
+    # condition_4: shoulder_no_parking & (`parking` == 'no') # FIXME shoulder access?
   bucketColumn: width_bikelane
   table_bikelane_noparking_1:
     conditions:
@@ -129,9 +130,9 @@ table_bikelane_yesparking:
   # BLR: [Bike Lane Reach] = [bike lane width] + [parking lane width]
   # Minimum BLR is 12ft, otherwise use mixed traffic
   conditions:
-    condition_1: (`cycleway` == 'lane') & (`parking' == 'yes')
-    condition_2: (`cycleway` == 'shared') & (`parking' == 'yes')
-    condition_3: (`cycleway` == 'shared_lane') & (`parking' == 'yes')
+    condition_1: (`cycleway` == 'lane') & (`parking` == 'yes')
+    condition_2: (`cycleway` == 'shared') & (`parking` == 'yes')
+    condition_3: (`cycleway` == 'shared_lane') & (`parking` == 'yes')
   bucketColumn: bikelane_reach
   table_bikelane_yesparking_1:
     # 1 thru lane per direction or contraflow lane

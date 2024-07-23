@@ -151,7 +151,7 @@ def parking_present(gdf_edges, rating_dict):
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
 
-    gdf_edges['width_parking'] = 0
+    gdf_edges['width_parking'] = 0.0
     gdf_edges.loc[gdf_edges[prefix]=='yes', 'width_parking'] = 8.5 # ft
 
     return gdf_edges
@@ -298,24 +298,30 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
 
     gdf_edges[f'LTS_{baseName}'] = np.nan
 
+    conditionTable = table['conditions']
+
     for subTable in subTables:
         print(f'\n{subTable=}')
         # print(f'{table[subTable]['conditions']=}')
-        for conditionName in table[subTable]['conditions']:
-            bucketColumn = table['bucketColumn']
-            bucketTable = table[subTable][f'table_{bucketColumn}']
-            ltsSpeeds = table[subTable]['table_speed']
-            for bucket, ltsSpeed in zip(bucketTable, ltsSpeeds):
-                conditionBucket = f'(`{bucketColumn}` >= {bucket[0]}) & (`{bucketColumn}` < {bucket[1]})'
-                for sMin, sMax, lts in zip(speedMin, speedMax, ltsSpeed):
-                    condition = table[subTable]['conditions'][conditionName]
-                    conditionSpeed = f'(`speed` > {sMin}) & (`speed` < {sMax})'
-                    condition = f'{condition} & {conditionSpeed} & {conditionBucket}'
-                    print(f'\t{conditionName} | {condition}')
-                    gdf_filter = gdf_edges.eval(f"{condition}")
-                    gdf_edges.loc[gdf_filter, f'LTS_{baseName}'] = lts
-            # gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
+        for conditionTableName in table['conditions']:
+            conditionTable = table['conditions'][conditionTableName]
+            # print(conditionTable)
+            for conditionName in table[subTable]['conditions']:
+                bucketColumn = table['bucketColumn']
+                bucketTable = table[subTable][f'table_{bucketColumn}']
+                ltsSpeeds = table[subTable]['table_speed']
+                for bucket, ltsSpeed in zip(bucketTable, ltsSpeeds):
+                    conditionBucket = f'(`{bucketColumn}` >= {bucket[0]}) & (`{bucketColumn}` < {bucket[1]})'
+                    for sMin, sMax, lts in zip(speedMin, speedMax, ltsSpeed):
+                        condition = table[subTable]['conditions'][conditionName]
+                        conditionSpeed = f'(`speed` > {sMin}) & (`speed` < {sMax})'
+                        condition = f'{condition} & {conditionSpeed} & {conditionBucket} & {conditionTable}'
+                        # print(f'\t{conditionName} | {condition}')
+                        gdf_filter = gdf_edges.eval(f"{condition}")
+                        gdf_edges.loc[gdf_filter, f'LTS_{baseName}'] = lts
+                # gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
             
+
     return gdf_edges
 
 def calculate_lts(gdf_edges, tables):
