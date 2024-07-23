@@ -333,74 +333,25 @@ def lts_edges(region, gdf_edges):
         all_lts = read_lts_csv(filepathAll)
     else:
         OVERWRITE = True
+
+        # Load the configuration files to caluclate ratings
+        rating_dict = lts.read_rating()
+        tables = lts.read_tables()
+
         # Start with is biking allowed, get edges where biking is not *not* allowed.
-        gdf_allowed, gdf_not_allowed = lts.biking_permitted(gdf_edges)
-        print(f'{gdf_allowed.shape=}')
-        print(f'{gdf_not_allowed.shape=}')
+        gdf_edges = lts.biking_permitted(gdf_edges, rating_dict)
+        gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
+        gdf_edges = lts.is_bike_lane(gdf_edges, rating_dict)
+        gdf_edges = lts.parking_present(gdf_edges, rating_dict)
+        gdf_edges = lts.get_prevailing_speed(gdf_edges, rating_dict)
+        gdf_edges = lts.get_lanes(gdf_edges, default_lanes = 2)
+        gdf_edges = lts.get_centerlines(gdf_edges, rating_dict)
+        gdf_edges = lts.width_ft(gdf_edges)
+        gdf_edges = lts.define_narrow_wide(gdf_edges)
+        gdf_edges = lts.define_adt(gdf_edges, rating_dict)
 
-        # check for separated path
-        separated_edges, unseparated_edges = lts.is_separated_path(gdf_allowed)
-        # assign separated ways lts = 1
-        separated_edges['lts'] = 1 # FIXME change this to use the LTS value for each rule in the config file
-        print(f'{separated_edges.shape=}')
-        print(f'{unseparated_edges.shape=}')
-
-        to_analyze, no_lane = lts.is_bike_lane(unseparated_edges)
-        print(f'{to_analyze.shape=}')
-        print(f'{no_lane.shape=}')
-
-        parking_detected, parking_not_detected = lts.parking_present(to_analyze)
-        print(f'{parking_detected.shape=}')
-        print(f'{parking_not_detected.shape=}')
-
-        if parking_detected.shape[0] > 0:
-            parking_lts = lts.bike_lane_analysis_with_parking(parking_detected)
-        else:
-            parking_lts = parking_detected
-
-        if parking_not_detected.shape[0] > 0:
-            no_parking_lts = lts.bike_lane_analysis_no_parking(parking_not_detected)
-        else:
-            no_parking_lts = parking_not_detected
-
-        # Next, go to the last step - mixed traffic
-
-        lts_no_lane = lts.mixed_traffic(no_lane)
-
-        # final components: lts_no_lane, parking_lts, no_parking_lts, separated_edges
-        # these should all add up to gdf_allowed
-        components = lts_no_lane.shape[0] + parking_lts.shape[0] +\
-                     no_parking_lts.shape[0] + separated_edges.shape[0]
-        compareStr = (f'gdf_allowed = {gdf_allowed.shape[0]}\nComponents  = {components}\n'
-                      f'\t{lts_no_lane.shape[0]=}\n\t{parking_lts.shape[0]=}\n'
-                      f'\t{no_parking_lts.shape[0]=}\n\t{separated_edges.shape[0]=}'
-                      )
-        print(compareStr)
-
-        gdf_not_allowed['lts'] = 0
-
-        all_lts = pd.concat([separated_edges, parking_lts, no_parking_lts,
-                            lts_no_lane, gdf_not_allowed])
-
-        # decision rule glossary
-        # these are from Bike Ottawa's stressmodel code
-        # pylint: disable=line-too-long
-
-        # with open('config/rule_message.yml', 'r') as yml_file:
-        #     rule_message_dict = yaml.safe_load(yml_file)
-
-        # with open('config/simplified_message_dict.yml', 'r') as yml_file:
-        #     simplified_message_dict = yaml.safe_load(yml_file)
-
-        with open('config/rating_dict.yml', 'r') as yml_file:
-            rating_dict = yaml.safe_load(yml_file)
-
-        rule_message_dict = {key:rating_dict[key]['rule_message'] for key in rating_dict}
-        simplified_message_dict = {key:rating_dict[key]['simple_message'] for key in rating_dict}
-
-        all_lts['message'] = all_lts['rule'].map(rule_message_dict)
-        all_lts['short_message'] = all_lts['rule'].map(simplified_message_dict)
-
+        all_lts = lts.calculate_lts(gdf_edges, tables)
+        
         # print(f'Saving LTS for {region}')
         all_lts.to_csv(filepathAll)
         # https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_file.html
