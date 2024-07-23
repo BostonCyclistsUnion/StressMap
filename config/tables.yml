@@ -1,52 +1,8 @@
-# Speeds
-s1:
-  english: 20
-  metric: 35
-s2:
-  english: 25
-  metric: 40
-s3:
-  english: 30
-  metric: 50
-s4:
-  english: 35
-  metric: 55
-s5:
-  english: 40
-  metric: 65
-s6:
-  english: 50
-  metric: 80
-s7:
-  english: 65
-  metric: 100
-
-# Widths
-w1:
-  english: 5.5
-  metric: 1.7
-w2:
-  english: 13.45
-  metric: 4.1
-w3:
-  english: 13.95
-  metric: 4.25
-w4:
-  english: 14.75
-  metric: 4.5
-
-# Default speeds (mph)
-national: 25 # s2
-local: 30 # s3
-motorway: 65 # s7
-primary: 50 # s6
-secondary: 50 # s6
-
 # LTS Tables v2.2
 # https://bpb-us-w2.wpmucdn.com/sites.northeastern.edu/dist/e/618/files/2014/05/LTS-Tables-v2.2.pdf
 
 # Prevailing speeds (mph), with no data use speed limit
-table_speeds: 
+cols_speeds: 
   min: [0, 23.5, 28.5, 33.5, 38.5, 43.5, 48.5]
   max: [23.5, 28.5, 33.5, 38.5, 43.5, 48.5, 100]
 
@@ -63,112 +19,156 @@ lane_narrow: # Otherwise lane is 'wide'
     parking: none
 
 # Table 1: Bikes in mixed traffic
-table_1:
-  conditions: 
-    condition_1: mixed_traffic
-  table_1a:
+table_mixed:
+  conditions: # Mixed traffic
+  bucketColumn: ADT
+  table_mixed_1:
     # Unlanned 2-way street w/out centerline
-    condtions:
-      condition_1:
-        centerline: false
-        lane_count: 2
-        one_way: false
-    table: # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
-      - [0, 750, 1, 1, 2, 2, 3, 3, 3]
-      - [751, 1500, 1, 1, 2, 3, 3, 3, 3]
-      - [1501, 3000, 2, 2, 2, 3, 3, 4, 4]
-      - [3001, inf, 2, 2, 3, 3, 4, 4, 4]
-  table_1b:
     conditions:
-      condition_1:
-        centerline: true
-        lane_count: 2
-        one_way: false
-      condition_2:
-        one_way: true
-        lane_count: 1
-        lane_nw: wide
-    table: # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
-      - [0, 1000, 1, 1, 2, 2, 3, 3, 3]
-      - [1001, 1500, 2, 2, 2, 3, 3, 4, 4]
-      - [1501, inf, 2, 3, 3, 3, 4, 4, 4]
-  table_1c:
+      condition_1: (`centerline` == 'no') & (`lane_count` == 2) & (`oneway` == 'no')
+    table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
+      - [1, 1, 2, 2, 3, 3, 3]
+      - [1, 1, 2, 3, 3, 3, 3]
+      - [2, 2, 2, 3, 3, 4, 4]
+      - [2, 2, 3, 3, 4, 4, 4]
+    table_ADT: # [ADT_min, ADT_max]
+      - [0, 750]
+      - [751, 1500]
+      - [1501, 3000]
+      - [3001, inf]
+  table_mixed_2:
+    # 2-way with 1 lane per direction and centerline, or wide 1-way, 1-lane
+    # FIXME Only label travel direction with LTS
     conditions:
-      condition_1:
-        lane_nw: narrow
-        lane_count: 1
-        one_way: true
-    table: # [ADT_min, ADT_max, Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
-      - [0, 600, 1, 1, 2, 2, 3, 3, 3]
-      - [601, 1000, 2, 2, 2, 3, 3, 4, 4]
-      - [1001, inf, 2, 3, 3, 3, 4, 4, 4]
+      condition_1: (`centerline` == 'yes') & (`lane_count` == 2) & (`oneway` == 'no')
+      condition_2: (`street_narrow_wide` == 'wide') & (`lane_count` == 1) & (`oneway` == 'yes')
+    table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
+      - [1, 1, 2, 2, 3, 3, 3]
+      - [2, 2, 2, 3, 3, 4, 4]
+      - [2, 3, 3, 3, 4, 4, 4]
+    table_ADT: # [ADT_min, ADT_max]
+      - [0, 1000]
+      - [1001, 1500]
+      - [3001, inf]
+  table_mixed_3:
+    # Narrow one-way, 1-lane
+    # FIXME Only label travel direction with LTS
+    conditions:
+      condition_1: (`street_narrow_wide` == 'narrow') & (`lane_count` == 1) & (`oneway` == 'yes')
+    table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
+      - [1, 1, 2, 2, 3, 3, 3]
+      - [2, 2, 2, 3, 3, 4, 4]
+      - [2, 3, 3, 3, 4, 4, 4]
+    table_ADT: # [ADT_min, ADT_max]
+      - [0, 600]
+      - [601, 1000]
+      - [1001, inf]
+  table_mixed_4:
+    # 2 thru lanes per direction
+    conditions:
+      condition_1: (`lane_count` == 4)
+    table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
+      - [3, 3, 3, 3, 4, 4, 4]
+      - [3, 3, 4, 4, 4, 4, 4]
+    table_ADT: # [ADT_min, ADT_max]
+      - [0, 8000]
+      - [8001, inf]
+  table_mixed_5:
+    # 3+ thru lanes per direction
+    conditions:
+      condition_1: (`lane_count` > 4)
+    table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
+      - [3, 3, 4, 4, 4, 4, 4]
+    table_ADT: # [ADT_min, ADT_max]
+      - [0, inf]
 
 # Table 2: Conventional bike lanes, advisory bike lanes, and shoulders not adjacent to a parking lane
-table_2:
+table_bikelane_noparking:
   conditions:
-    parking: false
-    condition_1: bike_lane
-    condition_2: advisory_bike_lane
-    condition_3: shoulder_no_parking
-  table_2a:
+    condition_1: (`cycleway` == 'lane') & (`parking' == 'no')
+    condition_2: (`cycleway` == 'shared_lane') & (`parking' == 'no')
+    condition_3: (`cycleway` == 'shared') & (`parking' == 'no')
+    # condition_4: shoulder_no_parking & (`parking' == 'no') # FIXME shoulder access?
+  bucketColumn: width_bikelane
+  table_bikelane_noparking_1:
     conditions:
-      condition_1:
-        one_way: false
-        lane_count: 2
-      condition_2:
-        one_way: true
-        countraflow: true
-        lane_count: 1
-    table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
-      - [6, inf, 1, 1, 1, 2, 3, 3, 3]
-      - [0, 6, 2, 2, 2, 2, 3, 3, 4]
-  table_2b:
+      # 1 thru lane per direction or contraflow lane
+      condition_1: (`lane_count` == 2) & (`oneway` == 'no')
+      # condition_2: (`lane_count` == 1) & (`oneway` == 'yes') & (`countraflow` == 'yes') 
+      # FIXME create function to identify contraflow lanes
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
+      - [1, 1, 1, 2, 3, 3, 3]
+      - [2, 2, 2, 2, 3, 3, 4]
+    table_width_bikelane: # [min, max]
+      - [6, inf]
+      - [0, 6]
+  table_bikelane_noparking_2:
     conditions:
-      condition_1:
-        lane_count: 4
-        one_way: false
-    table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
-      - [6, inf, 2, 2, 2, 2, 3, 3, 3]
-      - [0, 6, 2, 2, 2, 2, 3, 4, 4]
-  table_2c:
+      # 2 thru lanes per direction
+      condition_1: (`lane_count` == 4) & (`oneway` == 'no')
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
+      - [2, 2, 2, 2, 3, 3, 3]
+      - [2, 2, 2, 2, 3, 4, 4]
+    table_width_bikelane: # [min, max]
+      - [6, inf]
+      - [0, 6]
+  table_bikelane_noparking_3:
     conditions:
-      condition_1:
-        lane_count: 6
+      # 3+ lanes per direction
+      condition_1: (`lane_count` > 4)
     table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [0, inf, 3, 3, 3, 3, 4, 4, 4]
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
+      - [3, 3, 3, 3, 4, 4, 4]
+    table_width_bikelane: # [min, max]
+      - [0, inf]
 
 # Table 3: Conventional bike lanes and advisory bike lanes alongside a parking lane
-table_3:
+# FUTURE Identify commonly blocked bike lanes (commercial corridors) to force mixed traffic analysis
+table_bikelane_yesparking:
   # BLR: [Bike Lane Reach] = [bike lane width] + [parking lane width]
+  # Minimum BLR is 12ft, otherwise use mixed traffic
   conditions:
-    parking: true
-    condition_1: bike_lane
-    condition_2: advisory_bike_lane
-  table_3a:
+    condition_1: (`cycleway` == 'lane') & (`parking' == 'yes')
+    condition_2: (`cycleway` == 'shared') & (`parking' == 'yes')
+    condition_3: (`cycleway` == 'shared_lane') & (`parking' == 'yes')
+  bucketColumn: bikelane_reach
+  table_bikelane_yesparking_1:
+    # 1 thru lane per direction or contraflow lane
     conditions:
-      condition_1:
-        lane_count: 2
-        one_way: false
-      condition_2:
-        lane_count: 1
-        one_way: true
-        contraflow: true
-    table: # [BLR_min, BLR_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
-      - [15, inf, 1, 1, 2, 2, 3, 3, 3]
-      - [0, 15, 2, 2, 2, 3, 3, 3, 3]
-  table_3b:
+      condition_1: (`lane_count` == 2) & (`oneway` == 'no')
+      # condition_2: (`lane_count` == 1) & (`oneway` == 'yes') & (`contraflow` == 'yes') # FIXME contraflow
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [1, 1, 2, 2, 3, 3, 3]
+      - [2, 2, 2, 3, 3, 3, 3]
+    table_bikelane_reach: # [min, max]
+      - [15, inf]
+      - [12, 15]
+  table_bikelane_yesparking_2:
+    # 1-way multilane
     conditions:
-      condition_1:
-        lane_count: (2, inf)
-        one_way: true
-    table: # [BLR_min, BLR_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
-      - [15, inf, 2, 2, 3, 3, 3, 3, 3]
-      - [0, 15, 3, 3, 3, 3, 3, 3, 3]
-  table_3c:
+      condition_1: (`lane_count` >= 2) & (`oneway` == 'yes')
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [2, 2, 3, 3, 3, 3, 3]
+      - [3, 3, 3, 3, 3, 3, 3]
+    table_bikelane_reach: # [min, max]
+      - [15, inf]
+      - [12, 15]
+  table_bikelane_yesparking_3:
+    # 2-way, 2 lanes per direction
     conditions:
-      condition_1:
-        lane_count: 4
-        one_way: false
-    table: # [BLR_min, BLR_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
-      - [15, inf, 2, 2, 3, 3, 3, 3, 3]
-      - [0, 15, 3, 3, 3, 3, 3, 3, 3]
+      condition_1: (`lane_count` == 4) & (`oneway` == 'no')
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [2, 2, 3, 3, 3, 3, 3]
+      - [3, 3, 3, 3, 3, 3, 3]
+    table_bikelane_reach: # [min, max]
+      - [15, inf]
+      - [12, 15]
+  table_bikelane_yesparking_4:
+    # other 2-way multilane
+    conditions: 
+      condition_1: (`lane_count` >= 4) & (`oneway` == 'no')
+    table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
+      - [3, 3, 3, 3, 3, 3, 3]
+    table_bikelane_reach: # [min, max]
+      - [12, inf]
