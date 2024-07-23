@@ -25,43 +25,43 @@ table_mixed:
   table_mixed_1:
     # Unlanned 2-way street w/out centerline
     conditions:
-      condition_1: (`centerline` == 'no') & (`lane_count` == 2) & (`oneway` == 'no')
+      condition_1: (`centerline` == 'no') & (`lane_count` == 2) & (`oneway` == False)
     table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [1, 1, 2, 2, 3, 3, 3]
       - [1, 1, 2, 3, 3, 3, 3]
       - [2, 2, 2, 3, 3, 4, 4]
       - [2, 2, 3, 3, 4, 4, 4]
     table_ADT: # [ADT_min, ADT_max]
-      - [0, 750]
-      - [751, 1500]
-      - [1501, 3000]
+      - [0, 751]
+      - [751, 1501]
+      - [1501, 3001]
       - [3001, inf]
   table_mixed_2:
     # 2-way with 1 lane per direction and centerline, or wide 1-way, 1-lane
     # FIXME Only label travel direction with LTS
     conditions:
-      condition_1: (`centerline` == 'yes') & (`lane_count` == 2) & (`oneway` == 'no')
-      condition_2: (`street_narrow_wide` == 'wide') & (`lane_count` == 1) & (`oneway` == 'yes')
+      condition_1: (`centerline` == 'yes') & (`lane_count` == 2) & (`oneway` == False)
+      condition_2: (`street_narrow_wide` == 'wide') & (`lane_count` == 1) & (`oneway` == True)
     table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [1, 1, 2, 2, 3, 3, 3]
       - [2, 2, 2, 3, 3, 4, 4]
       - [2, 3, 3, 3, 4, 4, 4]
     table_ADT: # [ADT_min, ADT_max]
-      - [0, 1000]
-      - [1001, 1500]
-      - [3001, inf]
+      - [0, 1001]
+      - [1001, 1501]
+      - [1501, inf]
   table_mixed_3:
     # Narrow one-way, 1-lane
     # FIXME Only label travel direction with LTS
     conditions:
-      condition_1: (`street_narrow_wide` == 'narrow') & (`lane_count` == 1) & (`oneway` == 'yes')
+      condition_1: (`street_narrow_wide` == 'narrow') & (`lane_count` == 1) & (`oneway` == True)
     table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [1, 1, 2, 2, 3, 3, 3]
       - [2, 2, 2, 3, 3, 4, 4]
       - [2, 3, 3, 3, 4, 4, 4]
     table_ADT: # [ADT_min, ADT_max]
-      - [0, 600]
-      - [601, 1000]
+      - [0, 601]
+      - [601, 1001]
       - [1001, inf]
   table_mixed_4:
     # 2 thru lanes per direction
@@ -71,7 +71,7 @@ table_mixed:
       - [3, 3, 3, 3, 4, 4, 4]
       - [3, 3, 4, 4, 4, 4, 4]
     table_ADT: # [ADT_min, ADT_max]
-      - [0, 8000]
+      - [0, 8001]
       - [8001, inf]
   table_mixed_5:
     # 3+ thru lanes per direction
@@ -93,8 +93,8 @@ table_bikelane_noparking:
   table_bikelane_noparking_1:
     conditions:
       # 1 thru lane per direction or contraflow lane
-      condition_1: (`lane_count` == 2) & (`oneway` == 'no')
-      # condition_2: (`lane_count` == 1) & (`oneway` == 'yes') & (`countraflow` == 'yes') 
+      condition_1: (`lane_count` == 2) & (`oneway` == False)
+      # condition_2: (`lane_count` == 1) & (`oneway` == True) & (`countraflow` == 'yes') 
       # FIXME create function to identify contraflow lanes
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [1, 1, 1, 2, 3, 3, 3]
@@ -105,7 +105,7 @@ table_bikelane_noparking:
   table_bikelane_noparking_2:
     conditions:
       # 2 thru lanes per direction
-      condition_1: (`lane_count` == 4) & (`oneway` == 'no')
+      condition_1: (`lane_count` == 4) & (`oneway` == False)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [2, 2, 2, 2, 3, 3, 3]
       - [2, 2, 2, 2, 3, 4, 4]
@@ -136,8 +136,8 @@ table_bikelane_yesparking:
   table_bikelane_yesparking_1:
     # 1 thru lane per direction or contraflow lane
     conditions:
-      condition_1: (`lane_count` == 2) & (`oneway` == 'no')
-      # condition_2: (`lane_count` == 1) & (`oneway` == 'yes') & (`contraflow` == 'yes') # FIXME contraflow
+      condition_1: (`lane_count` == 2) & (`oneway` == False)
+      # condition_2: (`lane_count` == 1) & (`oneway` == True) & (`contraflow` == 'yes') # FIXME contraflow
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [1, 1, 2, 2, 3, 3, 3]
       - [2, 2, 2, 3, 3, 3, 3]
@@ -147,7 +147,7 @@ table_bikelane_yesparking:
   table_bikelane_yesparking_2:
     # 1-way multilane
     conditions:
-      condition_1: (`lane_count` >= 2) & (`oneway` == 'yes')
+      condition_1: (`lane_count` >= 2) & (`oneway` == True)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
@@ -157,7 +157,7 @@ table_bikelane_yesparking:
   table_bikelane_yesparking_3:
     # 2-way, 2 lanes per direction
     conditions:
-      condition_1: (`lane_count` == 4) & (`oneway` == 'no')
+      condition_1: (`lane_count` == 4) & (`oneway` == False)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
@@ -167,7 +167,7 @@ table_bikelane_yesparking:
   table_bikelane_yesparking_4:
     # other 2-way multilane
     conditions: 
-      condition_1: (`lane_count` >= 4) & (`oneway` == 'no')
+      condition_1: (`lane_count` >= 4) & (`oneway` == False)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [3, 3, 3, 3, 3, 3, 3]
     table_bikelane_reach: # [min, max]
