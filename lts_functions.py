@@ -169,6 +169,7 @@ def get_prevailing_speed(gdf_edges, rating_dict):
     # FIXME if change to apply assumed values first then replace with OSM data, can use common function
     gdf_edges['speed'] = gdf_edges['maxspeed'] 
     gdf_edges['speed'] = gdf_edges['speed'].fillna(0)
+    gdf_edges.loc[gdf_edges['speed'] == 'signals', 'speed'] = 0
     gdf_edges['speed_rule_num'] = defaultRule
     gdf_edges['speed_rule'] = 'Use signed speed limits.'
     gdf_edges['speed_condition'] = 'default'
@@ -237,16 +238,25 @@ def width_ft(gdf_edges):
     '''
     Convert OSM width columns to use decimal feet
     '''
-    # print('width_ft')
+    
     gdf_edges['width_street'], gdf_edges['width_street_notes'] = convert_feet_with_quotes(gdf_edges['width'])
-    # print('cycleway:width_ft')
-    gdf_edges['width_bikelane'], gdf_edges['width_bikelane_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:width'])
+    
+    try:
+        gdf_edges['width_bikelane'], gdf_edges['width_bikelane_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:width'])
+    except KeyError:
+        print('No cycleway:width column')  
+        gdf_edges['width_bikelane'] = 0.0
+        gdf_edges['width_bikelane_notes'] = 'No cycleway:width column'  
 
-    gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
+    try:
+        gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
+    except KeyError:
+        print('No cycleway:buffer column')
+        gdf_edges['width_bikelanebuffer'] = 0.0
+        gdf_edges['width_bikelanebuffer_notes'] = 'No cycleway:buffer column'
 
     # FIXME make this work for asymmetric layouts
     gdf_edges['bikelane_reach'] = gdf_edges['width_bikelane'] + gdf_edges['width_parking'] + gdf_edges['width_bikelanebuffer']
-
 
     return gdf_edges
 
