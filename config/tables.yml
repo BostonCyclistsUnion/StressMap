@@ -68,8 +68,9 @@ table_mixed:
   table_mixed_4:
     # 2 thru lanes per direction
     conditions:
-      condition_1: (`lane_count` >= 4)
-      condition_1: (`lane_count` >= 2) & (`oneway` == True)
+      condition_1: (`lane_count` == 3) & (`oneway` == False) # FIXME do better with asymetric lanes
+      condition_2: (`lane_count` == 4) & (`oneway` == False)
+      condition_3: (`lane_count` >= 2) & (`oneway` == True)
     table_speed: # [Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6, Speed 7]
       - [3, 3, 3, 3, 4, 4, 4]
       - [3, 3, 4, 4, 4, 4, 4]
@@ -109,6 +110,7 @@ table_bikelane_noparking:
     conditions:
       # 2 thru lanes per direction
       condition_1: (`lane_count` == 4) & (`oneway` == False)
+      condition_2: (`lane_count` == 3) & (`oneway` == False)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [2, 2, 2, 2, 3, 3, 3]
       - [2, 2, 2, 2, 3, 4, 4]
@@ -161,6 +163,7 @@ table_bikelane_yesparking:
     # 2-way, 2 lanes per direction
     conditions:
       condition_1: (`lane_count` == 4) & (`oneway` == False)
+      condition_2: (`lane_count` == 3) & (`oneway` == False) # FIXME handle asymetric lanes better
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
