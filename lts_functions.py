@@ -58,19 +58,21 @@ def convert_feet_with_quotes(series):
     quoteValues = quoteValues.astype(bool)
 
     feetinch = series[quoteValues].str.strip('"').str.split('\'', expand=True)
-    feetinch.loc[feetinch[1] == '', 1] = 0
-    feetinch = feetinch.apply(lambda x: np.array(x, dtype = 'int'))
     if feetinch.shape[0] > 0:
+        feetinch.loc[feetinch[1] == '', 1] = 0
+        feetinch = feetinch.apply(lambda x: np.array(x, dtype = 'int'))
+    # if feetinch.shape[0] > 0:
         feet = feetinch[0] + feetinch[1] / 12
         series[quoteValues] = feet
 
     # Use larger value if given multiple
     multiWidth = series.str.contains(';', na=False) 
 
-    maxWidth = series[multiWidth].str.split(';', expand=True).max(axis=1)
+    maxWidth = series[multiWidth].str.split(';', expand=True).fillna(value=np.nan).astype(float).max(axis=1)
     series[multiWidth] = maxWidth
 
-    series = series.apply(lambda x: np.array(x, dtype = 'float'))
+    series = pd.to_numeric(series, errors='coerce')
+    # series = series.apply(lambda x: np.array(x, dtype = 'float'))
 
     # Convert (assumed) meter values to feet
     series[meterValues] = series[meterValues].astype(float) * 3.28084
@@ -254,6 +256,8 @@ def width_ft(gdf_edges):
     try:
         if 'yes' in gdf_edges['cycleway:buffer'].values:
             gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "2'"
+        if 'no' in gdf_edges['cycleway:buffer'].values:
+            gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "0.0"
         gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
     except KeyError:
         print('No cycleway:buffer column')
