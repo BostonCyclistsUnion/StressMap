@@ -25,13 +25,16 @@ def apply_rules(gdf_edges, rating_dict, prefix):
         # FIXME gracefully handle if condition is not found
         # FIXME need to handle single sided tags so that can include both sides in outputs
         # print(key)
-        gdf_filter = gdf_edges.eval(f"{value['condition']} & (`{prefix}_condition` == 'default')")
-        gdf_edges.loc[gdf_filter, prefix] = value[prefix]
-        gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
-        gdf_edges.loc[gdf_filter, f'{prefix}_rule'] = value['rule_message']
-        gdf_edges.loc[gdf_filter, f'{prefix}_condition'] = value['condition']
-        if 'LTS' in value:
-            gdf_edges.loc[gdf_filter, f'LTS_{prefix}'] = value['LTS']
+        try:
+            gdf_filter = gdf_edges.eval(f"{value['condition']} & (`{prefix}_condition` == 'default')")
+            gdf_edges.loc[gdf_filter, prefix] = value[prefix]
+            gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
+            gdf_edges.loc[gdf_filter, f'{prefix}_rule'] = value['rule_message']
+            gdf_edges.loc[gdf_filter, f'{prefix}_condition'] = value['condition']
+            if 'LTS' in value:
+                gdf_edges.loc[gdf_filter, f'LTS_{prefix}'] = value['LTS']
+        except pd.errors.UndefinedVariableError as e:
+            print(f'Column used in condition does not exsist in this region:\n\t{e}')
 
     # Save memory by setting as category, need to set categories first
     for col in [
@@ -249,6 +252,8 @@ def width_ft(gdf_edges):
         gdf_edges['width_bikelane_notes'] = 'No cycleway:width column'  
 
     try:
+        if 'yes' in gdf_edges['cycleway:buffer'].values:
+            gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "2'"
         gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
     except KeyError:
         print('No cycleway:buffer column')
