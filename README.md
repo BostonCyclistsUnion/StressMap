@@ -17,3 +17,18 @@ This code is adapted from [Bike Ottawa's LTS code](https://github.com/BikeOttawa
 
 ## TBD:
 Plot an isochrone map for different LTS thresholds with `isochrone.py`. This requires both the saved graph object and the dataframe with LTS levels calculated.
+
+## Mapbox
+To get started with Mapbox, run the following command to create a geojson plot:
+```commandline
+ python main.py plot --format=json
+```
+
+You can run the mapbox webpage with the following command
+```commandline
+ python web.py
+```
+
+Vist http://localhost:8000 to view the rendered LTS.
+
+*Please note that the geojson file for Boston is 40mb and may render slowly with artifacts*
