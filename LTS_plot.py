@@ -205,7 +205,13 @@ def plot_lts_lonboard(region, all_lts):
             4: [255, 0, 0],  # red
         },
     )
+    geo_json = lts[["geometry", "LTS"]].to_json()
 
+    # Save GeoJson
+    json_plotFile = f'{plotFolder}/{region}_LTS_lonboard.json'
+    with open(json_plotFile, 'w') as f:
+        f.write(geo_json + '\n')
+    return
     # Save map to HTML
     plotFile = f'{plotFolder}/{region}_LTS_lonboard.html'
     lonboard.Map(layers=[layer],
