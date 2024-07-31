@@ -6,9 +6,6 @@ Just delete the file you want to start from and everything after
 will be recreated.
 """
 import sys
-
-import LTS_OSM
-import LTS_plot
 import argparse
 import constants
 
@@ -54,6 +51,7 @@ class StressMapCli(object):
         if args.cities and args.city:
             raise "Cannot specify both cities and city"
 
+        import LTS_OSM  # imported directly in the command to improve argparse performance
         if args.cities:
             for city in cities:
                 LTS_OSM.main(city,
@@ -75,6 +73,7 @@ class StressMapCli(object):
                             help="Format for plotting")
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES
+        import LTS_plot  # imported directly in the command to improve argparse performance
         for city in cities:
             try:
                 LTS_plot.main(city, args.format)
@@ -88,6 +87,7 @@ class StressMapCli(object):
             description='Download objects and refs from another repository')
         parser.add_argument("cities", type=str,
                             help="Comma-separated list of cities")
+        import LTS_OSM  # imported directly in the command to improve argparse performance
         LTS_OSM.combine_data('GreaterBoston', ["Boston"])
 
 
