@@ -10,66 +10,22 @@ import sys
 import LTS_OSM
 import LTS_plot
 import argparse
-
-# Query key and value can be determined by inspecting regions on OSM
-cities = {
-    'Arlington':
-        {'key': 'wikipedia',
-         'value': 'en:Arlington, Massachusetts'},
-    'Belmont':
-        {'key': 'wikipedia',
-         'value': 'en:Belmont, Massachusetts'},
-    'Boston':
-        {'key': 'wikipedia', 'value': 'en:Boston'},
-    'Brookline':
-        {'key': 'wikipedia',
-         'value': 'en:Brookline, Massachusetts'},
-    'Cambridge':
-        {'key': 'wikipedia',
-         'value': 'en:Cambridge, Massachusetts'},
-    'Chelsea':
-        {'key': 'wikipedia',
-         'value': 'en:Chelsea, Massachusetts'},
-    'Everett':
-        {'key': 'wikipedia',
-         'value': 'en:Everett, Massachusetts'},
-    'Malden':
-        {'key': 'wikipedia',
-         'value': 'en:Malden, Massachusetts'},
-    'Medford':
-        {'key': 'wikipedia',
-         'value': 'en:Medford, Massachusetts'},
-    'Newton':
-        {'key': 'wikipedia',
-         'value': 'en:Newton, Massachusetts'},
-    'Lexington':
-        {'key': 'wikipedia',
-         'value': 'en:Lexington, Massachusetts'},
-    'Somerville':
-        {'key': 'wikipedia',
-         'value': 'en:Somerville, Massachusetts'},
-    'Waltham':
-        {'key': 'wikipedia',
-         'value': 'en:Waltham, Massachusetts'},
-    'Watertown':
-        {'key': 'wikipedia',
-         'value': 'en:Watertown, Massachusetts'},
-}
+import constants
 
 
 class StressMapCli(object):
     def __init__(self):
-        print('test')
         parser = argparse.ArgumentParser(
-            description='StressMap LTS tool for calculating and plotting bike stress',
+            description='StressMap LTS tool for calculating and plotting bike '
+                        'stress',
             usage=
             '''
-stressmap <command> [<args>]
-The most commonly used stressmap commands are:
-    process      Record changes to the repository
-    plot         Plot a single city, a list of cities, or a whole region
-    combine      Create a combined map from all cities analyzed
-    help         Show this help message
+                main.py <command> [<args>]
+                The most commonly used stressmap commands are:
+                    process      Record changes to the repository
+                    plot         Plot a single city, a list of cities, or a whole region
+                    combine      Create a combined map from all cities analyzed
+                    help         Show this help message
             '''
         )
         parser.add_argument('command', help='Subcommand to run')
@@ -94,6 +50,7 @@ The most commonly used stressmap commands are:
                             help="Rebuild underlying data")
 
         args = parser.parse_args(sys.argv[2:])
+        cities = constants.CITIES
         if args.cities and args.city:
             raise "Cannot specify both cities and city"
 
@@ -117,8 +74,13 @@ The most commonly used stressmap commands are:
                             choices=["html", "json"], default="html",
                             help="Format for plotting")
         args = parser.parse_args(sys.argv[2:])
+        cities = constants.CITIES
         for city in cities:
-            LTS_plot.main(city)
+            try:
+                LTS_plot.main(city, args.format)
+            except FileNotFoundError as e:
+                print(e)
+                continue
 
     @staticmethod
     def combine():

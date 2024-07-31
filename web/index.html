@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>BCU Labs</title>
@@ -31,7 +31,7 @@
     mapboxgl.accessToken = 'pk.eyJ1IjoidHNjaGllZ2dtIiwiYSI6ImNrZHoyb25iYjMxMWQzM2p6eHlibHJkanIifQ.wj-SisFvNPgakxBy_1ZnHw';
     const map = new mapboxgl.Map({
         container: 'map', // container ID
-        center: [-71.057083, 42.361145], // starting position [lng, lat]
+        center: [-71.057083, 42.361145], // Boston starting position [lng, lat]
         style: "mapbox://styles/tschieggm/cke3eofps022p19mqmvfc8n4q",
         zoom: baseZoom // starting zoom
     });
@@ -39,7 +39,7 @@
     map.on('load', function () {
         map.addSource('lts', {
             type: 'geojson',
-            data: '/Boston_LTS_lonboard.json'
+            data: 'plots/Boston_LTS_lonboard.json'
         });
 
         map.addLayer({
