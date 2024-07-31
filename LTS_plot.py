@@ -5,6 +5,7 @@ This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 '''
 import os
 import glob
+
 from pathlib import Path
 
 import numpy as np
@@ -191,21 +192,29 @@ def plot_not_missing_data(region, all_lts):
 
 def plot_lts_lonboard(region, all_lts):
     lts = all_lts[all_lts['lts'] > 0]
+    #
+    # layer = lonboard.PathLayer.from_geopandas(
+    #     gdf=lts[["geometry", "lts", "name"]], width_scale=2
+    # )
+    # layer.get_color = apply_categorical_cmap(
+    #     values=lts["lts"],
+    #     cmap={
+    #         0: [0, 0, 0],  # black
+    #         1: [0, 128, 0],  # green
+    #         2: [0, 191, 255],  # blue
+    #         3: [255, 165, 0],  # orange
+    #         4: [255, 0, 0],  # red
+    #     },
+    # )
 
-    layer = lonboard.PathLayer.from_geopandas(
-        gdf=lts[["geometry", "lts", "name"]], width_scale=2
-    )
-    layer.get_color = apply_categorical_cmap(
-        values=lts["lts"],
-        cmap={
-            0: [0, 0, 0],  # black
-            1: [0, 128, 0],  # green
-            2: [0, 191, 255],  # blue
-            3: [255, 165, 0],  # orange
-            4: [255, 0, 0],  # red
-        },
-    )
+    geo_json = lts[["geometry", "lts"]].to_json()
 
+
+    # Save GeoJson
+    json_plotFile = f'{plotFolder}/{region}_LTS_lonboard.json'
+    with open(json_plotFile, 'w') as f:
+        f.write(geo_json + '\n')
+    return
     # Save map to HTML
     plotFile = f'{plotFolder}/{region}_LTS_lonboard.html'
     lonboard.Map(layers=[layer],
