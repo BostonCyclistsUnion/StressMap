@@ -57,20 +57,20 @@ cities = {
               'value': 'en:Watertown, Massachusetts'},
        }
 
-# city = 'Cambridge'
+city = 'Cambridge'
 # city = 'Boston'
 # city = 'Somerville'
 
 # Run LTS analysis and plotting
 rebuild = False
 
-# LTS_OSM.main(city, cities[city]['key'], cities[city]['value'], rebuild)
-# LTS_plot.main(city)
+LTS_OSM.main(city, cities[city]['key'], cities[city]['value'], rebuild)
+LTS_plot.main(city)
 
 # for city in cities:
 #     LTS_OSM.main(city, cities[city]['key'], cities[city]['value'], rebuild)
 #     LTS_plot.main(city)
 
 # Create a combined map from all cities analyzed
-LTS_OSM.combine_data('GreaterBoston', list(cities.keys()))
+# LTS_OSM.combine_data('GreaterBoston', list(cities.keys()))
 # LTS_plot.plot_all_regions()
