@@ -48,15 +48,15 @@ def load_data(region):
 
     # define lts colours for plotting
     conditions = [
-        (geodf['LTS'] == 0),
-        (geodf['LTS'] == 1),
-        (geodf['LTS'] == 2),
-        (geodf['LTS'] == 3),
-        (geodf['LTS'] == 4),
+        (geodf['lts'] == 0),
+        (geodf['lts'] == 1),
+        (geodf['lts'] == 2),
+        (geodf['lts'] == 3),
+        (geodf['lts'] == 4),
         ]
 
     # create a new column and use np.select to assign values to it using our lists as arguments
-    geodf['color'] = np.select(conditions, ltsColors, default='grey')
+    geodf['color'] = np.select(conditions, ltsColors)
 
     return geodf#, gdf_nodes
 
@@ -71,7 +71,7 @@ def plot_lts_plotly(region, all_lts):
         names = mapData['names']
         colors = mapData['colors']
         linegroup = mapData['linegroup']
-        lts = mapData['LTS']
+        lts = mapData['lts']
         notes = mapData['notes']
     else:
         lats = []
@@ -92,7 +92,7 @@ def plot_lts_plotly(region, all_lts):
                 else:
                     continue
                 for linestring in linestrings:
-                    if row.LTS > 0:
+                    if row.lts > 0:
                         x, y = linestring.xy
                         # Big speed improvement appending lists
                         lats.append(list(y))
@@ -100,7 +100,7 @@ def plot_lts_plotly(region, all_lts):
                         names.append([row['name']]*len(y))
                         colors.append([row.color]*len(y))
                         linegroup.append([index]*len(y))
-                        lts.append([f'LTS {row.LTS}']*len(y))
+                        lts.append([f'LTS {row.lts}']*len(y))
                         notes.append([row.short_message]*len(y))
 
             else:
@@ -190,8 +190,8 @@ def plot_not_missing_data(region, all_lts):
 
 
 def plot_lts_lonboard_geojson(region, all_lts):
-    lts = all_lts[all_lts['LTS'] > 0]
-    geo_json = lts[["geometry", "LTS"]].to_json()
+    lts = all_lts[all_lts['lts'] > 0]
+    geo_json = lts[["geometry", "lts"]].to_json()
 
     # Save GeoJson
     json_plot_file = f'{plotFolder}/{region}_LTS_lonboard.json'
@@ -201,13 +201,13 @@ def plot_lts_lonboard_geojson(region, all_lts):
 
 
 def plot_lts_lonboard(region, all_lts):
-    lts = all_lts[all_lts['LTS'] > 0]
+    lts = all_lts[all_lts['lts'] > 0]
 
     layer = lonboard.PathLayer.from_geopandas(
-        gdf=lts[["geometry", "LTS", "name"]], width_scale=2
+        gdf=lts[["geometry", "lts", "name"]], width_scale=2
     )
     layer.get_color = apply_categorical_cmap(
-        values=lts["LTS"],
+        values=lts["lts"],
         cmap={
             0: [0, 0, 0],  # black
             1: [0, 128, 0],  # green
