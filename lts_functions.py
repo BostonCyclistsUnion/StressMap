@@ -229,7 +229,7 @@ def get_max_speed(gdf_edges):
 
     # if multiple speed values present, use the largest one
     gdf_edges['maxspeed_assumed'] = gdf_edges['maxspeed_assumed'].apply(
-        lambda x: np.array(x, dtype = 'int')).apply(lambda x: np.max(x))
+        lambda x: np.array(x, dtype='int')).apply(lambda x: np.max(x))
 
     return gdf_edges
 
