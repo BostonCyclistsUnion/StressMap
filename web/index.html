@@ -37,19 +37,19 @@
     });
 
     map.on('load', function () {
-        map.addSource('lts', {
+        map.addSource('LTS', {
             type: 'geojson',
             data: 'plots/Boston_LTS_lonboard.json'
         });
 
         map.addLayer({
             'id': 'lts-layer',
-            'source': 'lts',
+            'source': 'LTS',
             "type": "line",
             'paint': {
                 'line-color': [
                     'match',
-                    ['get', 'lts'],
+                    ['get', 'LTS'],
                     0, 'black',
                     1, 'green',
                     2, 'blue',
