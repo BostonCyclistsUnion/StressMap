@@ -19,7 +19,7 @@ def read_rating():
 
 def apply_rules(gdf_edges, rating_dict, prefix):
     rules = {k:v for (k,v) in rating_dict.items() if prefix in k}
-        
+
     for key, value in rules.items():
         # Check rules in order, once something has been updated, leave it be
         # FIXME gracefully handle if condition is not found
@@ -40,7 +40,7 @@ def apply_rules(gdf_edges, rating_dict, prefix):
     for col in [
         # prefix,
         f'{prefix}_rule_num',
-        f'{prefix}_condition', 
+        f'{prefix}_condition',
         f'{prefix}_rule',
         ]:
 
@@ -66,7 +66,7 @@ def convert_feet_with_quotes(series):
         series[quoteValues] = feet
 
     # Use larger value if given multiple
-    multiWidth = series.str.contains(';', na=False) 
+    multiWidth = series.str.contains(';', na=False)
 
     maxWidth = series[multiWidth].str.split(';', expand=True).fillna(value=np.nan).astype(float).max(axis=1)
     series[multiWidth] = maxWidth
@@ -98,7 +98,7 @@ def biking_permitted(gdf_edges, rating_dict):
 
     return gdf_edges
 
-def is_separated_path(gdf_edges, rating_dict):   
+def is_separated_path(gdf_edges, rating_dict):
     prefix = 'bike_lane_separation'
     defaultRule = f'{prefix}0'
 
@@ -172,7 +172,7 @@ def get_prevailing_speed(gdf_edges, rating_dict):
     defaultRule = f'{prefix}0'
 
     # FIXME if change to apply assumed values first then replace with OSM data, can use common function
-    gdf_edges['speed'] = gdf_edges['maxspeed'] 
+    gdf_edges['speed'] = gdf_edges['maxspeed']
     gdf_edges['speed'] = gdf_edges['speed'].fillna(0)
     gdf_edges.loc[gdf_edges['speed'] == 'signals', 'speed'] = 0
     gdf_edges['speed_rule_num'] = defaultRule
@@ -214,11 +214,11 @@ def get_lanes(gdf_edges, default_lanes = 2):
     # this usually happens if multiple adjacent ways are included in the edge and 
     # there's a turning lane
     gdf_edges['lane_count'] = gdf_edges['lanes'].fillna(default_lanes).apply(
-        lambda x: np.array(re.split(r'; |, |\*|\n', str(x)), dtype = 'int')).apply( 
+        lambda x: np.array(re.split(r'; |, |\*|\n', str(x)), dtype = 'int')).apply(
             # Converted to a raw string to avoid 'SyntaxWarning: invalid escape sequence '\*' python re',
             # check that this is doing the right thing
             lambda x: np.max(x))
-    
+
     gdf_edges['lane_source'] = 'OSM'
     assumed = gdf_edges['lanes'] == np.nan
     gdf_edges.loc[assumed, 'lane_source'] = 'Assumed lane count'
@@ -243,15 +243,15 @@ def width_ft(gdf_edges):
     '''
     Convert OSM width columns to use decimal feet
     '''
-    
+
     gdf_edges['width_street'], gdf_edges['width_street_notes'] = convert_feet_with_quotes(gdf_edges['width'])
-    
+
     try:
         gdf_edges['width_bikelane'], gdf_edges['width_bikelane_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:width'])
     except KeyError:
-        print('No cycleway:width column')  
+        print('No cycleway:width column')
         gdf_edges['width_bikelane'] = 0.0
-        gdf_edges['width_bikelane_notes'] = 'No cycleway:width column'  
+        gdf_edges['width_bikelane_notes'] = 'No cycleway:width column'
 
     try:
         if 'yes' in gdf_edges['cycleway:buffer'].values:
@@ -287,7 +287,7 @@ def define_adt(gdf_edges, rating_dict):
     '''
     Add the Average Daily Traffic (ADT) value to each segment to use the right row of LTS tables.
 
-    Use assumptions based on roadway type. 
+    Use assumptions based on roadway type.
 
     FUTURE: Get ADT measurements from cities or Streetlight to improve values.
     '''
@@ -339,7 +339,7 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
                         gdf_filter = gdf_edges.eval(f"{condition}")
                         gdf_edges.loc[gdf_filter, f'LTS_{baseName}'] = lts
                 # gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
-            
+
 
     return gdf_edges
 

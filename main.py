@@ -39,9 +39,9 @@ class StressMapCli(object):
     def process():
         parser = argparse.ArgumentParser(
             description='Fetch and process OSM data into LTS')
-        parser.add_argument("cities", type=str,
+        parser.add_argument("-cities", type=str,
                             help="Comma-separated list of cities")
-        parser.add_argument("city", type=str,
+        parser.add_argument("-city", type=str,
                             help="Single city to ")
         parser.add_argument("--rebuild", action="store_true",
                             help="Rebuild underlying data")
