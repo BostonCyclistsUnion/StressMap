@@ -76,9 +76,10 @@ class StressMapCli(object):
         import LTS_plot  # imported directly in the command to improve argparse performance
         for city in cities:
             try:
+                print(f'Plotting {city}')
                 LTS_plot.main(city, args.format)
             except FileNotFoundError as e:
-                print(e)
+                print(f'\t{e}')
                 continue
 
     @staticmethod
