@@ -56,7 +56,7 @@ def load_data(region):
         ]
 
     # create a new column and use np.select to assign values to it using our lists as arguments
-    geodf['color'] = np.select(conditions, ltsColors)
+    geodf['color'] = np.select(conditions, ltsColors, default='grey')
 
     return geodf#, gdf_nodes
 
@@ -71,7 +71,7 @@ def plot_lts_plotly(region, all_lts):
         names = mapData['names']
         colors = mapData['colors']
         linegroup = mapData['linegroup']
-        lts = mapData['lts']
+        lts = mapData['LTS']
         notes = mapData['notes']
     else:
         lats = []
@@ -92,7 +92,7 @@ def plot_lts_plotly(region, all_lts):
                 else:
                     continue
                 for linestring in linestrings:
-                    if row.lts > 0:
+                    if row.LTS > 0:
                         x, y = linestring.xy
                         # Big speed improvement appending lists
                         lats.append(list(y))
@@ -100,7 +100,7 @@ def plot_lts_plotly(region, all_lts):
                         names.append([row['name']]*len(y))
                         colors.append([row.color]*len(y))
                         linegroup.append([index]*len(y))
-                        lts.append([f'LTS {row.lts}']*len(y))
+                        lts.append([f'LTS {row.LTS}']*len(y))
                         notes.append([row.short_message]*len(y))
 
             else:
@@ -204,7 +204,7 @@ def plot_lts_lonboard(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
 
     layer = lonboard.PathLayer.from_geopandas(
-        gdf=lts[["geometry", "lts", "name"]], width_scale=2
+        gdf=lts[["geometry", "LTS", "name"]], width_scale=2
     )
     layer.get_color = apply_categorical_cmap(
         values=lts["LTS"],
