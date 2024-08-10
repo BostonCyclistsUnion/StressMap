@@ -353,3 +353,8 @@ def calculate_lts(gdf_edges, tables):
     gdf_edges['LTS'] = gdf_edges.loc[:, gdf_edges.columns.str.contains('LTS')].min(axis=1, skipna=True, numeric_only=True)
 
     return gdf_edges
+
+### TESTS ###
+def test_answer():
+    df = pd.DataFrame()
+    assert biking_permitted(df) == 5

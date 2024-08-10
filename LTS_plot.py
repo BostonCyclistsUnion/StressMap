@@ -1,8 +1,8 @@
-'''
+"""
 Plotting Level of Traffic Stress
 
 This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
-'''
+"""
 import os
 import glob
 from pathlib import Path
@@ -27,9 +27,8 @@ plotFolder = 'plots'
 # create a list of the values we want to assign for each condition
 ltsColors = ['grey', 'green', 'deepskyblue', 'orange', 'red']
 
-# %% Load and Prep Data
-def load_data(region):
 
+def load_data(region):
     if type(region) == list:
         df = pd.DataFrame()
         for r in region:
@@ -62,7 +61,6 @@ def load_data(region):
     return geodf#, gdf_nodes
 
 
-# %% Plot LTS
 def plot_lts_plotly(region, all_lts):
     mapDataPath = f'data/{region}_plotly_data.csv'
 
@@ -142,6 +140,7 @@ def plot_lts_plotly(region, all_lts):
     fig.write_html(f'{plotFolder}/{region}_stressmap.html')
     print(f'Saved {region}_stressmap.html')
 
+
 def plot_lts_static(region, all_lts):
     linewidth = 0.4
 
@@ -160,7 +159,6 @@ def plot_lts_static(region, all_lts):
     ax.legend(legendLines, ['LTS 1', 'LTS 2', 'LTS 3', 'LTS 4'])
 
     cx.add_basemap(ax, crs=all_lts.crs, zoom=16,
-                #    source=cx.providers.CartoDB.Positron)
                    source=cx.providers.CartoDB.DarkMatter)
     ax.set_axis_off()
     fig.tight_layout()
@@ -169,6 +167,7 @@ def plot_lts_static(region, all_lts):
     plt.savefig(f"{plotFolder}/{region}_lts.png", dpi = 300)
     fig.show()
     print(f'Saved {region}_lts.png')
+
 
 def plot_not_missing_data(region, all_lts):
     # Plot segments that aren't missing speed and lane info
@@ -188,6 +187,18 @@ def plot_not_missing_data(region, all_lts):
     plt.savefig(f"{plotFolder}/LTS_{region}_has_speed_has_lanes.png", dpi = 300)
     fig.show()
     print(f'Saved LTS_{region}_has_speed_has_lanes.png')
+
+
+def plot_lts_lonboard_geojson(region, all_lts):
+    lts = all_lts[all_lts['LTS'] > 0]
+    geo_json = lts[["geometry", "LTS"]].to_json()
+
+    # Save GeoJson
+    json_plot_file = f'{plotFolder}/{region}_LTS_lonboard.json'
+    with open(json_plot_file, 'w') as f:
+        f.write(geo_json + '\n')
+    return
+
 
 def plot_lts_lonboard(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
@@ -216,6 +227,7 @@ def plot_lts_lonboard(region, all_lts):
 
     print(f'{plotFile} saved.')
 
+
 def plot_all_regions():
     regionFiles = glob.glob(f'{dataFolder}/*_4_all_lts.csv')
     regions = [os.path.basename(f).split('_')[0] for f in regionFiles]
@@ -226,14 +238,17 @@ def plot_all_regions():
     plot_lts_lonboard('GreaterBoston', all_lts)
 
 
-# %% Script
-def main(region):
+def main(region, format="html"):
     Path(plotFolder).mkdir(exist_ok=True)
 
     all_lts = load_data(region)
 
     # plot_lts_static(region, all_lts)
-    plot_lts_lonboard(region, all_lts)
+    if format == "html":
+        plot_lts_lonboard(region, all_lts)
+    if format == "json":
+        plot_lts_lonboard_geojson(region, all_lts)
+
 
 if __name__ == '__main__':
     # city = 'Cambridge'
