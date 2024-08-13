@@ -68,19 +68,25 @@ class StressMapCli(object):
     def plot():
         parser = argparse.ArgumentParser(
             description='Plot existing local LTS data to either HTML or GeoJson')
+        parser.add_argument("-city", type=str,
+                            help="Single city to ")
         parser.add_argument("--format",
                             choices=["html", "json"], default="html",
                             help="Format for plotting")
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES
         import LTS_plot  # imported directly in the command to improve argparse performance
-        for city in cities:
-            try:
-                print(f'Plotting {city}')
-                LTS_plot.main(city, args.format)
-            except FileNotFoundError as e:
-                print(f'\t{e}')
-                continue
+        if args.city:
+            print(f'Plotting {args.city}')
+            LTS_plot.main(args.city, args.format)
+        else:
+            for city in cities:
+                try:
+                    print(f'Plotting {city}')
+                    LTS_plot.main(city, args.format)
+                except FileNotFoundError as e:
+                    print(f'\t{e}')
+                    continue
 
     @staticmethod
     def combine():
@@ -88,8 +94,10 @@ class StressMapCli(object):
             description='Download objects and refs from another repository')
         parser.add_argument("-cities", type=str,
                             help="Comma-separated list of cities")
+        args = parser.parse_args(sys.argv[2:])
+        print(args.cities)
         import LTS_OSM  # imported directly in the command to improve argparse performance
-        LTS_OSM.combine_data('GreaterBoston', ["Boston"])
+        LTS_OSM.combine_data('GreaterBoston', ['Boston', 'Somerville', 'Cambridge', 'Brookline'])
 
 
 if __name__ == '__main__':
