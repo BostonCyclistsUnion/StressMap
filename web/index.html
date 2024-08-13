@@ -25,7 +25,8 @@
 <div id="map"></div>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
 <script>
-    const baseWidth = 1.4;
+    // const baseWidth = 1.4;
+    const baseWidth = 3;
     const baseZoom = 12
 
     mapboxgl.accessToken = 'pk.eyJ1IjoidHNjaGllZ2dtIiwiYSI6ImNrZHoyb25iYjMxMWQzM2p6eHlibHJkanIifQ.wj-SisFvNPgakxBy_1ZnHw';
@@ -37,14 +38,14 @@
     });
 
     map.on('load', function () {
-        map.addSource('LTS', {
+        map.addSource('LTS_source', {
             type: 'geojson',
             data: 'plots/Boston_LTS_lonboard.json'
         });
 
         map.addLayer({
             'id': 'lts-layer',
-            'source': 'LTS',
+            'source': 'LTS_source',
             "type": "line",
             'paint': {
                 'line-color': [
@@ -58,10 +59,44 @@
                     'white'
                 ],
                 "line-width": baseWidth,
-                'fill-opacity': 0.7,
+                'line-opacity': 0.5,
             }
         });
+
+        // When a click event occurs on a feature in the places layer, open a popup at the
+        // location of the feature, with description HTML from its properties.
+        map.on('click', 'lts-layer', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice(); // I don't think this works with line strings
+            const description = `<h1>${e.features[0].properties.name}</h1><p>LTS: ${e.features[0].properties.LTS}<br>OSMid: ${e.features[0].properties.osmid}</p>`;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup()
+                .setLngLat(e.lngLat) // Changed to use click location instead of feature location (I think)
+                .setHTML(description)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the LTS layer.
+        map.on('mouseenter', 'lts-layer', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'lts-layer', () => {
+            map.getCanvas().style.cursor = '';
+        });
     })
+
+    
 
 </script>
 </body>

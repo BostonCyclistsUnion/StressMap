@@ -191,7 +191,7 @@ def plot_not_missing_data(region, all_lts):
 
 def plot_lts_lonboard_geojson(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
-    geo_json = lts[["geometry", "LTS"]].to_json()
+    geo_json = lts[["geometry", "LTS", "osmid", "name"]].to_json()
 
     # Save GeoJson
     json_plot_file = f'{plotFolder}/{region}_LTS_lonboard.json'
