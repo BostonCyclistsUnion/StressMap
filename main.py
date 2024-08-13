@@ -53,7 +53,7 @@ class StressMapCli(object):
 
         import LTS_OSM  # imported directly in the command to improve argparse performance
         if args.cities:
-            for city in cities:
+            for city in args.cities:
                 LTS_OSM.main(city,
                              cities[city]['key'],
                              cities[city]['value'],
