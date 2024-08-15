@@ -256,7 +256,19 @@ def read_lts_csv(filepath):
             'trolley_wire', 'trolleybus', 'tunnel', 'turn:lanes:backward', 
             'turn:lanes:conditional', 'turn:lanes:forward', 'turn:lanes', 
             'turn', 'vehicle', 'was:bridge:movable', 'width:feet', 'width',
-            'LTS',
+            'biking_permitted', 'biking_permitted_rule_num', 'biking_permitted_rule', 'biking_permitted_condition',
+            'bike_lane_separation', 'bike_lane_separation_rule_num', 'bike_lane_separation_rule', 'bike_lane_separation_condition',
+            'bike_lane_exist', 'bike_lane_exist_rule_num', 'bike_lane_exist_rule', 'bike_lane_exist_condition',
+            'parking', 'parking_rule_num', 'parking_rule', 'parking_condition', 'width_parking',
+            'speed', 'speed_rule_num', 'speed_rule', 'speed_condition',
+            'lane_count', 'lane_source',
+            'centerline', 'centerline_rule_num', 'centerline_rule', 'centerline_condition',
+            'width_street', 'width_street_notes',
+            'width_bikelane', 'width_bikelane_notes', 'width_bikelanebuffer', 'width_bikelanebuffer_notes',
+            'bikelane_reach', 'street_narrow_wide',
+            'ADT', 'ADT_rule_num', 'ADT_rule', 'ADT_condition',
+            'LTS_biking_permitted', 'LTS_bike_lane_separation', 
+            'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS'
             ]
     
     dtypeDict = {'u': 'Int64',
@@ -340,7 +352,6 @@ def lts_edges(region, gdf_edges):
         rating_dict = lts.read_rating()
         tables = lts.read_tables()
 
-        # Start with is biking allowed, get edges where biking is not *not* allowed.
         gdf_edges = lts.biking_permitted(gdf_edges, rating_dict)
         gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
         gdf_edges = lts.is_bike_lane(gdf_edges, rating_dict)

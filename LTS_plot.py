@@ -191,7 +191,17 @@ def plot_not_missing_data(region, all_lts):
 
 def plot_lts_lonboard_geojson(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
-    geo_json = lts[["geometry", "LTS", "osmid", "name"]].to_json()
+    geo_json = lts[['geometry', 'LTS', 'osmid', 'name', 
+                    'biking_permitted', 'biking_permitted_rule',
+                    'bike_lane_exist', 'bike_lane_exist_rule',
+                    'bike_lane_separation', 'bike_lane_separation_rule',
+                    'parking', 'parking_rule',
+                    'speed', 'speed_rule',
+                    'centerline', 'centerline_rule',
+                    'ADT', 'ADT_rule',
+                    'lane_count', 'oneway', 'street_narrow_wide',
+                    'width_bikelane', 'bikelane_reach', 'cycleway',
+                    ]].to_json()
 
     # Save GeoJson
     json_plot_file = f'{plotFolder}/{region}_LTS_lonboard.json'
@@ -238,7 +248,7 @@ def plot_all_regions():
     plot_lts_lonboard('GreaterBoston', all_lts)
 
 
-def main(region, format="html"):
+def main(region, format="json"):
     Path(plotFolder).mkdir(exist_ok=True)
 
     all_lts = load_data(region)
