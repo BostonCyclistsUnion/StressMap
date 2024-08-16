@@ -176,7 +176,7 @@ def get_prevailing_speed(gdf_edges, rating_dict):
     gdf_edges['speed'] = gdf_edges['speed'].fillna(0)
     gdf_edges.loc[gdf_edges['speed'] == 'signals', 'speed'] = 0
     gdf_edges['speed_rule_num'] = defaultRule
-    gdf_edges['speed_rule'] = 'Use signed speed limits.'
+    gdf_edges['speed_rule'] = 'Signed speed limit'
     gdf_edges['speed_condition'] = 'default'
 
     for key, value in speedRules.items():
