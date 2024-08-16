@@ -53,7 +53,7 @@ class StressMapCli(object):
 
         import LTS_OSM  # imported directly in the command to improve argparse performance
         if args.cities:
-            for city in args.cities:
+            for city in args.cities.split(','):
                 LTS_OSM.main(city,
                              cities[city]['key'],
                              cities[city]['value'],
@@ -95,9 +95,8 @@ class StressMapCli(object):
         parser.add_argument("-cities", type=str,
                             help="Comma-separated list of cities")
         args = parser.parse_args(sys.argv[2:])
-        print(args.cities)
         import LTS_OSM  # imported directly in the command to improve argparse performance
-        LTS_OSM.combine_data('GreaterBoston', ['Boston', 'Somerville', 'Cambridge', 'Brookline'])
+        LTS_OSM.combine_data('GreaterBoston', args.cities.split(','))
 
 
 if __name__ == '__main__':
