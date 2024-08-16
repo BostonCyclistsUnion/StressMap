@@ -6,6 +6,7 @@ This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 import os
 import glob
 from pathlib import Path
+import shutil
 
 import numpy as np
 import pandas as pd
@@ -201,12 +202,16 @@ def plot_lts_lonboard_geojson(region, all_lts):
                     'ADT', 'ADT_rule',
                     'lane_count', 'oneway', 'street_narrow_wide',
                     'width_bikelane', 'bikelane_reach', 'cycleway',
+                    'LTS_biking_permitted', 'LTS_bike_lane_separation', 
+                    'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking',
                     ]].to_json()
 
     # Save GeoJson
     json_plot_file = f'{plotFolder}/{region}_LTS_lonboard.json'
     with open(json_plot_file, 'w') as f:
         f.write(geo_json + '\n')
+
+    shutil.copy(json_plot_file, f'{plotFolder}/LTS.json')
     return
 
 

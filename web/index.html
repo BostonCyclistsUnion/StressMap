@@ -129,7 +129,8 @@
         map.addSource('LTS_source', {
             type: 'geojson',
             // data: 'plots/Boston_LTS_lonboard.json'
-            data: 'plots/GreaterBoston_LTS_lonboard.json'
+            // data: 'plots/GreaterBoston_LTS_lonboard.json'
+            data: 'plots/LTS.json'
         });
 
         map.addLayer({
@@ -159,15 +160,31 @@
             const coordinates = e.features[0].geometry.coordinates.slice(); // I don't think this works with line strings
             const description = `
             <h1>${e.features[0].properties.name}</h1>
-            <p>LTS: ${e.features[0].properties.LTS}<br>
-                OSMid: ${e.features[0].properties.osmid}<br>
-                Biking Permitted: ${e.features[0].properties.biking_permitted} <font color="gray">${e.features[0].properties.biking_permitted_rule}</font><br>
+            <p>
+                <b>LTS: ${e.features[0].properties.LTS}</b><br>
+
+                <h2>Bike Infrastructure</h2>
                 Bike Lane: ${e.features[0].properties.bike_lane_exist} <font color="gray">${e.features[0].properties.bike_lane_exist_rule}</font><br>
-                Bike Lane Separation: ${e.features[0].properties.bike_lane_separation} <font color="gray">${e.features[0].properties.bike_lane_separation_rule}</font><br>
+                Separation: ${e.features[0].properties.bike_lane_separation} <font color="gray">${e.features[0].properties.bike_lane_separation_rule}</font><br>
+                Width: ${e.features[0].properties.width_bikelane} <font color="gray">${e.features[0].properties.width_bikelane_rule}</font><br>
+                Reach: ${e.features[0].properties.bikelane_reach} <font color="gray">${e.features[0].properties.bikelane_reach_rule}</font><br>
+
+                <h2>Street Design for Cars</h2>
+                Effective Width: ${e.features[0].properties.street_narrow_wide} <font color="gray">${e.features[0].properties.street_narrow_wide_rule}</font><br>
+                Lane Count: ${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font><br>
+                Oneway: ${e.features[0].properties.oneway} <font color="gray">${e.features[0].properties.oneway_rule}</font><br>
                 Parking: ${e.features[0].properties.parking} <font color="gray">${e.features[0].properties.parking_rule}</font><br>
                 Prevailing Speed: ${e.features[0].properties.speed} <font color="gray">${e.features[0].properties.speed_rule}</font><br>
                 Centerline: ${e.features[0].properties.centerline} <font color="gray">${e.features[0].properties.centerline_rule}</font><br>
                 Average Daily Traffic (ADT): ${e.features[0].properties.ADT} <font color="gray">${e.features[0].properties.ADT_rule}</font><br>
+
+                <h2>Technical Info</h2>
+                OSMid: <a href="https://www.openstreetmap.org/way/${e.features[0].properties.osmid}" target="_blank">${e.features[0].properties.osmid}</a><br>
+                LTS_biking_permitted: ${e.features[0].properties.LTS_biking_permitted}<br>
+                LTS_bike_lane_separation: ${e.features[0].properties.LTS_bike_lane_separation}<br>
+                LTS_mixed: ${e.features[0].properties.LTS_mixed}<br>
+                LTS_bikelane_noparking: ${e.features[0].properties.LTS_bikelane_noparking}<br>
+                LTS_bikelane_yesparking: ${e.features[0].properties.LTS_bikelane_yesparking}<br>
             </p>`;
 
             // Ensure that if the map is zoomed out such that multiple
