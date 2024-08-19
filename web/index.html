@@ -164,15 +164,19 @@
                 <b>LTS: ${e.features[0].properties.LTS}</b><br>
 
                 <h2>Bike Infrastructure</h2>
+                Bike Permitted: ${e.features[0].properties.biking_permitted} <font color="gray">${e.features[0].properties.biking_permitted_rule}</font><br>
                 Bike Lane: ${e.features[0].properties.bike_lane_exist} <font color="gray">${e.features[0].properties.bike_lane_exist_rule}</font><br>
                 Separation: ${e.features[0].properties.bike_lane_separation} <font color="gray">${e.features[0].properties.bike_lane_separation_rule}</font><br>
                 Width: ${e.features[0].properties.width_bikelane} <font color="gray">${e.features[0].properties.width_bikelane_rule}</font><br>
                 Reach: ${e.features[0].properties.bikelane_reach} <font color="gray">${e.features[0].properties.bikelane_reach_rule}</font><br>
+                Buffer: ${e.features[0].properties.width_bikelanebuffer} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule}</font><br>
 
                 <h2>Street Design for Cars</h2>
-                Effective Width: ${e.features[0].properties.street_narrow_wide} <font color="gray">${e.features[0].properties.street_narrow_wide_rule}</font><br>
+                Effective Width: ${e.features[0].properties.street_narrow_wide}<br>
+                Street Width: ${e.features[0].properties.width_street} <font color="gray">${e.features[0].properties.width_street_rule}</font><br>
+                Parking Width: ${e.features[0].properties.width_parking} <font color="gray">${e.features[0].properties.width_parking_rule}</font><br>
                 Lane Count: ${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font><br>
-                Oneway: ${e.features[0].properties.oneway} <font color="gray">${e.features[0].properties.oneway_rule}</font><br>
+                Oneway: ${e.features[0].properties.oneway}<br>
                 Parking: ${e.features[0].properties.parking} <font color="gray">${e.features[0].properties.parking_rule}</font><br>
                 Prevailing Speed: ${e.features[0].properties.speed} <font color="gray">${e.features[0].properties.speed_rule}</font><br>
                 Centerline: ${e.features[0].properties.centerline} <font color="gray">${e.features[0].properties.centerline_rule}</font><br>

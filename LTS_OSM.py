@@ -173,7 +173,7 @@ def download_data(region):
     osmfilter = ('["highway"]["area"!~"yes"]["access"!~"private"]'
                 '["highway"!~"abandoned|bus_guideway|corridor|elevator|escalator|motor|'
                 'planned|platform|proposed|raceway|steps"]'
-                '["bicycle"!~"no"]["service"!~"private"]'
+                '["service"!~"private"]'
                 '["indoor"!~"yes"]'
                 '["service"!="parking_aisle"]')
 
