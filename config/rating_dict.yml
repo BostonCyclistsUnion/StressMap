@@ -388,7 +388,7 @@ centerline7:
 centerline8:
   condition: (`highway` == 'residential')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message:  "Assume: 'highway'='residential'"
 centerline9:
   condition: (`highway` == 'footway')
   centerline: 'no'

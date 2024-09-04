@@ -1,0 +1,34 @@
+{
+    "version": 1,
+    "layers": {
+      "lts": {
+        "source": "mapbox://tileset-source/skilcoyne/stressmap",
+        "minzoom": 11,
+        "maxzoom": 16,
+        "features": {
+            "id": [ "get", "osmid"],
+            "attributes": {
+                "set": {
+                    "quality": [
+                    "match",
+                    [ "get", "highway" ],
+                    "primary", 11,
+                    "trunk", 11,
+                    "motorway", 11,
+                    "motorway_link", 12,
+                    "cycleway", 12,
+                    "secondary", 13,
+                    "tertiary", 14,
+                    "residential", 14,
+                    "service", 15,
+                    "footway", 16,
+                    "pedestrian", 16,
+                    16
+                    ]
+                }
+                },
+                "filter": [ "<=", [ "get", "quality" ], [ "zoom" ] ]
+            }
+        }
+    }
+}

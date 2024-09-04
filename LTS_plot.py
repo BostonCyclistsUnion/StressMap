@@ -192,7 +192,7 @@ def plot_not_missing_data(region, all_lts):
 
 def plot_lts_lonboard_geojson(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
-    geo_json = lts[['geometry', 'LTS', 'osmid', 'name', 
+    geo_json = lts[['geometry', 'LTS', 'osmid', 'name', 'highway',
                     'biking_permitted', 'biking_permitted_rule',
                     'bike_lane_exist', 'bike_lane_exist_rule',
                     'bike_lane_separation', 'bike_lane_separation_rule',
