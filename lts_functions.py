@@ -221,7 +221,7 @@ def get_lanes(gdf_edges, default_lanes = 2):
             lambda x: np.max(x))
     
     gdf_edges['lane_rule'] = 'OSM'
-    assumed = gdf_edges[gdf_edges['lanes'] == np.nan]
+    assumed = gdf_edges['lanes'] == np.nan
     gdf_edges.loc[assumed, 'lane_rule'] = 'Assumed lane count'
 
     return gdf_edges

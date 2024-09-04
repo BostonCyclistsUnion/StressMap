@@ -7,7 +7,7 @@ PORT = 8001
 class Handler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):
         if self.path == "/":
-            return 'mapbox/index_mapbox.html'
+            return 'index.html'
         if self.path.startswith("/plots"):
             return path[1:]  # strip the prefix slash so it can find the plots directory
         else:
