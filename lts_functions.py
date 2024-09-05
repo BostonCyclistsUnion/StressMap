@@ -158,6 +158,7 @@ def parking_present(gdf_edges, rating_dict):
 
     gdf_edges['width_parking'] = 0.0
     gdf_edges.loc[gdf_edges[prefix]=='yes', 'width_parking'] = 8.5 # ft
+    gdf_edges.loc[gdf_edges[prefix]=='yes', 'width_parking_rule'] = 'Assumed Width'
 
     return gdf_edges
 
@@ -176,7 +177,7 @@ def get_prevailing_speed(gdf_edges, rating_dict):
     gdf_edges['speed'] = gdf_edges['speed'].fillna(0)
     gdf_edges.loc[gdf_edges['speed'] == 'signals', 'speed'] = 0
     gdf_edges['speed_rule_num'] = defaultRule
-    gdf_edges['speed_rule'] = 'Use signed speed limits.'
+    gdf_edges['speed_rule'] = 'Signed speed limit'
     gdf_edges['speed_condition'] = 'default'
 
     for key, value in speedRules.items():
@@ -219,9 +220,9 @@ def get_lanes(gdf_edges, default_lanes = 2):
             # check that this is doing the right thing
             lambda x: np.max(x))
     
-    gdf_edges['lane_source'] = 'OSM'
+    gdf_edges['lane_rule'] = 'OSM'
     assumed = gdf_edges['lanes'] == np.nan
-    gdf_edges.loc[assumed, 'lane_source'] = 'Assumed lane count'
+    gdf_edges.loc[assumed, 'lane_rule'] = 'Assumed lane count'
 
     return gdf_edges
 
@@ -244,25 +245,25 @@ def width_ft(gdf_edges):
     Convert OSM width columns to use decimal feet
     '''
     
-    gdf_edges['width_street'], gdf_edges['width_street_notes'] = convert_feet_with_quotes(gdf_edges['width'])
+    gdf_edges['width_street'], gdf_edges['width_street_rule'] = convert_feet_with_quotes(gdf_edges['width'])
     
     try:
-        gdf_edges['width_bikelane'], gdf_edges['width_bikelane_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:width'])
+        gdf_edges['width_bikelane'], gdf_edges['width_bikelane_rule'] = convert_feet_with_quotes(gdf_edges['cycleway:width'])
     except KeyError:
         print('No cycleway:width column')  
         gdf_edges['width_bikelane'] = 0.0
-        gdf_edges['width_bikelane_notes'] = 'No cycleway:width column'  
+        gdf_edges['width_bikelane_rule'] = 'No cycleway:width column'  
 
     try:
         if 'yes' in gdf_edges['cycleway:buffer'].values:
             gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "2'"
         if 'no' in gdf_edges['cycleway:buffer'].values:
             gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "0.0"
-        gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_notes'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
+        gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_rule'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
     except KeyError:
         print('No cycleway:buffer column')
         gdf_edges['width_bikelanebuffer'] = 0.0
-        gdf_edges['width_bikelanebuffer_notes'] = 'No cycleway:buffer column'
+        gdf_edges['width_bikelanebuffer_rule'] = 'No cycleway:buffer column'
 
     # FIXME make this work for asymmetric layouts
     gdf_edges['bikelane_reach'] = gdf_edges['width_bikelane'] + gdf_edges['width_parking'] + gdf_edges['width_bikelanebuffer']
@@ -273,13 +274,13 @@ def define_narrow_wide(gdf_edges):
 
     gdf_edges['street_narrow_wide'] = 'wide'
 
-    gdf_edges[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 30) & (gdf_edges['parking'] == 'yes')] = 'narrow'
+    gdf_edges.loc[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 30) & (gdf_edges['parking'] == 'yes'), 'street_narrow_wide'] = 'narrow'
 
     # FIXME make sure only single side has parking and not ignoring where one side is explicit yes and the other is explicit no
-    gdf_edges[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 22) & (gdf_edges['parking'] == 'left:yes')] = 'narrow'
-    gdf_edges[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 22) & (gdf_edges['parking'] == 'right:yes')] = 'narrow'
+    gdf_edges.loc[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 22) & (gdf_edges['parking'] == 'left:yes'), 'street_narrow_wide'] = 'narrow'
+    gdf_edges.loc[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 22) & (gdf_edges['parking'] == 'right:yes'), 'street_narrow_wide'] = 'narrow'
 
-    gdf_edges[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 15) & (gdf_edges['parking'] == 'no')] = 'narrow'
+    gdf_edges.loc[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 15) & (gdf_edges['parking'] == 'no'), 'street_narrow_wide'] = 'narrow'
 
     return gdf_edges
 

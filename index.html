@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>[TESTING] BCU Labs Stressmap</title>
+    <meta name="viewport"
+          content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css"
+          rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<h1>BCU Labs - Data Team</h1>
+<div id="map"></div>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+<script>
+    const baseWidth = 3;
+    const baseZoom = 12
+    
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic2tpbGNveW5lIiwiYSI6ImNseTd2cXpwOTA5MnUya3E2ejBkN2ttOW8ifQ.TN39Bd_yu_SqMsu-IW4FKQ';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        center: [-71.057083, 42.361145], // Boston starting position [lng, lat]
+        // style: "mapbox://styles/skilcoyne/cly7vy7v200ut01qohg1ycwl7/draft",
+        style:'mapbox://styles/mapbox/dark-v11',
+        zoom: baseZoom // starting zoom
+    });
+
+    // map.on('style.load', () => {
+    //     map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
+    //     map.setConfigProperty('basemap', 'showPlaceLabels', false);
+    //     map.setConfigProperty('basemap', 'show3dObjects', false);
+    //     map.setConfigProperty('basemap', 'showTransitLabels', true);
+    //     map.setConfigProperty('basemap', 'theme', 'monochrome');
+    //     map.setConfigProperty('basemap', 'lightPreset', 'night');
+    // });
+
+    map.on('load', function () {
+        map.addSource('LTS_source', {
+            type: 'vector',
+            url: 'mapbox://skilcoyne.stressmap_tiles'
+        });
+
+        map.addLayer({
+            'id': 'lts-layer',
+            "type": "line",
+            'source': 'LTS_source',
+            'source-layer': 'lts',
+            'paint': {
+                'line-color': [
+                    'match',
+                    ['get', 'LTS'],
+                    // 0, 'black',
+                    1, 'green',
+                    2, 'blue',
+                    3, 'orange',
+                    4, 'red',
+                    'white'
+                ],
+                'line-width': baseWidth
+                // 'line-opacity': 0.5,
+            }
+        },
+        'road-label-simple' // Add layer below labels
+    );
+
+        // When a click event occurs on a feature in the places layer, open a popup at the
+        // location of the feature, with description HTML from its properties.
+        map.on('click', 'lts-layer', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice(); // I don't think this works with line strings
+            const description = `
+            <h1>${e.features[0].properties.name}</h1>
+            <p>
+                <b>LTS: ${e.features[0].properties.LTS}</b><br>
+                Road Type: ${e.features[0].properties.highway}<br>
+
+                <h2>Bike Infrastructure</h2>
+                Bike Permitted: ${e.features[0].properties.biking_permitted} <font color="gray">${e.features[0].properties.biking_permitted_rule}</font><br>
+                Bike Lane: ${e.features[0].properties.bike_lane_exist} <font color="gray">${e.features[0].properties.bike_lane_exist_rule}</font><br>
+                Separation: ${e.features[0].properties.bike_lane_separation} <font color="gray">${e.features[0].properties.bike_lane_separation_rule}</font><br>
+                Width: ${e.features[0].properties.width_bikelane} <font color="gray">${e.features[0].properties.width_bikelane_rule}</font><br>
+                Reach: ${e.features[0].properties.bikelane_reach} <font color="gray">${e.features[0].properties.bikelane_reach_rule}</font><br>
+                Buffer: ${e.features[0].properties.width_bikelanebuffer} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule}</font><br>
+
+                <h2>Street Design for Cars</h2>
+                Effective Width: ${e.features[0].properties.street_narrow_wide}<br>
+                Street Width: ${e.features[0].properties.width_street} <font color="gray">${e.features[0].properties.width_street_rule}</font><br>
+                Parking Width: ${e.features[0].properties.width_parking} <font color="gray">${e.features[0].properties.width_parking_rule}</font><br>
+                Lane Count: ${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font><br>
+                Oneway: ${e.features[0].properties.oneway}<br>
+                Parking: ${e.features[0].properties.parking} <font color="gray">${e.features[0].properties.parking_rule}</font><br>
+                Prevailing Speed: ${e.features[0].properties.speed} <font color="gray">${e.features[0].properties.speed_rule}</font><br>
+                Centerline: ${e.features[0].properties.centerline} <font color="gray">${e.features[0].properties.centerline_rule}</font><br>
+                Average Daily Traffic (ADT): ${e.features[0].properties.ADT} <font color="gray">${e.features[0].properties.ADT_rule}</font><br>
+
+                <h2>Technical Info</h2>
+                OSMid: <a href="https://www.openstreetmap.org/way/${e.features[0].properties.osmid}" target="_blank">${e.features[0].properties.osmid}</a><br>
+                LTS_biking_permitted: ${e.features[0].properties.LTS_biking_permitted}<br>
+                LTS_bike_lane_separation: ${e.features[0].properties.LTS_bike_lane_separation}<br>
+                LTS_mixed: ${e.features[0].properties.LTS_mixed}<br>
+                LTS_bikelane_noparking: ${e.features[0].properties.LTS_bikelane_noparking}<br>
+                LTS_bikelane_yesparking: ${e.features[0].properties.LTS_bikelane_yesparking}<br>
+            </p>`;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup()
+                .setLngLat(e.lngLat) // Changed to use click location instead of feature location (I think)
+                .setHTML(description)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the LTS layer.
+        map.on('mouseenter', 'lts-layer', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'lts-layer', () => {
+            map.getCanvas().style.cursor = '';
+        });
+    })
+
+</script>
+</body>
+</html>
