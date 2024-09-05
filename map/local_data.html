@@ -22,8 +22,31 @@
     </style>
 </head>
 <body>
+    <style>
+        .map-overlay {
+            background-color: #fff;
+            font:
+                12px/20px 'Helvetica Neue',
+                Arial,
+                Helvetica,
+                sans-serif;
+            position: absolute;
+            width: 100px;
+            top: 0;
+            left: 0;
+            padding: 1px;
+        }
+    </style>    
 <h1>BCU Labs - Data Team</h1>
 <div id="map"></div>
+<div class="map-overlay top">
+    <div class="map-overlay-inner">
+        <fieldset>
+            <label>Zoom Level: </label>
+            <label id="zoom"></label>
+        </fieldset>
+    </div>
+</div>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
 <script>
     const baseWidth = 3;
@@ -127,6 +150,10 @@
         // Change it back to a pointer when it leaves.
         map.on('mouseleave', 'lts-layer', () => {
             map.getCanvas().style.cursor = '';
+        });
+
+        map.on('zoom', () => {
+            document.getElementById('zoom').textContent = map.getZoom().toFixed(2);
         });
     })
 
