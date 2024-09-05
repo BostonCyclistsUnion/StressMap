@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>[TESTING] BCU Labs Stressmap</title>
+    <title>[Local] BCU Labs Stressmap</title>
     <meta name="viewport"
           content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css"
@@ -28,49 +28,38 @@
 <script>
     const baseWidth = 3;
     const baseZoom = 12
-    
-    mapboxgl.accessToken = 'pk.eyJ1Ijoic2tpbGNveW5lIiwiYSI6ImNseTd2cXpwOTA5MnUya3E2ejBkN2ttOW8ifQ.TN39Bd_yu_SqMsu-IW4FKQ';
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHNjaGllZ2dtIiwiYSI6ImNrZHoyb25iYjMxMWQzM2p6eHlibHJkanIifQ.wj-SisFvNPgakxBy_1ZnHw';
     const map = new mapboxgl.Map({
         container: 'map', // container ID
         center: [-71.057083, 42.361145], // Boston starting position [lng, lat]
-        // style: "mapbox://styles/skilcoyne/cly7vy7v200ut01qohg1ycwl7/draft",
         style:'mapbox://styles/mapbox/dark-v11',
         zoom: baseZoom // starting zoom
     });
 
-    // map.on('style.load', () => {
-    //     map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
-    //     map.setConfigProperty('basemap', 'showPlaceLabels', false);
-    //     map.setConfigProperty('basemap', 'show3dObjects', false);
-    //     map.setConfigProperty('basemap', 'showTransitLabels', true);
-    //     map.setConfigProperty('basemap', 'theme', 'monochrome');
-    //     map.setConfigProperty('basemap', 'lightPreset', 'night');
-    // });
-
     map.on('load', function () {
         map.addSource('LTS_source', {
-            type: 'vector',
-            url: 'mapbox://skilcoyne.stressmap_tiles'
+            type: 'geojson',
+            data: 'plots/LTS.json'
         });
 
         map.addLayer({
             'id': 'lts-layer',
-            "type": "line",
             'source': 'LTS_source',
-            'source-layer': 'lts',
+            "type": "line",
             'paint': {
                 'line-color': [
                     'match',
                     ['get', 'LTS'],
-                    // 0, 'black',
+                    0, 'black',
                     1, 'green',
                     2, 'blue',
                     3, 'orange',
                     4, 'red',
                     'white'
                 ],
-                'line-width': baseWidth
-                // 'line-opacity': 0.5,
+                "line-width": baseWidth,
+                'line-opacity': 0.5,
             }
         },
         'road-label-simple' // Add layer below labels
