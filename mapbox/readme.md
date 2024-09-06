@@ -15,4 +15,7 @@ tilesets create skilcoyne.stressmap_tiles --recipe mapbox/recipe.json --name "st
 tilesets publish skilcoyne.stressmap_tiles
 
 ## Update tileset recipe
+https://docs.mapbox.com/mapbox-tiling-service/examples/natural-earth-data-roads/
+
 tilesets update-recipe skilcoyne.stressmap_tiles mapbox/recipe.json
+tilesets publish skilcoyne.stressmap_tiles
