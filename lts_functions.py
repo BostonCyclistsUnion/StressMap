@@ -18,30 +18,66 @@ def read_rating():
 # %% Reused Functions
 
 def apply_rules(gdf_edges, rating_dict, prefix):
+    def apply_rule():
+        try:
+            if LEFT:
+                gdf_filter_left = gdf_edges.eval(f"{condition} & (`{prefix}_left_condition` == 'default')")
+            if RIGHT:
+                gdf_filter_right = gdf_edges.eval(f"{condition} & (`{prefix}_right_condition` == 'default')")
+            
+            if LEFT:
+                gdf_edges.loc[gdf_filter_left, f'{prefix}_left'] = value[prefix]
+                gdf_edges.loc[gdf_filter_left, f'{prefix}_left_rule_num'] = key
+                gdf_edges.loc[gdf_filter_left, f'{prefix}_left_rule'] = value['rule_message']
+                gdf_edges.loc[gdf_filter_left, f'{prefix}_left_condition'] = condition
+                if 'LTS' in value:
+                    gdf_edges.loc[gdf_filter_left, f'LTS_{prefix}_left'] = value['LTS']
+            if RIGHT:
+                gdf_edges.loc[gdf_filter_right, f'{prefix}_right'] = value[prefix]
+                gdf_edges.loc[gdf_filter_right, f'{prefix}_right_rule_num'] = key
+                gdf_edges.loc[gdf_filter_right, f'{prefix}_right_rule'] = value['rule_message']
+                gdf_edges.loc[gdf_filter_right, f'{prefix}_right_condition'] = condition
+                if 'LTS' in value:
+                    gdf_edges.loc[gdf_filter_right, f'LTS_{prefix}_right'] = value['LTS']
+        except pd.errors.UndefinedVariableError as e:
+            print(f'Column used in condition does not exsist in this region:\n\t{e}')
+
     rules = {k:v for (k,v) in rating_dict.items() if prefix in k}
         
     for key, value in rules.items():
         # Check rules in order, once something has been updated, leave it be
-        # FIXME gracefully handle if condition is not found
-        # FIXME need to handle single sided tags so that can include both sides in outputs
-        # print(key)
-        try:
-            gdf_filter = gdf_edges.eval(f"{value['condition']} & (`{prefix}_condition` == 'default')")
-            gdf_edges.loc[gdf_filter, prefix] = value[prefix]
-            gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
-            gdf_edges.loc[gdf_filter, f'{prefix}_rule'] = value['rule_message']
-            gdf_edges.loc[gdf_filter, f'{prefix}_condition'] = value['condition']
-            if 'LTS' in value:
-                gdf_edges.loc[gdf_filter, f'LTS_{prefix}'] = value['LTS']
-        except pd.errors.UndefinedVariableError as e:
-            print(f'Column used in condition does not exsist in this region:\n\t{e}')
+
+        condition = value['condition']
+        namespace = re.findall(r'\[(.*)\]', condition)[0]
+        if len(namespace.split(',')) > 0:
+            for namespaceVal in namespace:
+                condition = value['condition'].replace('[' + namespace + ']', namespaceVal)
+                if namespaceVal == 'both':
+                    LEFT = True
+                    RIGHT = True
+                if namespaceVal == 'left':
+                    LEFT = True
+                    RIGHT = False
+                if namespaceVal == 'right':
+                    LEFT = False
+                    RIGHT = True
+                apply_rule()
+        else:
+            condition = value['condition']
+            LEFT = True
+            RIGHT = True
+            apply_rule()
+    
 
     # Save memory by setting as category, need to set categories first
     for col in [
         # prefix,
-        f'{prefix}_rule_num',
-        f'{prefix}_condition', 
-        f'{prefix}_rule',
+        f'{prefix}_left_rule_num',
+        f'{prefix}_left_condition', 
+        f'{prefix}_left_rule',
+        f'{prefix}_right_rule_num',
+        f'{prefix}_right_condition', 
+        f'{prefix}_right_rule',
         ]:
 
         gdf_edges[col] = gdf_edges[col].astype('category')

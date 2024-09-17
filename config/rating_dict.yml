@@ -4,17 +4,9 @@ bike_lane_exist1:
   bike_lane_exist: 'yes'
   rule_message: Bike lane because cycleway='lane'
 bike_lane_exist2:
-  condition: (`cycleway:both` == 'lane')
+  condition: (`cycleway:[both,left,right]` == 'lane')
   bike_lane_exist: 'yes'
-  rule_message: Bike lane because cycleway:both='lane'
-bike_lane_exist3:
-  condition: (`cycleway:left` == 'lane')
-  bike_lane_exist: 'left:yes'
-  rule_message: Left bike lane because cycleway:left='lane'
-bike_lane_exist4:
-  condition: (`cycleway:right` == 'lane')
-  bike_lane_exist: 'right:yes'
-  rule_message: Right bike lane because cycleway:right='lane'
+  rule_message: Bike lane because cycleway:*='lane'
 # bike_lane_exist5:
 #   condition: (`shoulder:access:bicycle` == 'lane')
 #   bike_lane_exist: 'yes'
@@ -124,185 +116,68 @@ bike_lane_separation4:
 #   condition: (`cycleway` == 'separate')
 #   bike_lane_separation: 'yes'
 #   rule_message: Separated path because cycleway='separate'
-# bike_lane_separation6:
-#   LTS: 1
-#   condition: (`cycleway:both` == 'separate')
-#   bike_lane_separation: 'yes'
-#   rule_message: Separated path because cycleway:both='separate'
-# bike_lane_separation7:
-#   LTS: 1
-#   condition: (`cycleway:both:lane` == 'exclusive')
-#   bike_lane_separation: 'yes'
-#   rule_message: Separated path because cycleway:both:lane='exclusive'
-
 bike_lane_separation8:
   LTS: 1
-  condition: (`cycleway:right` == 'track')
-  bike_lane_separation: right:yes
-  rule_message: Separated path because cycleway:right='track'
+  condition: (`cycleway:[both,left,right]` == 'track')
+  bike_lane_separation: 'yes'
+  rule_message: Separated path because cycleway:*='track'
 # bike_lane_separation9:
 #   LTS: 1
-#   condition: (`cycleway:right` == 'separate')
-#   bike_lane_separation: right:yes
-#   rule_message: Separated path because cycleway:right='separate'
-
+#   condition: (`cycleway:[both,left,right]` == 'separate')
+#   bike_lane_separation: 'yes'
+#   rule_message: Separated path because cycleway:*='separate'
 bike_lane_separation10:
   LTS: 1
-  condition: (`cycleway:left` == 'track')
-  bike_lane_separation: left:yes
-  rule_message: Separated path because cycleway:left='track'
-# bike_lane_separation11:
-#   LTS: 1
-#   condition: (`cycleway:left` == 'separate')
-#   bike_lane_separation: left:yes
-#   rule_message: Separated path because cycleway:left='separate'
+  condition: (`cycleway:[both,left,right]:lane` == 'exclusive')
+  bike_lane_separation: 'yes'
+  rule_message: Separated path because cycleway:*:lane='exclusive'
 
-# bike_lane_separation12:
-#   LTS: 1
-#   condition: (`cycleway:right:lane` == 'exclusive')
-#   bike_lane_separation: right:yes
-#   rule_message: Separated path because cycleway:right:lane='exclusive'
-# bike_lane_separation13:
-#   LTS: 1
-#   condition: (`cycleway:left:lane` == 'exclusive')
-#   bike_lane_separation: left:yes
-#   rule_message: Separated path because cycleway:left:lane='exclusive'
 
 # Parking - parking_present()
 parking1:
-  condition: (`parking:both` == 'no')
+  condition: (`parking:[both,left,right]` == 'no')
   parking: 'no'
-  rule_message: Parking not allowed on either side
+  rule_message: Parking not allowed
 parking2:
-  condition: (`parking:both` == 'lane')
+  condition: (`parking:[both,left,right]` == 'lane')
   parking: 'yes'
-  rule_message: Parking allowed on both sides
+  rule_message: Parking lane
 parking3:
-  condition: (`parking:both` == 'street_side')
+  condition: (`parking:[both,left,right]` == 'street_side')
   parking: 'yes'
-  rule_message: Parking allowed on both sides
+  rule_message: Parking allowed on street side
 parking4:
-  condition: (`parking:both` == 'separate')
+  condition: (`parking:[both,left,right]` == 'separate')
   parking: 'yes'
-  rule_message: Parking separately mapped on both sides
+  rule_message: Parking separately mapped
 parking5:
-  condition: (`parking:both:orientation` == 'parallel')
+  condition: (`parking:[both,left,right]:orientation` == 'parallel')
   parking: 'yes'
-  rule_message: Parallel parking on both sides
+  rule_message: Parallel parking
 parking6:
-  condition: (`parking:condition:both` == 'no_parking')
+  condition: (`parking:condition:[both,left,right]` == 'no_parking')
   parking: 'no'
-  rule_message: Parking not allowed on either side
+  rule_message: Parking not allowed
 parking7:
-  condition: (`parking:condition:both` == 'no_stopping')
+  condition: (`parking:condition:[both,left,right]` == 'no_stopping')
   parking: 'no'
-  rule_message: Stopping not allowed on either side
+  rule_message: Stopping not allowed
 parking8:
-  condition: (`parking:lane:both` == 'no')
+  condition: (`parking:lane:[both,left,right]` == 'no')
   parking: 'no'
-  rule_message: Parking not allowed on either side
+  rule_message: Parking not allowed
 parking9:
-  condition: (`parking:lane:both` == 'no_stopping')
+  condition: (`parking:lane:[both,left,right]` == 'no_stopping')
   parking: 'no'
-  rule_message: Stopping not allowed on either side
+  rule_message: Stopping not allowed
 parking10:
-  condition: (`parking:lane:both` == 'parallel')
+  condition: (`parking:lane:[both,left,right]` == 'parallel')
   parking: 'yes'
-  rule_message: Parallel parking on both sides
+  rule_message: Parallel parking
 parking11:
-  condition: (`parking:condition:both` == 'ticket;residents')
+  condition: (`parking:condition:[both,left,right]` == 'ticket;residents')
   parking: 'yes'
-  rule_message: Resident parking on both sides
-
-parking21:
-  condition: (`parking:left` == 'no')
-  parking: 'left:no'
-  rule_message: Parking not allowed on the left
-parking22:
-  condition: (`parking:left` == 'lane')
-  parking: 'left:yes'
-  rule_message: Parking allowed on the left
-parking23:
-  condition: (`parking:left` == 'street_side')
-  parking: 'left:yes'
-  rule_message: Parking allowed on the left
-parking24:
-  condition: (`parking:left` == 'separate')
-  parking: 'left:yes'
-  rule_message: Parking separately mapped on the left
-parking25:
-  condition: (`parking:left:orientation` == 'parallel')
-  parking: 'left:yes'
-  rule_message: Parallel parking on the left
-parking26:
-  condition: (`parking:condition:left` == 'no_parking')
-  parking: 'left:no'
-  rule_message: Parking not allowed on the left
-parking27:
-  condition: (`parking:condition:left` == 'no_stopping')
-  parking: 'left:no'
-  rule_message: Stopping not allowed on the left
-parking28:
-  condition: (`parking:lane:left` == 'no')
-  parking: 'left:no'
-  rule_message: Parking not allowed on the left
-parking29:
-  condition: (`parking:lane:left` == 'no_stopping')
-  parking: 'left:no'
-  rule_message: Stopping not allowed on the left
-parking30:
-  condition: (`parking:lane:left` == 'parallel')
-  parking: 'left:yes'
-  rule_message: Parallel parking on the left
-parking31:
-  condition: (`parking:condition:left` == 'ticket;residents')
-  parking: 'left:yes'
-  rule_message: Resident parking on the left
-
-parking41:
-  condition: (`parking:right` == 'no')
-  parking: 'right:no'
-  rule_message: Parking not allowed on the right
-parking42:
-  condition: (`parking:right` == 'lane')
-  parking: 'right:yes'
-  rule_message: Parking allowed on the right
-parking43:
-  condition: (`parking:right` == 'street_side')
-  parking: 'right:yes'
-  rule_message: Parking allowed on the right
-parking44:
-  condition: (`parking:right` == 'separate')
-  parking: 'right:yes'
-  rule_message: Parking separately mapped on the right
-parking45:
-  condition: (`parking:right:orientation` == 'parallel')
-  parking: 'right:yes'
-  rule_message: Parallel parking on the right
-parking46:
-  condition: (`parking:condition:right` == 'no_parking')
-  parking: 'right:no'
-  rule_message: Parking not allowed on the right
-parking47:
-  condition: (`parking:condition:right` == 'no_stopping')
-  parking: 'right:no'
-  rule_message: Stopping not allowed on the right
-parking48:
-  condition: (`parking:lane:right` == 'no')
-  parking: 'right:no'
-  rule_message: Parking not allowed on the right
-parking49:
-  condition: (`parking:lane:right` == 'no_stopping')
-  parking: 'right:no'
-  rule_message: Stopping not allowed on the right
-parking50:
-  condition: (`parking:lane:right` == 'parallel')
-  parking: 'right:yes'
-  rule_message: Parallel parking on the right
-parking51:
-  condition: (`parking:condition:right` == 'ticket;residents')
-  parking: 'right:yes'
-  rule_message: Resident parking on the right
+  rule_message: Resident parking
 
 # Prevailing Speed (mph) - get_max_speed()
 # Assumed speeds are worst in Cambridge - FIXME use larger region
