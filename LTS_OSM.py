@@ -499,8 +499,8 @@ def combine_data(fullRegion, regionList):
         print(datetime.datetime.now())
 
     combine_all_lts(fullRegion, regionList)
-    combine_gdf_nodes(fullRegion, regionList)
-    combine_lts_graph(fullRegion, regionList)
+    # combine_gdf_nodes(fullRegion, regionList)
+    # combine_lts_graph(fullRegion, regionList)
 
 
 # %% Run as Script
@@ -514,11 +514,11 @@ def main(region, key, value, rebuild=False):
     extract_tags(region)
     gdfNodes, gdfEdges = download_data(region)
     all_lts, all_lts_small = lts_edges(region, gdfEdges)
-    gdf_nodes = lts_nodes(region, gdfNodes, all_lts)
-    save_LTS_graph(region, all_lts_small, gdf_nodes)
+    # gdf_nodes = lts_nodes(region, gdfNodes, all_lts) # Not using this yet/atm.
+    # save_LTS_graph(region, all_lts_small, gdf_nodes) # Pretty sure this isn't needed, I think it's duplicated/superceded by LTS_plot.plot_lts_geojson()
 
 if __name__ == '__main__':
     # city = ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts']
-    city = ['Boston', 'wikipedia', 'en:Boston,']
+    city = ['Boston', 'wikipedia', 'en:Boston']
 
     main(*city, True)
