@@ -6,17 +6,17 @@ cols_speeds:
   min: [0, 23.5, 28.5, 33.5, 38.5, 43.5, 48.5]
   max: [23.5, 28.5, 33.5, 38.5, 43.5, 48.5, 100]
 
-# Lane Width Classification (lane_nw)
-lane_narrow: # Otherwise lane is 'wide'
-  condition_1:
-    width_max: 30 # ft
-    parking: both
-  condition_2:
-    width_max: 22 # ft
-    parking: one
-  condition_3:
-    width_max: 15 # ft
-    parking: none
+# # Lane Width Classification (lane_nw)
+# lane_narrow: # Otherwise lane is 'wide'
+#   condition_1:
+#     width_max: 30 # ft
+#     parking: both
+#   condition_2:
+#     width_max: 22 # ft
+#     parking: one
+#   condition_3:
+#     width_max: 15 # ft
+#     parking: none
 
 # Table 1: Bikes in mixed traffic
 table_mixed:
@@ -89,10 +89,10 @@ table_mixed:
 # Table 2: Conventional bike lanes, advisory bike lanes, and shoulders not adjacent to a parking lane
 table_bikelane_noparking:
   conditions:
-    condition_1: (`cycleway` == 'lane') & (`parking` == 'no')
-    condition_2: (`cycleway` == 'shared_lane') & (`parking` == 'no')
-    condition_3: (`cycleway` == 'shared') & (`parking` == 'no')
-    # condition_4: shoulder_no_parking & (`parking` == 'no') # FIXME shoulder access?
+    condition_1: (`cycleway` == 'lane') & (`parking_side` == 'no')
+    condition_2: (`cycleway` == 'shared_lane') & (`parking_side` == 'no')
+    condition_3: (`cycleway` == 'shared') & (`parking_side` == 'no')
+    # condition_4: shoulder_no_parking & (`parking_side` == 'no') # FIXME shoulder access?
   bucketColumn: width_bikelane
   table_bikelane_noparking_1:
     conditions:
@@ -120,7 +120,8 @@ table_bikelane_noparking:
   table_bikelane_noparking_3:
     conditions:
       # 3+ lanes per direction
-      condition_1: (`lane_count` > 4)
+      condition_1: (`lane_count` > 4) & (`oneway` == False)
+      condition_2: (`lane_count` >= 3) & (`oneway` == True)
     table: # [bike_lane_min, bike_lane_max, Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [0, inf, 3, 3, 3, 3, 4, 4, 4]
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
@@ -134,10 +135,10 @@ table_bikelane_yesparking:
   # BLR: [Bike Lane Reach] = [bike lane width] + [parking lane width]
   # Minimum BLR is 12ft, otherwise use mixed traffic
   conditions:
-    condition_1: (`cycleway` == 'lane') & (`parking` == 'yes')
-    condition_2: (`cycleway` == 'shared') & (`parking` == 'yes')
-    condition_3: (`cycleway` == 'shared_lane') & (`parking` == 'yes')
-  bucketColumn: bikelane_reach
+    condition_1: (`cycleway` == 'lane') & (`parking_side` == 'yes')
+    condition_2: (`cycleway` == 'shared') & (`parking_side` == 'yes')
+    condition_3: (`cycleway` == 'shared_lane') & (`parking_side` == 'yes')
+  bucketColumn: bikelane_reach_side
   table_bikelane_yesparking_1:
     # 1 thru lane per direction or contraflow lane
     conditions:
@@ -146,7 +147,7 @@ table_bikelane_yesparking:
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [1, 1, 2, 2, 3, 3, 3]
       - [2, 2, 2, 3, 3, 3, 3]
-    table_bikelane_reach: # [min, max]
+    table_bikelane_reach_side: # [min, max]
       - [15, inf]
       - [12, 15]
   table_bikelane_yesparking_2:
@@ -156,7 +157,7 @@ table_bikelane_yesparking:
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
-    table_bikelane_reach: # [min, max]
+    table_bikelane_reach_side: # [min, max]
       - [15, inf]
       - [12, 15]
   table_bikelane_yesparking_3:
@@ -167,7 +168,7 @@ table_bikelane_yesparking:
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
-    table_bikelane_reach: # [min, max]
+    table_bikelane_reach_side: # [min, max]
       - [15, inf]
       - [12, 15]
   table_bikelane_yesparking_4:
@@ -176,5 +177,5 @@ table_bikelane_yesparking:
       condition_1: (`lane_count` >= 4) & (`oneway` == False)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [3, 3, 3, 3, 3, 3, 3]
-    table_bikelane_reach: # [min, max]
+    table_bikelane_reach_side: # [min, max]
       - [12, inf]
