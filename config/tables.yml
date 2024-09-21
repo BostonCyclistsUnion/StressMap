@@ -21,7 +21,7 @@ cols_speeds:
 # Table 1: Bikes in mixed traffic
 table_mixed:
   conditions: # Mixed traffic
-    condition_1: (`biking_permitted` == 'yes')
+    condition_1: (`biking_permitted_side` == 'yes')
   bucketColumn: ADT
   table_mixed_1:
     # Unlanned 2-way street w/out centerline
@@ -93,7 +93,7 @@ table_bikelane_noparking:
     condition_2: (`cycleway` == 'shared_lane') & (`parking_side` == 'no')
     condition_3: (`cycleway` == 'shared') & (`parking_side` == 'no')
     # condition_4: shoulder_no_parking & (`parking_side` == 'no') # FIXME shoulder access?
-  bucketColumn: width_bikelane
+  bucketColumn: width_bikelane_side
   table_bikelane_noparking_1:
     conditions:
       # 1 thru lane per direction or contraflow lane
@@ -147,7 +147,7 @@ table_bikelane_yesparking:
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [1, 1, 2, 2, 3, 3, 3]
       - [2, 2, 2, 3, 3, 3, 3]
-    table_bikelane_reach_side: # [min, max]
+    table_bikelane_reach: # [min, max]
       - [15, inf]
       - [12, 15]
   table_bikelane_yesparking_2:
@@ -157,7 +157,7 @@ table_bikelane_yesparking:
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
-    table_bikelane_reach_side: # [min, max]
+    table_bikelane_reach: # [min, max]
       - [15, inf]
       - [12, 15]
   table_bikelane_yesparking_3:
@@ -168,7 +168,7 @@ table_bikelane_yesparking:
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [2, 2, 3, 3, 3, 3, 3]
       - [3, 3, 3, 3, 3, 3, 3]
-    table_bikelane_reach_side: # [min, max]
+    table_bikelane_reach: # [min, max]
       - [15, inf]
       - [12, 15]
   table_bikelane_yesparking_4:
@@ -177,5 +177,5 @@ table_bikelane_yesparking:
       condition_1: (`lane_count` >= 4) & (`oneway` == False)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5 (assumed), Speed 6 (assumed)]
       - [3, 3, 3, 3, 3, 3, 3]
-    table_bikelane_reach_side: # [min, max]
+    table_bikelane_reach: # [min, max]
       - [12, inf]

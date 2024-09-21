@@ -4,7 +4,7 @@ import yaml
 import pandas as pd
 import numpy as np
 
-sides = ['left', 'right']
+SIDES = ['left', 'right']
 
 # %% Read Configuration Files
 def read_tables():
@@ -20,29 +20,27 @@ def read_rating():
 # %% Reused Functions
 
 def apply_rules(gdf_edges, rating_dict, prefix):
-    def apply_rule():
-        try:
-            if LEFT:
-                gdf_filter_left = gdf_edges.eval(f"{condition} & (`{prefix}_left_condition` == 'default')")
-            if RIGHT:
-                gdf_filter_right = gdf_edges.eval(f"{condition} & (`{prefix}_right_condition` == 'default')")
+    def apply_rule(SYM, LEFT, RIGHT):
+        sides = set()
+        if SYM:
+            sides.add('')
+        if LEFT:
+            sides.add('_left')
+        if RIGHT:
+            sides.add('_right')
+
+        for side in sides:
+            try:
+                gdf_filter = gdf_edges.eval(f"{condition} & (`{prefix}{side}_condition` == 'default')")
+                gdf_edges.loc[gdf_filter, f'{prefix}{side}'] = value[prefix]
+                gdf_edges.loc[gdf_filter, f'{prefix}{side}_rule_num'] = key
+                gdf_edges.loc[gdf_filter, f'{prefix}{side}_rule'] = value['rule_message']
+                gdf_edges.loc[gdf_filter, f'{prefix}{side}_condition'] = condition
+                if 'LTS' in value:
+                    gdf_edges.loc[gdf_filter, f'LTS_{prefix}{side}'] = value['LTS']
             
-            if LEFT:
-                gdf_edges.loc[gdf_filter_left, f'{prefix}_left'] = value[prefix]
-                gdf_edges.loc[gdf_filter_left, f'{prefix}_rule_num_left'] = key
-                gdf_edges.loc[gdf_filter_left, f'{prefix}_rule_left'] = value['rule_message']
-                gdf_edges.loc[gdf_filter_left, f'{prefix}_condition_left'] = condition
-                if 'LTS' in value:
-                    gdf_edges.loc[gdf_filter_left, f'LTS_{prefix}_left'] = value['LTS']
-            if RIGHT:
-                gdf_edges.loc[gdf_filter_right, f'{prefix}_right'] = value[prefix]
-                gdf_edges.loc[gdf_filter_right, f'{prefix}_rule_num_right'] = key
-                gdf_edges.loc[gdf_filter_right, f'{prefix}_rule_right'] = value['rule_message']
-                gdf_edges.loc[gdf_filter_right, f'{prefix}_condition_right'] = condition
-                if 'LTS' in value:
-                    gdf_edges.loc[gdf_filter_right, f'LTS_{prefix}_right'] = value['LTS']
-        except pd.errors.UndefinedVariableError as e:
-            print(f'Column used in condition does not exsist in this region:\n\t{e}')
+            except pd.errors.UndefinedVariableError as e:
+                print(f'Column used in condition does not exsist in this region:\n\t{e}')
 
     rules = {k:v for (k,v) in rating_dict.items() if prefix in k}
         
@@ -50,39 +48,66 @@ def apply_rules(gdf_edges, rating_dict, prefix):
         # Check rules in order, once something has been updated, leave it be
 
         condition = value['condition']
-        namespace = re.findall(r'\[(.*)\]', condition)[0]
-        if len(namespace.split(',')) > 0:
-            for namespaceVal in namespace:
-                condition = value['condition'].replace('[' + namespace + ']', namespaceVal)
-                if namespaceVal == 'both':
-                    LEFT = True
-                    RIGHT = True
-                if namespaceVal == 'left':
-                    LEFT = True
-                    RIGHT = False
-                if namespaceVal == 'right':
-                    LEFT = False
-                    RIGHT = True
-                apply_rule()
+        namespace = re.findall(r'\[(.*)\]', condition)
+        if len(namespace) > 0:
+            namespaceSplit = namespace[0].split(',')
+            if len(namespaceSplit) > 0:
+                for namespaceVal in namespaceSplit:
+                    condition = value['condition'].replace('[' + namespace[0] + ']', namespaceVal)
+                    if namespaceVal == 'both':
+                        LEFT = True
+                        RIGHT = True
+                    elif namespaceVal == 'left':
+                        LEFT = True
+                        RIGHT = False
+                    elif namespaceVal == 'right':
+                        LEFT = False
+                        RIGHT = True
+                    else:
+                        print(namespaceVal)
+                    SYM = False
+                    apply_rule(SYM, LEFT, RIGHT)
+        # elif symlist:
+        #     condition = value['condition']
+        #     SYM = True
+        #     LEFT = False
+        #     RIGHT = False
+        #     apply_rule(SYM, LEFT, RIGHT)
         else:
             condition = value['condition']
-            LEFT = True
-            RIGHT = True
-            apply_rule()
+            # SYM = False
+            # LEFT = True
+            # RIGHT = True
+            SYM = True
+            LEFT = False
+            RIGHT = False
+            apply_rule(SYM, LEFT, RIGHT)
     
 
     # Save memory by setting as category, need to set categories first
-    for col in [
-        # prefix,
-        f'{prefix}_left_rule_num',
-        f'{prefix}_left_condition', 
-        f'{prefix}_left_rule',
-        f'{prefix}_right_rule_num',
-        f'{prefix}_right_condition', 
-        f'{prefix}_right_rule',
-        ]:
+    if SYM:
+        cols = [
+            # prefix,
+            f'{prefix}_rule_num',
+            f'{prefix}_condition', 
+            f'{prefix}_rule',
+            ]
+    else:
+        cols = [
+            # prefix,
+            f'{prefix}_left_rule_num',
+            f'{prefix}_left_condition', 
+            f'{prefix}_left_rule',
+            f'{prefix}_right_rule_num',
+            f'{prefix}_right_condition', 
+            f'{prefix}_right_rule',
+            ]
 
-        gdf_edges[col] = gdf_edges[col].astype('category')
+    for col in cols:
+        try:
+            gdf_edges[col] = gdf_edges[col].astype('category')
+        except KeyError as e:
+            print(e)
 
     return gdf_edges
 
@@ -127,7 +152,7 @@ def biking_permitted(gdf_edges, rating_dict):
     prefix = 'biking_permitted'
     defaultRule = f'{prefix}0'
 
-    for side in sides:
+    for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
         gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
         gdf_edges[f'{prefix}_{side}_rule'] = 'Assume biking permitted'
@@ -141,7 +166,7 @@ def is_separated_path(gdf_edges, rating_dict):
     prefix = 'bike_lane_separation'
     defaultRule = f'{prefix}0'
 
-    for side in sides:
+    for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'no'
         gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
         gdf_edges[f'{prefix}_{side}_rule'] = 'Assume no bike lane separation'
@@ -168,7 +193,7 @@ def is_bike_lane(gdf_edges, rating_dict):
     prefix = 'bike_lane_exist'
     defaultRule = f'{prefix}0'
 
-    for side in sides:
+    for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'no'
         gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
         gdf_edges[f'{prefix}_{side}_rule'] = 'Assume no bike lane'
@@ -189,7 +214,7 @@ def parking_present(gdf_edges, rating_dict):
     prefix = 'parking'
     defaultRule = f'{prefix}0'
 
-    for side in sides:
+    for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
         gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
         gdf_edges[f'{prefix}_{side}_rule'] = 'Assume street parking is allowed on both sides'
@@ -197,10 +222,10 @@ def parking_present(gdf_edges, rating_dict):
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
-    for side in sides:
+    for side in SIDES:
         gdf_edges[f'width_parking_{side}'] = 0.0
         gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_{side}'] = 8.5 # ft
-        gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_rule_{side}'] = 'Assumed Width'
+        gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_{side}_rule'] = 'Assumed Width'
 
     return gdf_edges
 
@@ -273,11 +298,11 @@ def get_centerlines(gdf_edges, rating_dict):
     prefix = 'centerline'
     defaultRule = f'{prefix}0'
 
-    for side in sides:
-        gdf_edges[f'{prefix}_{side}'] = 'yes'
-        gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_{side}_rule'] = 'Assume centerlines'
-        gdf_edges[f'{prefix}_{side}_condition'] = 'default'
+    for side in SIDES:
+        gdf_edges[f'{prefix}'] = 'yes'
+        gdf_edges[f'{prefix}_rule_num'] = defaultRule
+        gdf_edges[f'{prefix}_rule'] = 'Assume centerlines'
+        gdf_edges[f'{prefix}_condition'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
@@ -288,28 +313,39 @@ def width_ft(gdf_edges):
     Convert OSM width columns to use decimal feet
     '''
     gdf_edges['width_street'], gdf_edges['width_street_rule'] = convert_feet_with_quotes(gdf_edges['width'])
+    # width_street, width_street_rule = convert_feet_with_quotes(gdf_edges['width'])
+    # for side in SIDES:
+    #     gdf_edges[f'width_street_{side}'] = width_street
+    #     gdf_edges[f'width_street_{side}_rule'] = width_street_rule
     
     try:
-        gdf_edges['width_bikelane'], gdf_edges['width_bikelane_rule'] = convert_feet_with_quotes(gdf_edges['cycleway:width'])
+        width_bikelane, width_bikelane_rule = convert_feet_with_quotes(gdf_edges['cycleway:width'])
+        for side in SIDES:
+            gdf_edges[f'width_bikelane_{side}'] = width_bikelane
+            gdf_edges[f'width_bikelane_{side}_rule'] = width_bikelane_rule
     except KeyError:
         print('No cycleway:width column')  
-        gdf_edges['width_bikelane'] = 0.0
-        gdf_edges['width_bikelane_rule'] = 'No cycleway:width column'  
+        for side in SIDES:
+            gdf_edges[f'width_bikelane_{side}'] = 0.0
+            gdf_edges[f'width_bikelane_{side}_rule'] = 'No cycleway:width column'  
 
     try:
         if 'yes' in gdf_edges['cycleway:buffer'].values:
             gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "2'"
         if 'no' in gdf_edges['cycleway:buffer'].values:
             gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "0.0"
-        gdf_edges['width_bikelanebuffer'], gdf_edges['width_bikelanebuffer_rule'] = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
+        width_bikelanebuffer, width_bikelanebuffer_rule = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
+        for side in SIDES:
+            gdf_edges[f'width_bikelanebuffer_{side}'] = width_bikelanebuffer
+            gdf_edges[f'width_bikelanebuffer_{side}_rule'] = width_bikelanebuffer_rule
     except KeyError:
         print('No cycleway:buffer column')
-        gdf_edges['width_bikelanebuffer'] = 0.0
-        gdf_edges['width_bikelanebuffer_rule'] = 'No cycleway:buffer column'
+        for side in SIDES:
+            gdf_edges[f'width_bikelanebuffer_{side}'] = 0.0
+            gdf_edges[f'width_bikelanebuffer_{side}_rule'] = 'No cycleway:buffer column'
 
-    # FIXME make this work for asymmetric layouts
-    for side in sides:
-        gdf_edges[f'bikelane_reach_{side}'] = gdf_edges['width_bikelane'] + gdf_edges[f'width_parking_{side}'] + gdf_edges['width_bikelanebuffer']
+    for side in SIDES:
+        gdf_edges[f'bikelane_reach_{side}'] = gdf_edges[f'width_bikelane_{side}'] + gdf_edges[f'width_parking_{side}'] + gdf_edges[f'width_bikelanebuffer_{side}']
 
     return gdf_edges
 
@@ -323,8 +359,7 @@ def define_narrow_wide(gdf_edges):
                   (gdf_edges['parking_left'] == 'yes') & 
                   (gdf_edges['parking_right'] == 'yes'), 'street_narrow_wide'] = 'narrow'
 
-    # FIXME make sure only single side has parking and not ignoring where one side is explicit yes and the other is explicit no
-    for side in sides:
+    for side in SIDES:
         gdf_edges.loc[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 22) & (gdf_edges[f'parking_{side}'] == 'yes'), 'street_narrow_wide'] = 'narrow'
 
     gdf_edges.loc[(gdf_edges['oneway'] == 'True') & 
@@ -346,11 +381,16 @@ def define_adt(gdf_edges, rating_dict):
     prefix = 'ADT'
     defaultRule = f'{prefix}0'
 
-    for side in sides:
-        gdf_edges[f'{prefix}_{side}'] = 1500 # FIXME is this the right default?
-        gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_{side}_rule'] = 'Assume moderate traffic.'
-        gdf_edges[f'{prefix}_{side}_condition'] = 'default'
+    gdf_edges[f'{prefix}'] = 1500 # FIXME is this the right default?
+    gdf_edges[f'{prefix}_rule_num'] = defaultRule
+    gdf_edges[f'{prefix}_rule'] = 'Assume moderate traffic.'
+    gdf_edges[f'{prefix}_condition'] = 'default'
+
+    # for side in SIDES:
+    #     gdf_edges[f'{prefix}_{side}'] = 1500 # FIXME is this the right default?
+    #     gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
+    #     gdf_edges[f'{prefix}_{side}_rule'] = 'Assume moderate traffic.'
+    #     gdf_edges[f'{prefix}_{side}_condition'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
@@ -367,7 +407,7 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
     speedMin = tables['cols_speeds']['min']
     speedMax = tables['cols_speeds']['max']
 
-    for side in sides:
+    for side in SIDES:
         gdf_edges[f'LTS_{baseName}_{side}'] = np.nan
 
     conditionTable = table['conditions']
@@ -378,12 +418,12 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
         # print(f'{table[subTable]['conditions']=}')
         for conditionTableName in table['conditions']:
             conditionTable = table['conditions'][conditionTableName]
-            for side in sides:
+            for side in SIDES:
                 conditionTable = conditionTable.replace('side', side)
             # print(conditionTable)
                 for conditionName in table[subTable]['conditions']:
                     bucketColumn = table['bucketColumn']
-                    bucketTable = table[subTable][f'table_{bucketColumn}']
+                    bucketTable = table[subTable][f'table_{bucketColumn}'.replace('_side', '')]
                     ltsSpeeds = table[subTable]['table_speed']
 
                     bucketColumn = bucketColumn.replace('side', side)
