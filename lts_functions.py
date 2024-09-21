@@ -33,9 +33,9 @@ def apply_rules(gdf_edges, rating_dict, prefix):
             try:
                 gdf_filter = gdf_edges.eval(f"{condition} & (`{prefix}{side}_condition` == 'default')")
                 gdf_edges.loc[gdf_filter, f'{prefix}{side}'] = value[prefix]
-                gdf_edges.loc[gdf_filter, f'{prefix}{side}_rule_num'] = key
-                gdf_edges.loc[gdf_filter, f'{prefix}{side}_rule'] = value['rule_message']
-                gdf_edges.loc[gdf_filter, f'{prefix}{side}_condition'] = condition
+                gdf_edges.loc[gdf_filter, f'{prefix}_rule_num{side}'] = key
+                gdf_edges.loc[gdf_filter, f'{prefix}_rule'] = value['rule_message']
+                gdf_edges.loc[gdf_filter, f'{prefix}_condition{side}'] = condition
                 if 'LTS' in value:
                     gdf_edges.loc[gdf_filter, f'LTS_{prefix}{side}'] = value['LTS']
             
@@ -95,12 +95,12 @@ def apply_rules(gdf_edges, rating_dict, prefix):
     else:
         cols = [
             # prefix,
-            f'{prefix}_left_rule_num',
-            f'{prefix}_left_condition', 
-            f'{prefix}_left_rule',
-            f'{prefix}_right_rule_num',
-            f'{prefix}_right_condition', 
-            f'{prefix}_right_rule',
+            f'{prefix}_rule_num_left',
+            f'{prefix}_condition_left', 
+            f'{prefix}_rule_left',
+            f'{prefix}_rule_num_right',
+            f'{prefix}_condition_right', 
+            f'{prefix}_rule_right',
             ]
 
     for col in cols:
@@ -154,9 +154,9 @@ def biking_permitted(gdf_edges, rating_dict):
 
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
-        gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_{side}_rule'] = 'Assume biking permitted'
-        gdf_edges[f'{prefix}_{side}_condition'] = 'default'
+        gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume biking permitted'
+        gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
@@ -168,9 +168,9 @@ def is_separated_path(gdf_edges, rating_dict):
 
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'no'
-        gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_{side}_rule'] = 'Assume no bike lane separation'
-        gdf_edges[f'{prefix}_{side}_condition'] = 'default'
+        gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume no bike lane separation'
+        gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     # get the columns that start with 'cycleway'
     # tags = gdf_edges.columns[gdf_edges.columns.str.contains('cycleway')]
@@ -195,9 +195,9 @@ def is_bike_lane(gdf_edges, rating_dict):
 
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'no'
-        gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_{side}_rule'] = 'Assume no bike lane'
-        gdf_edges[f'{prefix}_{side}_condition'] = 'default'
+        gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume no bike lane'
+        gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
@@ -216,16 +216,16 @@ def parking_present(gdf_edges, rating_dict):
 
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
-        gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_{side}_rule'] = 'Assume street parking is allowed on both sides'
-        gdf_edges[f'{prefix}_{side}_condition'] = 'default'
+        gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume street parking is allowed on both sides'
+        gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
     for side in SIDES:
         gdf_edges[f'width_parking_{side}'] = 0.0
         gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_{side}'] = 8.5 # ft
-        gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_{side}_rule'] = 'Assumed Width'
+        gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_rule_{side}'] = 'Assumed Width'
 
     return gdf_edges
 
@@ -322,12 +322,12 @@ def width_ft(gdf_edges):
         width_bikelane, width_bikelane_rule = convert_feet_with_quotes(gdf_edges['cycleway:width'])
         for side in SIDES:
             gdf_edges[f'width_bikelane_{side}'] = width_bikelane
-            gdf_edges[f'width_bikelane_{side}_rule'] = width_bikelane_rule
+            gdf_edges[f'width_bikelane_rule_{side}'] = width_bikelane_rule
     except KeyError:
         print('No cycleway:width column')  
         for side in SIDES:
             gdf_edges[f'width_bikelane_{side}'] = 0.0
-            gdf_edges[f'width_bikelane_{side}_rule'] = 'No cycleway:width column'  
+            gdf_edges[f'width_bikelane_rule_{side}'] = 'No cycleway:width column'  
 
     try:
         if 'yes' in gdf_edges['cycleway:buffer'].values:
@@ -337,12 +337,12 @@ def width_ft(gdf_edges):
         width_bikelanebuffer, width_bikelanebuffer_rule = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
         for side in SIDES:
             gdf_edges[f'width_bikelanebuffer_{side}'] = width_bikelanebuffer
-            gdf_edges[f'width_bikelanebuffer_{side}_rule'] = width_bikelanebuffer_rule
+            gdf_edges[f'width_bikelanebuffer_rule_{side}'] = width_bikelanebuffer_rule
     except KeyError:
         print('No cycleway:buffer column')
         for side in SIDES:
             gdf_edges[f'width_bikelanebuffer_{side}'] = 0.0
-            gdf_edges[f'width_bikelanebuffer_{side}_rule'] = 'No cycleway:buffer column'
+            gdf_edges[f'width_bikelanebuffer_rule_{side}'] = 'No cycleway:buffer column'
 
     for side in SIDES:
         gdf_edges[f'bikelane_reach_{side}'] = gdf_edges[f'width_bikelane_{side}'] + gdf_edges[f'width_parking_{side}'] + gdf_edges[f'width_bikelanebuffer_{side}']
