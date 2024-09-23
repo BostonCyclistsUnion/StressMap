@@ -31,10 +31,10 @@ def apply_rules(gdf_edges, rating_dict, prefix):
 
         for side in sides:
             try:
-                gdf_filter = gdf_edges.eval(f"{condition} & (`{prefix}{side}_condition` == 'default')")
+                gdf_filter = gdf_edges.eval(f"{condition} & (`{prefix}_condition{side}` == 'default')")
                 gdf_edges.loc[gdf_filter, f'{prefix}{side}'] = value[prefix]
                 gdf_edges.loc[gdf_filter, f'{prefix}_rule_num{side}'] = key
-                gdf_edges.loc[gdf_filter, f'{prefix}_rule'] = value['rule_message']
+                gdf_edges.loc[gdf_filter, f'{prefix}_rule{side}'] = value['rule_message']
                 gdf_edges.loc[gdf_filter, f'{prefix}_condition{side}'] = condition
                 if 'LTS' in value:
                     gdf_edges.loc[gdf_filter, f'LTS_{prefix}{side}'] = value['LTS']
@@ -67,17 +67,14 @@ def apply_rules(gdf_edges, rating_dict, prefix):
                         print(namespaceVal)
                     SYM = False
                     apply_rule(SYM, LEFT, RIGHT)
-        # elif symlist:
-        #     condition = value['condition']
-        #     SYM = True
-        #     LEFT = False
-        #     RIGHT = False
-        #     apply_rule(SYM, LEFT, RIGHT)
+        elif prefix in ['biking_permitted', 'bike_lane_separation']:
+            condition = value['condition']
+            SYM = False
+            LEFT = True
+            RIGHT = True
+            apply_rule(SYM, LEFT, RIGHT)
         else:
             condition = value['condition']
-            # SYM = False
-            # LEFT = True
-            # RIGHT = True
             SYM = True
             LEFT = False
             RIGHT = False
@@ -107,7 +104,7 @@ def apply_rules(gdf_edges, rating_dict, prefix):
         try:
             gdf_edges[col] = gdf_edges[col].astype('category')
         except KeyError as e:
-            print(e)
+            print(f'Key error attempting to set column as category: {e}')
 
     return gdf_edges
 
@@ -171,11 +168,6 @@ def is_separated_path(gdf_edges, rating_dict):
         gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
         gdf_edges[f'{prefix}_rule_{side}'] = 'Assume no bike lane separation'
         gdf_edges[f'{prefix}_condition_{side}'] = 'default'
-
-    # get the columns that start with 'cycleway'
-    # tags = gdf_edges.columns[gdf_edges.columns.str.contains('cycleway')]
-    # for tag in tags:
-    #     print(tag, gdfEdges[tag].unique())
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
@@ -298,11 +290,11 @@ def get_centerlines(gdf_edges, rating_dict):
     prefix = 'centerline'
     defaultRule = f'{prefix}0'
 
-    for side in SIDES:
-        gdf_edges[f'{prefix}'] = 'yes'
-        gdf_edges[f'{prefix}_rule_num'] = defaultRule
-        gdf_edges[f'{prefix}_rule'] = 'Assume centerlines'
-        gdf_edges[f'{prefix}_condition'] = 'default'
+    # for side in SIDES:
+    gdf_edges[f'{prefix}'] = 'yes'
+    gdf_edges[f'{prefix}_rule_num'] = defaultRule
+    gdf_edges[f'{prefix}_rule'] = 'Assume centerlines'
+    gdf_edges[f'{prefix}_condition'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
@@ -410,7 +402,7 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
     for side in SIDES:
         gdf_edges[f'LTS_{baseName}_{side}'] = np.nan
 
-    conditionTable = table['conditions']
+    # conditionTable = table['conditions']
 
     # Each LTS table split by number of lane classifications
     for subTable in subTables:
@@ -436,7 +428,8 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
                             condition = f'{condition} & {conditionSpeed} & {conditionBucket} & {conditionTable}'
                             # print(f'\t{conditionName} | {condition}')
                             gdf_filter = gdf_edges.eval(f"{condition}")
-                            gdf_edges.loc[gdf_filter, f'LTS_{baseName}'] = lts
+                            # print(f'{baseName}: LTS={lts}\n{condition}\n{gdf_filter.value_counts()}\n')
+                            gdf_edges.loc[gdf_filter, f'LTS_{baseName}_{side}'] = lts
                     # gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
             
 
@@ -449,7 +442,10 @@ def calculate_lts(gdf_edges, tables):
         gdf_edges = evaluate_lts_table(gdf_edges, tables, tableName)
 
     # Use the lowest calculated LTS score for a segment (in case mixed is lower than bike lane)
-    gdf_edges['LTS'] = gdf_edges.loc[:, gdf_edges.columns.str.contains('LTS')].min(axis=1, skipna=True, numeric_only=True)
+    for side in SIDES:
+        gdf_edges[f'LTS_{side}'] = gdf_edges.loc[:,( gdf_edges.columns.str.startswith('LTS') & gdf_edges.columns.str.endswith(side))].min(axis=1, skipna=True, numeric_only=True)
+
+    gdf_edges['LTS'] = gdf_edges[['LTS_left', 'LTS_right']].max(axis=1)
 
     return gdf_edges
 

@@ -146,7 +146,11 @@
                     <td colspan="3"><b>Street Design for Cars</b></td>
                 </tr>
                 <tr>
-                    <td>Effective Width</td>
+                    <td>Oneway</td>
+                    <td colspan="2">${e.features[0].properties.oneway}</td>
+                </tr>
+                <tr>
+                    <td>Oneway Width Type</td>
                     <td colspan="2">${e.features[0].properties.street_narrow_wide}</td>
                 </tr>
                 <tr>
@@ -161,10 +165,6 @@
                 <tr>
                     <td>Lane Count</td>
                     <td colspan="2">${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font></td>
-                </tr>
-                <tr>
-                    <td>Oneway</td>
-                    <td colspan="2">${e.features[0].properties.oneway}</td>
                 </tr>
                 <tr>
                     <td>Parking</td>
@@ -229,7 +229,7 @@
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat) // Changed to use click location instead of feature location (I think)
                 .setHTML(description)
-                .setMaxWidth("500px")
+                .setMaxWidth("600px")
                 .addTo(map);
         });
 

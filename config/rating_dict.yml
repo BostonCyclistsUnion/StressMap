@@ -7,6 +7,10 @@ bike_lane_exist2:
   condition: (`cycleway:[both,left,right]` == 'lane')
   bike_lane_exist: 'yes'
   rule_message: Bike lane because cycleway:*='lane'
+bike_lane_exist3:
+  condition: (`cycleway:[both,left,right]` == 'lane')
+  bike_lane_exist: 'no'
+  rule_message: No bike lane because cycleway:*='no'
 # bike_lane_exist5:
 #   condition: (`shoulder:access:bicycle` == 'lane')
 #   bike_lane_exist: 'yes'
@@ -89,6 +93,11 @@ biking_permitted11:
 #   LTS: 2
 #   condition: highway == 'track'
 #   rule_message: Setting LTS to 2 because highway='track'.
+biking_permitted15:
+  LTS: 0
+  condition: (oneway == 'yes') & (`cycleway:left` == 'no')
+  biking_permitted: 'no'
+  rule_message: No contraflow lane
 
 # Separated Paths - is_separated_path()
 bike_lane_separation1:
@@ -126,11 +135,6 @@ bike_lane_separation8:
 #   condition: (`cycleway:[both,left,right]` == 'separate')
 #   bike_lane_separation: 'yes'
 #   rule_message: Separated path because cycleway:*='separate'
-bike_lane_separation10:
-  LTS: 1
-  condition: (`cycleway:[both,left,right]:lane` == 'exclusive')
-  bike_lane_separation: 'yes'
-  rule_message: Separated path because cycleway:*:lane='exclusive'
 
 
 # Parking - parking_present()

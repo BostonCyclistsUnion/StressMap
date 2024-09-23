@@ -371,18 +371,19 @@ def lts_edges(region, gdf_edges):
         all_lts.to_csv(filepathAll)
         # https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_file.html
 
-    if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
-        # load graph
-        print(f"Loading LTS_small for {region}")
-        all_lts_small = read_lts_csv(filepathSmall)
-    else:
-        OVERWRITE = True
-        # FIXME need to figure out exactly what columns we want to save
-        all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'geometry',
-                                'length', 'LTS',
-                                ]]
-        print(f'Saving LTS_small for {region}')
-        all_lts_small.to_csv(filepathSmall)
+    # if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
+    #     # load graph
+    #     print(f"Loading LTS_small for {region}")
+    #     all_lts_small = read_lts_csv(filepathSmall)
+    # else:
+    #     OVERWRITE = True
+    #     # FIXME need to figure out exactly what columns we want to save
+    #     all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'geometry',
+    #                             'length', 'LTS',
+    #                             ]]
+    #     print(f'Saving LTS_small for {region}')
+    #     all_lts_small.to_csv(filepathSmall)
+    all_lts_small = None
 
     return all_lts, all_lts_small
 
