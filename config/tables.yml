@@ -3,7 +3,7 @@
 
 # Prevailing speeds (mph), with no data use speed limit
 cols_speeds: 
-  min: [0, 23.5, 28.5, 33.5, 38.5, 43.5, 48.5]
+  min: [0,    23.5, 28.5, 33.5, 38.5, 43.5, 48.5]
   max: [23.5, 28.5, 33.5, 38.5, 43.5, 48.5, 100]
 
 # # Lane Width Classification (lane_nw)

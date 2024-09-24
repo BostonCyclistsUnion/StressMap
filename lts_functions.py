@@ -305,21 +305,20 @@ def width_ft(gdf_edges):
     Convert OSM width columns to use decimal feet
     '''
     gdf_edges['width_street'], gdf_edges['width_street_rule'] = convert_feet_with_quotes(gdf_edges['width'])
-    # width_street, width_street_rule = convert_feet_with_quotes(gdf_edges['width'])
-    # for side in SIDES:
-    #     gdf_edges[f'width_street_{side}'] = width_street
-    #     gdf_edges[f'width_street_{side}_rule'] = width_street_rule
-    
+
+    for side in SIDES:
+        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelane_{side}'] = 5.0
+        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelane_rule_{side}'] = 'Assumed Width'
+        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelanebuffer_{side}'] = 0.0
+        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelanebuffer_rule_{side}'] = 'Assume no buffer'
+        
     try:
         width_bikelane, width_bikelane_rule = convert_feet_with_quotes(gdf_edges['cycleway:width'])
         for side in SIDES:
-            gdf_edges[f'width_bikelane_{side}'] = width_bikelane
-            gdf_edges[f'width_bikelane_rule_{side}'] = width_bikelane_rule
+            gdf_edges.loc[width_bikelane.notna(), f'width_bikelane_{side}'] = width_bikelane
+            gdf_edges.loc[width_bikelane.notna(), f'width_bikelane_rule_{side}'] = width_bikelane_rule
     except KeyError:
         print('No cycleway:width column')  
-        for side in SIDES:
-            gdf_edges[f'width_bikelane_{side}'] = 0.0
-            gdf_edges[f'width_bikelane_rule_{side}'] = 'No cycleway:width column'  
 
     try:
         if 'yes' in gdf_edges['cycleway:buffer'].values:
@@ -328,13 +327,10 @@ def width_ft(gdf_edges):
             gdf_edges.loc[gdf_edges['cycleway:buffer']=='yes','cycleway:buffer'] = "0.0"
         width_bikelanebuffer, width_bikelanebuffer_rule = convert_feet_with_quotes(gdf_edges['cycleway:buffer'])
         for side in SIDES:
-            gdf_edges[f'width_bikelanebuffer_{side}'] = width_bikelanebuffer
-            gdf_edges[f'width_bikelanebuffer_rule_{side}'] = width_bikelanebuffer_rule
+            gdf_edges.loc[width_bikelanebuffer.notna(), f'width_bikelanebuffer_{side}'] = width_bikelanebuffer
+            gdf_edges.loc[width_bikelanebuffer.notna(), f'width_bikelanebuffer_rule_{side}'] = width_bikelanebuffer_rule
     except KeyError:
         print('No cycleway:buffer column')
-        for side in SIDES:
-            gdf_edges[f'width_bikelanebuffer_{side}'] = 0.0
-            gdf_edges[f'width_bikelanebuffer_rule_{side}'] = 'No cycleway:buffer column'
 
     for side in SIDES:
         gdf_edges[f'bikelane_reach_{side}'] = gdf_edges[f'width_bikelane_{side}'] + gdf_edges[f'width_parking_{side}'] + gdf_edges[f'width_bikelanebuffer_{side}']
@@ -342,19 +338,19 @@ def width_ft(gdf_edges):
     return gdf_edges
 
 def define_narrow_wide(gdf_edges):
-    gdf_edges['street_narrow_wide'] = 'n/a'
+    gdf_edges['street_narrow_wide'] = 'not oneway'
 
-    gdf_edges.loc[(gdf_edges['oneway'] == 'True'), 'street_narrow_wide'] = 'wide'
+    gdf_edges.loc[(gdf_edges['oneway']), 'street_narrow_wide'] = 'wide'
 
-    gdf_edges.loc[(gdf_edges['oneway'] == 'True') & 
+    gdf_edges.loc[(gdf_edges['oneway']) & 
                   (gdf_edges['width_street'] < 30) & 
                   (gdf_edges['parking_left'] == 'yes') & 
                   (gdf_edges['parking_right'] == 'yes'), 'street_narrow_wide'] = 'narrow'
 
     for side in SIDES:
-        gdf_edges.loc[(gdf_edges['oneway'] == 'True') & (gdf_edges['width_street'] < 22) & (gdf_edges[f'parking_{side}'] == 'yes'), 'street_narrow_wide'] = 'narrow'
+        gdf_edges.loc[(gdf_edges['oneway']) & (gdf_edges['width_street'] < 22) & (gdf_edges[f'parking_{side}'] == 'yes'), 'street_narrow_wide'] = 'narrow'
 
-    gdf_edges.loc[(gdf_edges['oneway'] == 'True') & 
+    gdf_edges.loc[(gdf_edges['oneway']) & 
                   (gdf_edges['width_street'] < 15) & 
                   (gdf_edges['parking_left'] == 'no') & 
                   (gdf_edges['parking_right'] == 'no'), 'street_narrow_wide'] = 'narrow'
@@ -409,15 +405,15 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
         # print(f'\n{subTable=}')
         # print(f'{table[subTable]['conditions']=}')
         for conditionTableName in table['conditions']:
-            conditionTable = table['conditions'][conditionTableName]
+            conditionTableStr = table['conditions'][conditionTableName]
             for side in SIDES:
-                conditionTable = conditionTable.replace('side', side)
+                conditionTable = conditionTableStr.replace('side', side)
             # print(conditionTable)
                 for conditionName in table[subTable]['conditions']:
                     bucketColumn = table['bucketColumn']
                     bucketTable = table[subTable][f'table_{bucketColumn}'.replace('_side', '')]
                     ltsSpeeds = table[subTable]['table_speed']
-
+                    # print(f'{subTable=} | {conditionTable=} | {conditionName=}')
                     bucketColumn = bucketColumn.replace('side', side)
                     for bucket, ltsSpeed in zip(bucketTable, ltsSpeeds):
                         conditionBucket = f'(`{bucketColumn}` >= {bucket[0]}) & (`{bucketColumn}` < {bucket[1]})'

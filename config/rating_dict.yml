@@ -11,6 +11,10 @@ bike_lane_exist3:
   condition: (`cycleway:[both,left,right]` == 'lane')
   bike_lane_exist: 'no'
   rule_message: No bike lane because cycleway:*='no'
+bike_lane_exist4:
+  condition: (`cycleway:[both,left,right]` == 'separate')
+  bike_lane_exist: 'no'
+  rule_message: Bike lane displayed separately
 # bike_lane_exist5:
 #   condition: (`shoulder:access:bicycle` == 'lane')
 #   bike_lane_exist: 'yes'
@@ -19,6 +23,11 @@ bike_lane_exist3:
 
 
 # Biking Permitted Rules - biking_permitted()
+biking_permitted0:
+  LTS: 0
+  condition: (oneway == True) & (`cycleway:[left]` == 'no')
+  biking_permitted: 'no'
+  rule_message: No contraflow lane
 biking_permitted1:
   LTS: 0
   condition: (`bicycle` == 'dismount')
@@ -48,7 +57,7 @@ biking_permitted6:
   LTS: 0
   condition: (`highway` == 'proposed')
   biking_permitted: 'no'
-  rule_message:  "Assume: highway='proposed'"
+  rule_message: "Assume: highway='proposed'"
 biking_permitted7:
   LTS: 0
   condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'footway')
@@ -93,11 +102,6 @@ biking_permitted11:
 #   LTS: 2
 #   condition: highway == 'track'
 #   rule_message: Setting LTS to 2 because highway='track'.
-biking_permitted15:
-  LTS: 0
-  condition: (oneway == 'yes') & (`cycleway:left` == 'no')
-  biking_permitted: 'no'
-  rule_message: No contraflow lane
 
 # Separated Paths - is_separated_path()
 bike_lane_separation1:
@@ -188,51 +192,51 @@ parking11:
 speed1:
   condition: (`highway` == 'primary')
   speed: 50
-  rule_message:  "Assume: 'highway'='primary'"
+  rule_message: "Assume: 'highway'='primary'"
 speed2:
   condition: (`highway` == 'primary_link')
   speed: 35
-  rule_message:  "Assume: 'highway'='primary_link'"
+  rule_message: "Assume: 'highway'='primary_link'"
 speed3:
   condition: (`highway` == 'trunk')
   speed: 50
-  rule_message:  "Assume: 'highway'='trunk'"
+  rule_message: "Assume: 'highway'='trunk'"
 speed4:
   condition: (`highway` == 'trunk_link')
   speed: 50
-  rule_message:  "Assume: 'highway'='trunk_link'"
+  rule_message: "Assume: 'highway'='trunk_link'"
 speed5:
   condition: (`highway` == 'secondary')
   speed: 35
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message: "Assume: 'highway'='secondary'"
 speed6:
   condition: (`highway` == 'residential')
   speed: 25
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message: "Assume: 'highway'='secondary'"
 speed7:
   condition: (`highway` == 'footway')
   speed: 15
-  rule_message:  "Assume: 'highway'='footway'"
+  rule_message: "Assume: 'highway'='footway'"
 speed8:
   condition: (`highway` == 'unclassified')
   speed: 40
-  rule_message:  "Assume: 'highway'='unclassified'"
+  rule_message: "Assume: 'highway'='unclassified'"
 speed9:
   condition: (`highway` == 'service')
   speed: 30
-  rule_message:  "Assume: 'highway'='service'"
+  rule_message: "Assume: 'highway'='service'"
 speed10:
   condition: (`highway` == 'tertiary')
   speed: 25
-  rule_message:  "Assume: 'highway'='tertiary'"
+  rule_message: "Assume: 'highway'='tertiary'"
 speed11:
   condition: (`highway` == 'tertiary_link')
   speed: 25
-  rule_message:  "Assume: 'highway'='tertiary_link'"
+  rule_message: "Assume: 'highway'='tertiary_link'"
 speed12:
   condition: (`highway` == 'living_street')
   speed: 25
-  rule_message:  "Assume: 'highway'='living_street'"
+  rule_message: "Assume: 'highway'='living_street'"
 
 # Centerlines - get_centerlines()
 # Should this be combined with speed assumptions?
@@ -247,51 +251,51 @@ centerline2:
 centerline3:
   condition: (`highway` == 'primary')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='primary'"
+  rule_message: "Assume: 'highway'='primary'"
 centerline4:
   condition: (`highway` == 'primary_link')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='primary_link'"
+  rule_message: "Assume: 'highway'='primary_link'"
 centerline5:
   condition: (`highway` == 'trunk')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='trunk'"
+  rule_message: "Assume: 'highway'='trunk'"
 centerline6:
   condition: (`highway` == 'trunk_link')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='trunk_link'"
+  rule_message: "Assume: 'highway'='trunk_link'"
 centerline7:
   condition: (`highway` == 'secondary')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message: "Assume: 'highway'='secondary'"
 centerline8:
   condition: (`highway` == 'residential')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='residential'"
+  rule_message: "Assume: 'highway'='residential'"
 centerline9:
   condition: (`highway` == 'footway')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='footway'"
+  rule_message: "Assume: 'highway'='footway'"
 centerline10:
   condition: (`highway` == 'unclassified')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='unclassified'"
+  rule_message: "Assume: 'highway'='unclassified'"
 centerline11:
   condition: (`highway` == 'service')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='service'"
+  rule_message: "Assume: 'highway'='service'"
 centerline12:
   condition: (`highway` == 'tertiary')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='tertiary'"
+  rule_message: "Assume: 'highway'='tertiary'"
 centerline13:
   condition: (`highway` == 'tertiary_link')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='tertiary_link'"
+  rule_message: "Assume: 'highway'='tertiary_link'"
 centerline14:
   condition: (`highway` == 'living_street')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='living_street'"
+  rule_message: "Assume: 'highway'='living_street'"
 
 # Average Daily Traffic - get_adt()
 # Assumptions are based on an email for Prof. Furth
@@ -312,11 +316,11 @@ ADT4:
   ADT: 3001
   rule_message: Unlaned non-residential has moderate traffic
 ADT5:
-  condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == 'yes') 
+  condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == True) 
   ADT: 599
   rule_message: Oneway residential has low traffic
 ADT6:
-  condition: (`lane_count` == 1) & (`oneway` == 'yes') 
+  condition: (`lane_count` == 1) & (`oneway` == True) 
   ADT: 1001
   rule_message: Oneway non-residential has moderate traffic
 ADT7:
@@ -326,11 +330,11 @@ ADT7:
 ADT8:
   condition: (`highway` == 'footway')
   ADT: 10
-  rule_message:  "Assume: 'highway'='footway'"
+  rule_message: "Assume: 'highway'='footway'"
 ADT9:
   condition: (`highway` == 'service')
   ADT: 500
-  rule_message:  "Assume: 'highway'='service'"
+  rule_message: "Assume: 'highway'='service'"
 
 # ADT1:
 #   condition: (`highway` == 'primary')
