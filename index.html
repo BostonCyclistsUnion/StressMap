@@ -106,37 +106,123 @@
             const coordinates = e.features[0].geometry.coordinates.slice(); // I don't think this works with line strings
             const description = `
             <h1>${e.features[0].properties.name}</h1>
-            <p>
-                <b>LTS: ${e.features[0].properties.LTS}</b><br>
-                Road Type: ${e.features[0].properties.highway}<br>
+            <p>Road Type: ${e.features[0].properties.highway}<br></p>
+            <table>
+                <tr>
+                    <th>Value</th>
+                    <th>Left</th>
+                    <th>Right</th>
+                </tr>
+                <tr>
+                    <td><b>LTS</b></td>
+                    <td><b>${e.features[0].properties.LTS_left}</b></td>
+                    <td><b>${e.features[0].properties.LTS_right}</b></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><b>Bike Infrastructure</b></td>
+                </tr>
+                <tr>
+                    <td>Bike Permitted</td>
+                    <td>${e.features[0].properties.biking_permitted_left} <font color="gray">${e.features[0].properties.biking_permitted_rule_left}</font></td>
+                    <td>${e.features[0].properties.biking_permitted_right} <font color="gray">${e.features[0].properties.biking_permitted_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Bike Lane</td>
+                    <td>${e.features[0].properties.bike_lane_exist_left} <font color="gray">${e.features[0].properties.bike_lane_exist_rule_left}</font></td>
+                    <td>${e.features[0].properties.bike_lane_exist_right} <font color="gray">${e.features[0].properties.bike_lane_exist_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Separation</td>
+                    <td>${e.features[0].properties.bike_lane_separation_left} <font color="gray">${e.features[0].properties.bike_lane_separation_rule_left}</font></td>
+                    <td>${e.features[0].properties.bike_lane_separation_right} <font color="gray">${e.features[0].properties.bike_lane_separation_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Width</td>
+                    <td>${e.features[0].properties.width_bikelane_left} <font color="gray">${e.features[0].properties.width_bikelane_rule_left}</font></td>
+                    <td>${e.features[0].properties.width_bikelane_right} <font color="gray">${e.features[0].properties.width_bikelane_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Reach</td>
+                    <td>${e.features[0].properties.bikelane_reach_left} <font color="gray">${e.features[0].properties.bikelane_reach_rule_left}</font></td>
+                    <td>${e.features[0].properties.bikelane_reach_right} <font color="gray">${e.features[0].properties.bikelane_reach_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Buffer</td>
+                    <td>${e.features[0].properties.width_bikelanebuffer_left} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule_left}</font></td>
+                    <td>${e.features[0].properties.width_bikelanebuffer_right} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule_right}</font></td>
+                </tr>
+                <tr>
 
-                <h2>Bike Infrastructure</h2>
-                Bike Permitted: ${e.features[0].properties.biking_permitted} <font color="gray">${e.features[0].properties.biking_permitted_rule}</font><br>
-                Bike Lane: ${e.features[0].properties.bike_lane_exist} <font color="gray">${e.features[0].properties.bike_lane_exist_rule}</font><br>
-                Separation: ${e.features[0].properties.bike_lane_separation} <font color="gray">${e.features[0].properties.bike_lane_separation_rule}</font><br>
-                Width: ${e.features[0].properties.width_bikelane} <font color="gray">${e.features[0].properties.width_bikelane_rule}</font><br>
-                Reach: ${e.features[0].properties.bikelane_reach} <font color="gray">${e.features[0].properties.bikelane_reach_rule}</font><br>
-                Buffer: ${e.features[0].properties.width_bikelanebuffer} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule}</font><br>
-
-                <h2>Street Design for Cars</h2>
-                Effective Width: ${e.features[0].properties.street_narrow_wide}<br>
-                Street Width: ${e.features[0].properties.width_street} <font color="gray">${e.features[0].properties.width_street_rule}</font><br>
-                Parking Width: ${e.features[0].properties.width_parking} <font color="gray">${e.features[0].properties.width_parking_rule}</font><br>
-                Lane Count: ${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font><br>
-                Oneway: ${e.features[0].properties.oneway}<br>
-                Parking: ${e.features[0].properties.parking} <font color="gray">${e.features[0].properties.parking_rule}</font><br>
-                Prevailing Speed: ${e.features[0].properties.speed} <font color="gray">${e.features[0].properties.speed_rule}</font><br>
-                Centerline: ${e.features[0].properties.centerline} <font color="gray">${e.features[0].properties.centerline_rule}</font><br>
-                Average Daily Traffic (ADT): ${e.features[0].properties.ADT} <font color="gray">${e.features[0].properties.ADT_rule}</font><br>
-
-                <h2>Technical Info</h2>
-                OSMid: <a href="https://www.openstreetmap.org/way/${e.features[0].properties.osmid}" target="_blank">${e.features[0].properties.osmid}</a><br>
-                LTS_biking_permitted: ${e.features[0].properties.LTS_biking_permitted}<br>
-                LTS_bike_lane_separation: ${e.features[0].properties.LTS_bike_lane_separation}<br>
-                LTS_mixed: ${e.features[0].properties.LTS_mixed}<br>
-                LTS_bikelane_noparking: ${e.features[0].properties.LTS_bikelane_noparking}<br>
-                LTS_bikelane_yesparking: ${e.features[0].properties.LTS_bikelane_yesparking}<br>
-            </p>`;
+                <tr>
+                    <td colspan="3"><b>Street Design for Cars</b></td>
+                </tr>
+                <tr>
+                    <td>Oneway</td>
+                    <td colspan="2">${e.features[0].properties.oneway} <font color="gray">${e.features[0].properties.street_narrow_wide}</font></td>
+                </tr>
+                <tr>
+                    <td>Street Width</td>
+                    <td colspan="2">${e.features[0].properties.width_street} <font color="gray">${e.features[0].properties.width_street_rule}</font></td>
+                </tr>
+                <tr>
+                    <td>Parking Width</td>
+                    <td>${e.features[0].properties.width_parking_left} <font color="gray">${e.features[0].properties.width_parking_rule_left}</font></td>
+                    <td>${e.features[0].properties.width_parking_right} <font color="gray">${e.features[0].properties.width_parking_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Lane Count</td>
+                    <td colspan="2">${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font></td>
+                </tr>
+                <tr>
+                    <td>Parking</td>
+                    <td>${e.features[0].properties.parking_left} <font color="gray">${e.features[0].properties.parking_rule_left}</font></td>
+                    <td>${e.features[0].properties.parking_right} <font color="gray">${e.features[0].properties.parking_rule_right}</font></td>
+                </tr>
+                <tr>
+                    <td>Prevailing Speed</td>
+                    <td colspan="2">${e.features[0].properties.speed} <font color="gray">${e.features[0].properties.speed_rule}</font></td>
+                </tr>
+                <tr>
+                    <td>Centerline</td>
+                    <td colspan="2">${e.features[0].properties.centerline} <font color="gray">${e.features[0].properties.centerline_rule}</font></td>
+                </tr>
+                <tr>
+                    <td>Average Daily Traffic (ADT)</td>
+                    <td colspan="2">${e.features[0].properties.ADT} <font color="gray">${e.features[0].properties.ADT_rule}</font></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><b>Technical Info</b></td>
+                </tr>
+                <tr>
+                    <td>OSMid</td>
+                    <td colspan="2"><a href="https://www.openstreetmap.org/way/${e.features[0].properties.osmid}" target="_blank">${e.features[0].properties.osmid}</a></td>
+                </tr>
+                <tr>
+                    <td>LTS_biking_permitted</td>
+                    <td>${e.features[0].properties.LTS_biking_permitted_left}</td>
+                    <td>${e.features[0].properties.LTS_biking_permitted_right}</td>
+                </tr>
+                <tr>
+                    <td>LTS_bike_lane_separation</td>
+                    <td>${e.features[0].properties.LTS_bike_lane_separation_left}</td>
+                    <td>${e.features[0].properties.LTS_bike_lane_separation_right}</td>
+                </tr>
+                <tr>
+                    <td>LTS_mixed</td>
+                    <td>${e.features[0].properties.LTS_mixed_left}</td>
+                    <td>${e.features[0].properties.LTS_mixed_right}</td>
+                </tr>
+                <tr>
+                    <td>LTS_bikelane_noparking</td>
+                    <td>${e.features[0].properties.LTS_bikelane_noparking_left}</td>
+                    <td>${e.features[0].properties.LTS_bikelane_noparking_right}</td>
+                </tr>
+                <tr>
+                    <td>LTS_bikelane_yesparking</td>
+                    <td>${e.features[0].properties.LTS_bikelane_yesparking_left}</td>
+                    <td>${e.features[0].properties.LTS_bikelane_yesparking_right}</td>
+                </tr>
+            </table>`;
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
