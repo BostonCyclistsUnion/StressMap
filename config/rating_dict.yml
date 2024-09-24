@@ -28,6 +28,11 @@ biking_permitted0:
   condition: (oneway == True) & (`cycleway:[left]` == 'no')
   biking_permitted: 'no'
   rule_message: No contraflow lane
+biking_permitted90:
+  LTS: 0
+  condition: (oneway == True) & (`cycleway:[left]` != 'yes')
+  biking_permitted: 'no'
+  rule_message: No contraflow lane (assumed)
 biking_permitted1:
   LTS: 0
   condition: (`bicycle` == 'dismount')

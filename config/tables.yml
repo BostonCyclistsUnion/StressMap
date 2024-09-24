@@ -99,6 +99,7 @@ table_bikelane_noparking:
     conditions:
       # 1 thru lane per direction or contraflow lane
       condition_1: (`lane_count` == 2) & (`oneway` == False)
+      condition_2: (`lane_count` == 1) & (`oneway` == True)
       # condition_2: (`lane_count` == 1) & (`oneway` == True) & (`countraflow` == 'yes') 
       # FIXME create function to identify contraflow lanes
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
@@ -112,6 +113,7 @@ table_bikelane_noparking:
       # 2 thru lanes per direction
       condition_1: (`lane_count` == 4) & (`oneway` == False)
       condition_2: (`lane_count` == 3) & (`oneway` == False)
+      condition_3: (`lane_count` == 2) & (`oneway` == True)
     table_speed: # [Speed 0 (assumed), Speed 1, Speed 2, Speed 3, Speed 4, Speed 5, Speed 6]
       - [2, 2, 2, 2, 3, 3, 3]
       - [2, 2, 2, 2, 3, 4, 4]
