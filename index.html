@@ -235,6 +235,7 @@
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat) // Changed to use click location instead of feature location (I think)
                 .setHTML(description)
+                .setMaxWidth("600px")
                 .addTo(map);
         });
 
