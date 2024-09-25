@@ -4,17 +4,17 @@ bike_lane_exist1:
   bike_lane_exist: 'yes'
   rule_message: Bike lane because cycleway='lane'
 bike_lane_exist2:
-  condition: (`cycleway:both` == 'lane')
+  condition: (`cycleway:[both,left,right]` == 'lane')
   bike_lane_exist: 'yes'
-  rule_message: Bike lane because cycleway:both='lane'
+  rule_message: Bike lane because cycleway:*='lane'
 bike_lane_exist3:
-  condition: (`cycleway:left` == 'lane')
-  bike_lane_exist: 'left:yes'
-  rule_message: Left bike lane because cycleway:left='lane'
+  condition: (`cycleway:[both,left,right]` == 'lane')
+  bike_lane_exist: 'no'
+  rule_message: No bike lane because cycleway:*='no'
 bike_lane_exist4:
-  condition: (`cycleway:right` == 'lane')
-  bike_lane_exist: 'right:yes'
-  rule_message: Right bike lane because cycleway:right='lane'
+  condition: (`cycleway:[both,left,right]` == 'separate')
+  bike_lane_exist: 'no'
+  rule_message: Bike lane displayed separately
 # bike_lane_exist5:
 #   condition: (`shoulder:access:bicycle` == 'lane')
 #   bike_lane_exist: 'yes'
@@ -23,6 +23,16 @@ bike_lane_exist4:
 
 
 # Biking Permitted Rules - biking_permitted()
+biking_permitted0:
+  LTS: 0
+  condition: (oneway == True) & (`cycleway:[left]` == 'no')
+  biking_permitted: 'no'
+  rule_message: No contraflow lane
+biking_permitted90:
+  LTS: 0
+  condition: (oneway == True) & (`cycleway:[left]` != 'yes')
+  biking_permitted: 'no'
+  rule_message: No contraflow lane (assumed)
 biking_permitted1:
   LTS: 0
   condition: (`bicycle` == 'dismount')
@@ -52,7 +62,7 @@ biking_permitted6:
   LTS: 0
   condition: (`highway` == 'proposed')
   biking_permitted: 'no'
-  rule_message:  "Assume: highway='proposed'"
+  rule_message: "Assume: highway='proposed'"
 biking_permitted7:
   LTS: 0
   condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'footway')
@@ -124,236 +134,114 @@ bike_lane_separation4:
 #   condition: (`cycleway` == 'separate')
 #   bike_lane_separation: 'yes'
 #   rule_message: Separated path because cycleway='separate'
-# bike_lane_separation6:
-#   LTS: 1
-#   condition: (`cycleway:both` == 'separate')
-#   bike_lane_separation: 'yes'
-#   rule_message: Separated path because cycleway:both='separate'
-# bike_lane_separation7:
-#   LTS: 1
-#   condition: (`cycleway:both:lane` == 'exclusive')
-#   bike_lane_separation: 'yes'
-#   rule_message: Separated path because cycleway:both:lane='exclusive'
-
 bike_lane_separation8:
   LTS: 1
-  condition: (`cycleway:right` == 'track')
-  bike_lane_separation: right:yes
-  rule_message: Separated path because cycleway:right='track'
+  condition: (`cycleway:[both,left,right]` == 'track')
+  bike_lane_separation: 'yes'
+  rule_message: Separated path because cycleway:*='track'
 # bike_lane_separation9:
 #   LTS: 1
-#   condition: (`cycleway:right` == 'separate')
-#   bike_lane_separation: right:yes
-#   rule_message: Separated path because cycleway:right='separate'
+#   condition: (`cycleway:[both,left,right]` == 'separate')
+#   bike_lane_separation: 'yes'
+#   rule_message: Separated path because cycleway:*='separate'
 
-bike_lane_separation10:
-  LTS: 1
-  condition: (`cycleway:left` == 'track')
-  bike_lane_separation: left:yes
-  rule_message: Separated path because cycleway:left='track'
-# bike_lane_separation11:
-#   LTS: 1
-#   condition: (`cycleway:left` == 'separate')
-#   bike_lane_separation: left:yes
-#   rule_message: Separated path because cycleway:left='separate'
-
-# bike_lane_separation12:
-#   LTS: 1
-#   condition: (`cycleway:right:lane` == 'exclusive')
-#   bike_lane_separation: right:yes
-#   rule_message: Separated path because cycleway:right:lane='exclusive'
-# bike_lane_separation13:
-#   LTS: 1
-#   condition: (`cycleway:left:lane` == 'exclusive')
-#   bike_lane_separation: left:yes
-#   rule_message: Separated path because cycleway:left:lane='exclusive'
 
 # Parking - parking_present()
 parking1:
-  condition: (`parking:both` == 'no')
+  condition: (`parking:[both,left,right]` == 'no')
   parking: 'no'
-  rule_message: Parking not allowed on either side
+  rule_message: Parking not allowed
 parking2:
-  condition: (`parking:both` == 'lane')
+  condition: (`parking:[both,left,right]` == 'lane')
   parking: 'yes'
-  rule_message: Parking allowed on both sides
+  rule_message: Parking lane
 parking3:
-  condition: (`parking:both` == 'street_side')
+  condition: (`parking:[both,left,right]` == 'street_side')
   parking: 'yes'
-  rule_message: Parking allowed on both sides
+  rule_message: Parking allowed on street side
 parking4:
-  condition: (`parking:both` == 'separate')
+  condition: (`parking:[both,left,right]` == 'separate')
   parking: 'yes'
-  rule_message: Parking separately mapped on both sides
+  rule_message: Parking separately mapped
 parking5:
-  condition: (`parking:both:orientation` == 'parallel')
+  condition: (`parking:[both,left,right]:orientation` == 'parallel')
   parking: 'yes'
-  rule_message: Parallel parking on both sides
+  rule_message: Parallel parking
 parking6:
-  condition: (`parking:condition:both` == 'no_parking')
+  condition: (`parking:condition:[both,left,right]` == 'no_parking')
   parking: 'no'
-  rule_message: Parking not allowed on either side
+  rule_message: Parking not allowed
 parking7:
-  condition: (`parking:condition:both` == 'no_stopping')
+  condition: (`parking:condition:[both,left,right]` == 'no_stopping')
   parking: 'no'
-  rule_message: Stopping not allowed on either side
+  rule_message: Stopping not allowed
 parking8:
-  condition: (`parking:lane:both` == 'no')
+  condition: (`parking:lane:[both,left,right]` == 'no')
   parking: 'no'
-  rule_message: Parking not allowed on either side
+  rule_message: Parking not allowed
 parking9:
-  condition: (`parking:lane:both` == 'no_stopping')
+  condition: (`parking:lane:[both,left,right]` == 'no_stopping')
   parking: 'no'
-  rule_message: Stopping not allowed on either side
+  rule_message: Stopping not allowed
 parking10:
-  condition: (`parking:lane:both` == 'parallel')
+  condition: (`parking:lane:[both,left,right]` == 'parallel')
   parking: 'yes'
-  rule_message: Parallel parking on both sides
+  rule_message: Parallel parking
 parking11:
-  condition: (`parking:condition:both` == 'ticket;residents')
+  condition: (`parking:condition:[both,left,right]` == 'ticket;residents')
   parking: 'yes'
-  rule_message: Resident parking on both sides
-
-parking21:
-  condition: (`parking:left` == 'no')
-  parking: 'left:no'
-  rule_message: Parking not allowed on the left
-parking22:
-  condition: (`parking:left` == 'lane')
-  parking: 'left:yes'
-  rule_message: Parking allowed on the left
-parking23:
-  condition: (`parking:left` == 'street_side')
-  parking: 'left:yes'
-  rule_message: Parking allowed on the left
-parking24:
-  condition: (`parking:left` == 'separate')
-  parking: 'left:yes'
-  rule_message: Parking separately mapped on the left
-parking25:
-  condition: (`parking:left:orientation` == 'parallel')
-  parking: 'left:yes'
-  rule_message: Parallel parking on the left
-parking26:
-  condition: (`parking:condition:left` == 'no_parking')
-  parking: 'left:no'
-  rule_message: Parking not allowed on the left
-parking27:
-  condition: (`parking:condition:left` == 'no_stopping')
-  parking: 'left:no'
-  rule_message: Stopping not allowed on the left
-parking28:
-  condition: (`parking:lane:left` == 'no')
-  parking: 'left:no'
-  rule_message: Parking not allowed on the left
-parking29:
-  condition: (`parking:lane:left` == 'no_stopping')
-  parking: 'left:no'
-  rule_message: Stopping not allowed on the left
-parking30:
-  condition: (`parking:lane:left` == 'parallel')
-  parking: 'left:yes'
-  rule_message: Parallel parking on the left
-parking31:
-  condition: (`parking:condition:left` == 'ticket;residents')
-  parking: 'left:yes'
-  rule_message: Resident parking on the left
-
-parking41:
-  condition: (`parking:right` == 'no')
-  parking: 'right:no'
-  rule_message: Parking not allowed on the right
-parking42:
-  condition: (`parking:right` == 'lane')
-  parking: 'right:yes'
-  rule_message: Parking allowed on the right
-parking43:
-  condition: (`parking:right` == 'street_side')
-  parking: 'right:yes'
-  rule_message: Parking allowed on the right
-parking44:
-  condition: (`parking:right` == 'separate')
-  parking: 'right:yes'
-  rule_message: Parking separately mapped on the right
-parking45:
-  condition: (`parking:right:orientation` == 'parallel')
-  parking: 'right:yes'
-  rule_message: Parallel parking on the right
-parking46:
-  condition: (`parking:condition:right` == 'no_parking')
-  parking: 'right:no'
-  rule_message: Parking not allowed on the right
-parking47:
-  condition: (`parking:condition:right` == 'no_stopping')
-  parking: 'right:no'
-  rule_message: Stopping not allowed on the right
-parking48:
-  condition: (`parking:lane:right` == 'no')
-  parking: 'right:no'
-  rule_message: Parking not allowed on the right
-parking49:
-  condition: (`parking:lane:right` == 'no_stopping')
-  parking: 'right:no'
-  rule_message: Stopping not allowed on the right
-parking50:
-  condition: (`parking:lane:right` == 'parallel')
-  parking: 'right:yes'
-  rule_message: Parallel parking on the right
-parking51:
-  condition: (`parking:condition:right` == 'ticket;residents')
-  parking: 'right:yes'
-  rule_message: Resident parking on the right
+  rule_message: Resident parking
 
 # Prevailing Speed (mph) - get_max_speed()
 # Assumed speeds are worst in Cambridge - FIXME use larger region
 speed1:
   condition: (`highway` == 'primary')
   speed: 50
-  rule_message:  "Assume: 'highway'='primary'"
+  rule_message: "Assume: 'highway'='primary'"
 speed2:
   condition: (`highway` == 'primary_link')
   speed: 35
-  rule_message:  "Assume: 'highway'='primary_link'"
+  rule_message: "Assume: 'highway'='primary_link'"
 speed3:
   condition: (`highway` == 'trunk')
   speed: 50
-  rule_message:  "Assume: 'highway'='trunk'"
+  rule_message: "Assume: 'highway'='trunk'"
 speed4:
   condition: (`highway` == 'trunk_link')
   speed: 50
-  rule_message:  "Assume: 'highway'='trunk_link'"
+  rule_message: "Assume: 'highway'='trunk_link'"
 speed5:
   condition: (`highway` == 'secondary')
   speed: 35
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message: "Assume: 'highway'='secondary'"
 speed6:
   condition: (`highway` == 'residential')
   speed: 25
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message: "Assume: 'highway'='secondary'"
 speed7:
   condition: (`highway` == 'footway')
   speed: 15
-  rule_message:  "Assume: 'highway'='footway'"
+  rule_message: "Assume: 'highway'='footway'"
 speed8:
   condition: (`highway` == 'unclassified')
   speed: 40
-  rule_message:  "Assume: 'highway'='unclassified'"
+  rule_message: "Assume: 'highway'='unclassified'"
 speed9:
   condition: (`highway` == 'service')
   speed: 30
-  rule_message:  "Assume: 'highway'='service'"
+  rule_message: "Assume: 'highway'='service'"
 speed10:
   condition: (`highway` == 'tertiary')
   speed: 25
-  rule_message:  "Assume: 'highway'='tertiary'"
+  rule_message: "Assume: 'highway'='tertiary'"
 speed11:
   condition: (`highway` == 'tertiary_link')
   speed: 25
-  rule_message:  "Assume: 'highway'='tertiary_link'"
+  rule_message: "Assume: 'highway'='tertiary_link'"
 speed12:
   condition: (`highway` == 'living_street')
   speed: 25
-  rule_message:  "Assume: 'highway'='living_street'"
+  rule_message: "Assume: 'highway'='living_street'"
 
 # Centerlines - get_centerlines()
 # Should this be combined with speed assumptions?
@@ -368,51 +256,51 @@ centerline2:
 centerline3:
   condition: (`highway` == 'primary')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='primary'"
+  rule_message: "Assume: 'highway'='primary'"
 centerline4:
   condition: (`highway` == 'primary_link')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='primary_link'"
+  rule_message: "Assume: 'highway'='primary_link'"
 centerline5:
   condition: (`highway` == 'trunk')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='trunk'"
+  rule_message: "Assume: 'highway'='trunk'"
 centerline6:
   condition: (`highway` == 'trunk_link')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='trunk_link'"
+  rule_message: "Assume: 'highway'='trunk_link'"
 centerline7:
   condition: (`highway` == 'secondary')
   centerline: 'yes'
-  rule_message:  "Assume: 'highway'='secondary'"
+  rule_message: "Assume: 'highway'='secondary'"
 centerline8:
   condition: (`highway` == 'residential')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='residential'"
+  rule_message: "Assume: 'highway'='residential'"
 centerline9:
   condition: (`highway` == 'footway')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='footway'"
+  rule_message: "Assume: 'highway'='footway'"
 centerline10:
   condition: (`highway` == 'unclassified')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='unclassified'"
+  rule_message: "Assume: 'highway'='unclassified'"
 centerline11:
   condition: (`highway` == 'service')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='service'"
+  rule_message: "Assume: 'highway'='service'"
 centerline12:
   condition: (`highway` == 'tertiary')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='tertiary'"
+  rule_message: "Assume: 'highway'='tertiary'"
 centerline13:
   condition: (`highway` == 'tertiary_link')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='tertiary_link'"
+  rule_message: "Assume: 'highway'='tertiary_link'"
 centerline14:
   condition: (`highway` == 'living_street')
   centerline: 'no'
-  rule_message:  "Assume: 'highway'='living_street'"
+  rule_message: "Assume: 'highway'='living_street'"
 
 # Average Daily Traffic - get_adt()
 # Assumptions are based on an email for Prof. Furth
@@ -433,11 +321,11 @@ ADT4:
   ADT: 3001
   rule_message: Unlaned non-residential has moderate traffic
 ADT5:
-  condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == 'yes') 
+  condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == True) 
   ADT: 599
   rule_message: Oneway residential has low traffic
 ADT6:
-  condition: (`lane_count` == 1) & (`oneway` == 'yes') 
+  condition: (`lane_count` == 1) & (`oneway` == True) 
   ADT: 1001
   rule_message: Oneway non-residential has moderate traffic
 ADT7:
@@ -447,49 +335,8 @@ ADT7:
 ADT8:
   condition: (`highway` == 'footway')
   ADT: 10
-  rule_message:  "Assume: 'highway'='footway'"
+  rule_message: "Assume: 'highway'='footway'"
 ADT9:
   condition: (`highway` == 'service')
   ADT: 500
-  rule_message:  "Assume: 'highway'='service'"
-
-# ADT1:
-#   condition: (`highway` == 'primary')
-#   ADT: 1500
-#   rule_message: Assume ADT of 50 where 'highway'='primary'
-# ADT2:
-#   condition: (`highway` == 'primary_link')
-#   ADT: 1500
-#   rule_message: Assume ADT of 50 where 'highway'='primary_link'
-# ADT3:
-#   condition: (`highway` == 'trunk')
-#   ADT: 1500
-#   rule_message: Assume ADT of 50 where 'highway'='trunk'
-# ADT4:
-#   condition: (`highway` == 'trunk_link')
-#   ADT: 1500
-#   rule_message: Assume ADT of 50 where 'highway'='trunk_link'
-# ADT5:
-#   condition: (`highway` == 'secondary')
-#   ADT: 1500
-#   rule_message: Assume ADT of 35 where 'highway'='secondary'
-# ADT6:
-#   condition: (`highway` == 'residential')
-#   ADT: 1500
-#   rule_message: Assume ADT of 25 where 'highway'='secondary'
-# ADT8:
-#   condition: (`highway` == 'unclassified')
-#   ADT: 1500
-#   rule_message: Assume ADT of 40 where 'highway'='unclassified'
-# ADT10:
-#   condition: (`highway` == 'tertiary')
-#   ADT: 1500
-#   rule_message: Assume ADT of 25 where 'highway'='tertiary'
-# ADT11:
-#   condition: (`highway` == 'tertiary_link')
-#   ADT: 1500
-#   rule_message: Assume ADT of 25 where 'highway'='tertiary_link'
-# ADT12:
-#   condition: (`highway` == 'living_street')
-#   ADT: 1500
-#   rule_message: Assume ADT of 25 where 'highway'='living_street'
+  rule_message: "Assume: 'highway'='service'"

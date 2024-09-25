@@ -30,7 +30,7 @@ ltsColors = ['grey', 'green', 'deepskyblue', 'orange', 'red']
 
 
 def load_data(region):
-    if type(region) == list:
+    if type(region) is list:
         df = pd.DataFrame()
         for r in region:
             dfr = pd.read_csv(f'{dataFolder}/{r}_4_all_lts.csv', low_memory=False)
@@ -190,28 +190,33 @@ def plot_not_missing_data(region, all_lts):
     print(f'Saved LTS_{region}_has_speed_has_lanes.png')
 
 
-def plot_lts_lonboard_geojson(region, all_lts):
+def plot_lts_geojson(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
-    geo_json = lts[['geometry', 'LTS', 'osmid', 'name', 'highway',
-                    'biking_permitted', 'biking_permitted_rule',
-                    'bike_lane_exist', 'bike_lane_exist_rule',
-                    'bike_lane_separation', 'bike_lane_separation_rule',
-                    'parking', 'parking_rule',
+    fields_general = ['geometry', 'LTS', 'osmid', 'name', 'highway',
                     'speed', 'speed_rule',
                     'centerline', 'centerline_rule',
                     'ADT', 'ADT_rule',
                     'lane_count', 'oneway', 
                     'street_narrow_wide', 
                     'width_street', 'width_street_rule',
-                    'width_parking', 'width_parking_rule', 
+                    'cycleway',                    
+                    ]
+    fields_sided = ['biking_permitted', 'biking_permitted_rule',
+                    'bike_lane_exist', 'bike_lane_exist_rule',
+                    'bike_lane_separation', 'bike_lane_separation_rule',
+                    'parking', 'parking_rule','width_parking', 'width_parking_rule', 
                     'width_bikelanebuffer', 'width_bikelanebuffer_rule',
-                    'width_bikelane', 'width_bikelane_rule', 'bikelane_reach', 'cycleway',
-                    'LTS_biking_permitted', 'LTS_bike_lane_separation', 
+                    'width_bikelane', 'width_bikelane_rule', 'bikelane_reach',                      
                     'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking',
-                    ]].to_json()
+                    'LTS_biking_permitted', 'LTS_bike_lane_separation',
+                    'LTS',
+                    ]
+    
+    fields_sided = [field + '_left' for field in fields_sided] + [field + '_right' for field in fields_sided]
+    geo_json = lts[fields_general + fields_sided].to_json()
 
     # Save GeoJson
-    json_plot_file = f'{plotFolder}/{region}_LTS_lonboard.json'
+    json_plot_file = f'{plotFolder}/{region}_LTS.json'
     with open(json_plot_file, 'w') as f:
         f.write(geo_json + '\n')
 
@@ -266,7 +271,7 @@ def main(region, format="json"):
     if format == "html":
         plot_lts_lonboard(region, all_lts)
     if format == "json":
-        plot_lts_lonboard_geojson(region, all_lts)
+        plot_lts_geojson(region, all_lts)
 
 
 if __name__ == '__main__':

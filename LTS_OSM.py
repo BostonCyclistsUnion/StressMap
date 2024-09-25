@@ -268,7 +268,16 @@ def read_lts_csv(filepath):
             'bikelane_reach', 'street_narrow_wide',
             'ADT', 'ADT_rule_num', 'ADT_rule', 'ADT_condition',
             'LTS_biking_permitted', 'LTS_bike_lane_separation', 
-            'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS'
+            'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS',
+            'width_street_rule', 'biking_permitted_left', 'biking_permitted_rule_left', 'bike_lane_exist_left', 'bike_lane_exist_rule_left', 
+            'bike_lane_separation_left', 'bike_lane_separation_rule_left', 'parking_left', 'parking_rule_left', 'width_parking_left', 
+            'width_parking_rule_left', 'width_bikelanebuffer_left', 'width_bikelanebuffer_rule_left', 'width_bikelane_left', 
+            'width_bikelane_rule_left', 'bikelane_reach_left', 'LTS_mixed_left', 'LTS_bikelane_noparking_left', 'LTS_bikelane_yesparking_left',
+            'LTS_biking_permitted_left', 'LTS_bike_lane_separation_left', 'LTS_left', 'biking_permitted_right', 'biking_permitted_rule_right',
+            'bike_lane_exist_right', 'bike_lane_exist_rule_right', 'bike_lane_separation_right', 'bike_lane_separation_rule_right', 
+            'parking_right', 'parking_rule_right', 'width_parking_right', 'width_parking_rule_right', 'width_bikelanebuffer_right', 
+            'width_bikelanebuffer_rule_right', 'width_bikelane_right', 'width_bikelane_rule_right', 'bikelane_reach_right', 'LTS_mixed_right',
+            'LTS_bikelane_noparking_right', 'LTS_bikelane_yesparking_right', 'LTS_biking_permitted_right', 'LTS_bike_lane_separation_right', 'LTS_right'
             ]
     
     dtypeDict = {'u': 'Int64',
@@ -371,18 +380,19 @@ def lts_edges(region, gdf_edges):
         all_lts.to_csv(filepathAll)
         # https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_file.html
 
-    if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
-        # load graph
-        print(f"Loading LTS_small for {region}")
-        all_lts_small = read_lts_csv(filepathSmall)
-    else:
-        OVERWRITE = True
-        # FIXME need to figure out exactly what columns we want to save
-        all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'geometry',
-                                'length', 'LTS',
-                                ]]
-        print(f'Saving LTS_small for {region}')
-        all_lts_small.to_csv(filepathSmall)
+    # if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
+    #     # load graph
+    #     print(f"Loading LTS_small for {region}")
+    #     all_lts_small = read_lts_csv(filepathSmall)
+    # else:
+    #     OVERWRITE = True
+    #     # FIXME need to figure out exactly what columns we want to save
+    #     all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'geometry',
+    #                             'length', 'LTS',
+    #                             ]]
+    #     print(f'Saving LTS_small for {region}')
+    #     all_lts_small.to_csv(filepathSmall)
+    all_lts_small = None
 
     return all_lts, all_lts_small
 
@@ -499,8 +509,8 @@ def combine_data(fullRegion, regionList):
         print(datetime.datetime.now())
 
     combine_all_lts(fullRegion, regionList)
-    combine_gdf_nodes(fullRegion, regionList)
-    combine_lts_graph(fullRegion, regionList)
+    # combine_gdf_nodes(fullRegion, regionList)
+    # combine_lts_graph(fullRegion, regionList)
 
 
 # %% Run as Script
@@ -514,11 +524,11 @@ def main(region, key, value, rebuild=False):
     extract_tags(region)
     gdfNodes, gdfEdges = download_data(region)
     all_lts, all_lts_small = lts_edges(region, gdfEdges)
-    gdf_nodes = lts_nodes(region, gdfNodes, all_lts)
-    save_LTS_graph(region, all_lts_small, gdf_nodes)
+    # gdf_nodes = lts_nodes(region, gdfNodes, all_lts) # Not using this yet/atm.
+    # save_LTS_graph(region, all_lts_small, gdf_nodes) # Pretty sure this isn't needed, I think it's duplicated/superceded by LTS_plot.plot_lts_geojson()
 
 if __name__ == '__main__':
     # city = ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts']
-    city = ['Boston', 'wikipedia', 'en:Boston,']
+    city = ['Boston', 'wikipedia', 'en:Boston']
 
     main(*city, True)
