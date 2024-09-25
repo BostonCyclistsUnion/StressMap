@@ -268,7 +268,16 @@ def read_lts_csv(filepath):
             'bikelane_reach', 'street_narrow_wide',
             'ADT', 'ADT_rule_num', 'ADT_rule', 'ADT_condition',
             'LTS_biking_permitted', 'LTS_bike_lane_separation', 
-            'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS'
+            'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS',
+            'width_street_rule', 'biking_permitted_left', 'biking_permitted_rule_left', 'bike_lane_exist_left', 'bike_lane_exist_rule_left', 
+            'bike_lane_separation_left', 'bike_lane_separation_rule_left', 'parking_left', 'parking_rule_left', 'width_parking_left', 
+            'width_parking_rule_left', 'width_bikelanebuffer_left', 'width_bikelanebuffer_rule_left', 'width_bikelane_left', 
+            'width_bikelane_rule_left', 'bikelane_reach_left', 'LTS_mixed_left', 'LTS_bikelane_noparking_left', 'LTS_bikelane_yesparking_left',
+            'LTS_biking_permitted_left', 'LTS_bike_lane_separation_left', 'LTS_left', 'biking_permitted_right', 'biking_permitted_rule_right',
+            'bike_lane_exist_right', 'bike_lane_exist_rule_right', 'bike_lane_separation_right', 'bike_lane_separation_rule_right', 
+            'parking_right', 'parking_rule_right', 'width_parking_right', 'width_parking_rule_right', 'width_bikelanebuffer_right', 
+            'width_bikelanebuffer_rule_right', 'width_bikelane_right', 'width_bikelane_rule_right', 'bikelane_reach_right', 'LTS_mixed_right',
+            'LTS_bikelane_noparking_right', 'LTS_bikelane_yesparking_right', 'LTS_biking_permitted_right', 'LTS_bike_lane_separation_right', 'LTS_right'
             ]
     
     dtypeDict = {'u': 'Int64',

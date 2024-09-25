@@ -49,7 +49,7 @@
 </div>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
 <script>
-    const baseWidth = 3;
+    const baseWidth = 4;
     const baseZoom = 12
 
     mapboxgl.accessToken = 'pk.eyJ1IjoidHNjaGllZ2dtIiwiYSI6ImNrZHoyb25iYjMxMWQzM2p6eHlibHJkanIifQ.wj-SisFvNPgakxBy_1ZnHw';
@@ -131,16 +131,15 @@
                     <td>${e.features[0].properties.width_bikelane_right} <font color="gray">${e.features[0].properties.width_bikelane_rule_right}</font></td>
                 </tr>
                 <tr>
-                    <td>Reach</td>
-                    <td>${e.features[0].properties.bikelane_reach_left} <font color="gray">${e.features[0].properties.bikelane_reach_rule_left}</font></td>
-                    <td>${e.features[0].properties.bikelane_reach_right} <font color="gray">${e.features[0].properties.bikelane_reach_rule_right}</font></td>
-                </tr>
-                <tr>
                     <td>Buffer</td>
                     <td>${e.features[0].properties.width_bikelanebuffer_left} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule_left}</font></td>
                     <td>${e.features[0].properties.width_bikelanebuffer_right} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule_right}</font></td>
                 </tr>
                 <tr>
+                    <td>Reach</td>
+                    <td>${e.features[0].properties.bikelane_reach_left}</td>
+                    <td>${e.features[0].properties.bikelane_reach_right}</td>
+                </tr>
 
                 <tr>
                     <td colspan="3"><b>Street Design for Cars</b></td>

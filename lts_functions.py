@@ -67,7 +67,7 @@ def apply_rules(gdf_edges, rating_dict, prefix):
                         print(namespaceVal)
                     SYM = False
                     apply_rule(SYM, LEFT, RIGHT)
-        elif prefix in ['biking_permitted', 'bike_lane_separation']:
+        elif prefix in ['bike_lane_exist', 'biking_permitted', 'bike_lane_separation']:
             condition = value['condition']
             SYM = False
             LEFT = True
