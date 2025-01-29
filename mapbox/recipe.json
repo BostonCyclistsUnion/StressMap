@@ -27,8 +27,12 @@
                     ]
                 }
                 },
-                "filter": [ "<=", [ "get", "quality" ], [ "zoom" ] ]
-            }
+                "filter": [ "<=", [ "get", "quality" ], [ "zoom" ] ],
+                "simplification": 10
+            },
+        "tiles": {
+            "layer_size": 2500
+        }
         }
     }
 }
