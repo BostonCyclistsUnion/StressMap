@@ -3,15 +3,32 @@ bike_lane_exist1:
   condition: (`cycleway` == 'lane')
   bike_lane_exist: 'yes'
   rule_message: Bike lane because cycleway='lane'
-bike_lane_exist2:
+bike_lane_exist3:
+  condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_exist: 'yes'
+  rule_message: Left side bikelane
+bike_lane_exist4:
+  condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_exist: 'no'
+  rule_message: No contraflow lane
+bike_lane_exist5:
+  condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_exist: 'yes'
+  rule_message: Left side bikelane
+bike_lane_exist6:
+  condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_exist: 'no'
+  rule_message: No contraflow lane
+
+bike_lane_exist10:
   condition: (`cycleway:[both,left,right]` == 'lane')
   bike_lane_exist: 'yes'
   rule_message: Bike lane because cycleway:*='lane'
-bike_lane_exist3:
-  condition: (`cycleway:[both,left,right]` == 'lane')
+bike_lane_exist12:
+  condition: (`cycleway:[both,left,right]` == 'no')
   bike_lane_exist: 'no'
   rule_message: No bike lane because cycleway:*='no'
-bike_lane_exist4:
+bike_lane_exist14:
   condition: (`cycleway:[both,left,right]` == 'separate')
   bike_lane_exist: 'no'
   rule_message: Bike lane displayed separately
@@ -23,81 +40,115 @@ bike_lane_exist4:
 
 
 # Biking Permitted Rules - biking_permitted()
-biking_permitted0:
+biking_permitted1:
   LTS: 0
   condition: (oneway == True) & (`cycleway:[left]` == 'no')
   biking_permitted: 'no'
   rule_message: No contraflow lane
-biking_permitted90:
+biking_permitted2:
   LTS: 0
   condition: (oneway == True) & (`cycleway:[left]` != 'yes')
   biking_permitted: 'no'
-  rule_message: No contraflow lane (assumed)
-biking_permitted1:
+  rule_message: Assumed
+biking_permitted4:
   LTS: 0
   condition: (`bicycle` == 'dismount')
   biking_permitted: 'no' # FUTURE classify dismount separately to include in some analyses specially
   rule_message: Cyclists must dismount
-biking_permitted2:
+biking_permitted6:
   LTS: 0
   condition: (`bicycle` == 'no')
   biking_permitted: 'no'
   rule_message: Cycling explicitly excluded
-biking_permitted3:
+biking_permitted8:
+  condition: (`bicycle` == 'yes')
+  biking_permitted: 'yes'
+  rule_message: Cycling explicitly allowed
+biking_permitted10:
   LTS: 0
   condition: (`highway` == 'motorway')
   biking_permitted: 'no'
-  rule_message: "Assume: highway='motorway'"
-biking_permitted4:
+  rule_message: "Assumed"
+biking_permitted12:
   LTS: 0
   condition: (`highway` == 'motorway_link')
   biking_permitted: 'no'
-  rule_message: "Assume: highway='motorway_link'"
-biking_permitted5:
+  rule_message: "Assumed"
+biking_permitted14:
   LTS: 0
   condition: (`access` == 'no')
   biking_permitted: 'no'
   rule_message: No access
-biking_permitted6:
+biking_permitted16:
   LTS: 0
   condition: (`highway` == 'proposed')
   biking_permitted: 'no'
-  rule_message: "Assume: highway='proposed'"
-biking_permitted7:
+  rule_message: "Assumed"
+biking_permitted18:
   LTS: 0
   condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'footway')
   biking_permitted: 'no'
-  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".
-biking_permitted8:
+  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway"
+biking_permitted20:
   LTS: 0
   condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'path')
   biking_permitted: 'no'
-  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway" or "path".
-# Moved from mixed_traffic
-# biking_permitted:
-#   LTS: 1
-#   condition: highway = 'pedestrian'
-#   rule_message: Setting LTS to 1 because highway='pedestrian'.
-# biking_permitted:
-#   LTS: 1
-#   condition: motor_vehicle == 'no'
-#   rule_message: Setting LTS to 1 because motor_vehicle='no'.
-
-biking_permitted9:
+  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "path".
+biking_permitted21:
+  LTS: 0
+  condition: (`footway` == 'crossing') & (`bicycle` != 'yes') & (`highway` == 'footway')
+  biking_permitted: 'no'
+  rule_message: Don't include crossings where bikes aren't explicitly allowed
+biking_permitted22:
+  LTS: 0
+  condition: (`crossing` == 'informal') & (`bicycle` != 'yes') & (`highway` == 'footway')
+  biking_permitted: 'no'
+  rule_message: Don't include crossings where bikes aren't explicitly allowed
+biking_permitted23:
+  LTS: 0
+  condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & (`bicycle` != 'yes')
+  biking_permitted: 'no'
+  rule_message: Bicycle must be yes on an access aisle footway
+biking_permitted24:
+  LTS: 1
+  condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & (`bicycle` == 'yes')
+  biking_permitted: 'no'
+  rule_message: Footway are low stress
+biking_permitted26:
   LTS: 2
   condition: (highway == 'service') & (service == 'alley')
   biking_permitted: 'yes'
   rule_message: Service alley
-biking_permitted10:
+biking_permitted28:
   LTS: 2
   condition: (highway == 'service') & (service == 'driveway')
   biking_permitted: 'yes'
   rule_message: Driveway
-biking_permitted11:
+biking_permitted30:
   LTS: 2
   condition: (highway == 'service')
   biking_permitted: 'yes'
   rule_message: Service road
+biking_permitted32:
+  LTS: 0
+  condition: (`tunnel` == 'yes') & (`bicycle` != 'yes')
+  biking_permitted: 'no'
+  rule_message: No biking in tunnels
+biking_permitted34:
+  LTS: 0
+  condition: (`tunnel` == 'building_passage') & (`bicycle` != 'yes')
+  biking_permitted: 'no'
+  rule_message: No biking in tunnels
+biking_permitted36:
+  LTS: 0
+  condition: (`highway` == 'footway') & (`foot` == 'private') & (`bicycle` != 'yes')
+  biking_permitted: 'no'
+  rule_message: No biking on private footways
+biking_permitted38:
+  LTS: 0
+  condition: (`bus` == 'designated') & (`bicycle` != 'yes')
+  biking_permitted: 'no'
+  rule_message: No biking on busways
 # biking_permitted:
 #   LTS: 2
 #   condition: highway = 'footway' & footway == 'crossing'
@@ -107,6 +158,16 @@ biking_permitted11:
 #   LTS: 2
 #   condition: highway == 'track'
 #   rule_message: Setting LTS to 2 because highway='track'.
+
+# Moved from mixed_traffic
+# biking_permitted:
+#   LTS: 1
+#   condition: highway = 'pedestrian'
+#   rule_message: Setting LTS to 1 because highway='pedestrian'.
+# biking_permitted:
+#   LTS: 1
+#   condition: motor_vehicle == 'no'
+#   rule_message: Setting LTS to 1 because motor_vehicle='no'.
 
 # Separated Paths - is_separated_path()
 bike_lane_separation1:
@@ -129,12 +190,30 @@ bike_lane_separation4:
   condition: (`cycleway` == 'track')
   bike_lane_separation: 'yes'
   rule_message: Separated path because cycleway='track'
+bike_lane_separation10:
+  condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_separation: 'no'
+  rule_message: Left side bikelane
+bike_lane_separation11:
+  condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_separation: 'no'
+  rule_message: No contraflow lane
+bike_lane_separation12:
+  LTS: 1
+  condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_separation: 'yes'
+  rule_message: Left side bikelane
+bike_lane_separation13:
+  LTS: 0
+  condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+  bike_lane_separation: 'no'
+  rule_message: No contraflow lane
 # bike_lane_separation5:
 #   LTS: 1
 #   condition: (`cycleway` == 'separate')
 #   bike_lane_separation: 'yes'
 #   rule_message: Separated path because cycleway='separate'
-bike_lane_separation8:
+bike_lane_separation20:
   LTS: 1
   condition: (`cycleway:[both,left,right]` == 'track')
   bike_lane_separation: 'yes'
@@ -197,51 +276,51 @@ parking11:
 speed1:
   condition: (`highway` == 'primary')
   speed: 50
-  rule_message: "Assume: 'highway'='primary'"
+  rule_message: Assumed
 speed2:
   condition: (`highway` == 'primary_link')
   speed: 35
-  rule_message: "Assume: 'highway'='primary_link'"
+  rule_message: Assumed
 speed3:
   condition: (`highway` == 'trunk')
   speed: 50
-  rule_message: "Assume: 'highway'='trunk'"
+  rule_message: Assumed
 speed4:
   condition: (`highway` == 'trunk_link')
   speed: 50
-  rule_message: "Assume: 'highway'='trunk_link'"
+  rule_message: Assumed
 speed5:
   condition: (`highway` == 'secondary')
   speed: 35
-  rule_message: "Assume: 'highway'='secondary'"
+  rule_message: Assumed
 speed6:
   condition: (`highway` == 'residential')
   speed: 25
-  rule_message: "Assume: 'highway'='secondary'"
+  rule_message: Assumed
 speed7:
   condition: (`highway` == 'footway')
   speed: 15
-  rule_message: "Assume: 'highway'='footway'"
+  rule_message: Assumed
 speed8:
   condition: (`highway` == 'unclassified')
   speed: 40
-  rule_message: "Assume: 'highway'='unclassified'"
+  rule_message: Assumed
 speed9:
   condition: (`highway` == 'service')
   speed: 30
-  rule_message: "Assume: 'highway'='service'"
+  rule_message: Assumed
 speed10:
   condition: (`highway` == 'tertiary')
   speed: 25
-  rule_message: "Assume: 'highway'='tertiary'"
+  rule_message: Assumed
 speed11:
   condition: (`highway` == 'tertiary_link')
   speed: 25
-  rule_message: "Assume: 'highway'='tertiary_link'"
+  rule_message: Assumed
 speed12:
   condition: (`highway` == 'living_street')
   speed: 25
-  rule_message: "Assume: 'highway'='living_street'"
+  rule_message: Assumed
 
 # Centerlines - get_centerlines()
 # Should this be combined with speed assumptions?
@@ -256,87 +335,96 @@ centerline2:
 centerline3:
   condition: (`highway` == 'primary')
   centerline: 'yes'
-  rule_message: "Assume: 'highway'='primary'"
+  rule_message: Assumed
 centerline4:
   condition: (`highway` == 'primary_link')
   centerline: 'yes'
-  rule_message: "Assume: 'highway'='primary_link'"
+  rule_message: Assumed
 centerline5:
   condition: (`highway` == 'trunk')
   centerline: 'yes'
-  rule_message: "Assume: 'highway'='trunk'"
+  rule_message: Assumed
 centerline6:
   condition: (`highway` == 'trunk_link')
   centerline: 'yes'
-  rule_message: "Assume: 'highway'='trunk_link'"
+  rule_message: Assumed
 centerline7:
   condition: (`highway` == 'secondary')
   centerline: 'yes'
-  rule_message: "Assume: 'highway'='secondary'"
+  rule_message: Assumed
 centerline8:
   condition: (`highway` == 'residential')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='residential'"
+  rule_message: Assumed
 centerline9:
   condition: (`highway` == 'footway')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='footway'"
+  rule_message: Assumed
 centerline10:
   condition: (`highway` == 'unclassified')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='unclassified'"
+  rule_message: Assumed
 centerline11:
   condition: (`highway` == 'service')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='service'"
+  rule_message: Assumed
 centerline12:
   condition: (`highway` == 'tertiary')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='tertiary'"
+  rule_message: Assumed
 centerline13:
   condition: (`highway` == 'tertiary_link')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='tertiary_link'"
+  rule_message: Assumed
 centerline14:
   condition: (`highway` == 'living_street')
   centerline: 'no'
-  rule_message: "Assume: 'highway'='living_street'"
+  rule_message: Assumed
 
 # Average Daily Traffic - get_adt()
 # Assumptions are based on an email for Prof. Furth
-ADT1:
+ADT10:
+  condition: (`highway` == 'footway')
+  ADT: 10
+  rule_message: Assumed
+ADT20:
+  condition: (`highway` == 'service')
+  ADT: 100
+  rule_message: Assumed
+ADT30:
+  condition: (`highway` == 'primary')
+  ADT: 3001
+  rule_message: Assumed
+ADT31:
+  condition: (`highway` == 'primary_link')
+  ADT: 3001
+  rule_message: Assumed
+ADT40:
   condition: (`lane_count` >= 3)
   ADT: 8001
   rule_message: Traffic is high on large roads
-ADT2:
+ADT50:
   condition: (`lane_count` == 2) & (`centerline` == 'yes')
   ADT: 1501
-  rule_message: Why would there be a centerline unless traffic is high?
-ADT3:
+  rule_message: Assumed - Centerline
+  # Why would there be a centerline unless traffic is high?
+ADT60:
   condition: (`lane_count` == 2) & (`centerline` == 'no') & (`highway` == 'residential')
   ADT: 749
-  rule_message: Unlaned residential has low traffic
-ADT4:
+  rule_message: Assumed - Unlaned residential has low traffic
+ADT70:
   condition: (`lane_count` == 2) & (`centerline` == 'no')
   ADT: 3001
-  rule_message: Unlaned non-residential has moderate traffic
-ADT5:
+  rule_message: Assumed - Unlaned non-residential has moderate traffic
+ADT80:
   condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == True) 
   ADT: 599
-  rule_message: Oneway residential has low traffic
-ADT6:
+  rule_message: Assumed - Oneway residential has low traffic
+ADT90:
   condition: (`lane_count` == 1) & (`oneway` == True) 
   ADT: 1001
-  rule_message: Oneway non-residential has moderate traffic
-ADT7:
+  rule_message: Assumed - Oneway non-residential has moderate traffic
+ADT100:
   condition: (`lane_count` == 1) & (`highway` == 'residential')
   ADT: 599
-  rule_message: 2 way, 1 lane residential has low traffic
-ADT8:
-  condition: (`highway` == 'footway')
-  ADT: 10
-  rule_message: "Assume: 'highway'='footway'"
-ADT9:
-  condition: (`highway` == 'service')
-  ADT: 500
-  rule_message: "Assume: 'highway'='service'"
+  rule_message: Assumed - 2 way, 1 lane residential has low traffic

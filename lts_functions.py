@@ -152,7 +152,7 @@ def biking_permitted(gdf_edges, rating_dict):
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
         gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
-        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume biking permitted'
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assumed'
         gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
@@ -166,7 +166,7 @@ def is_separated_path(gdf_edges, rating_dict):
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'no'
         gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
-        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume no bike lane separation'
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assumed'
         gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
@@ -188,7 +188,7 @@ def is_bike_lane(gdf_edges, rating_dict):
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'no'
         gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
-        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume no bike lane'
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assumed'
         gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
@@ -209,7 +209,7 @@ def parking_present(gdf_edges, rating_dict):
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
         gdf_edges[f'{prefix}_rule_num_{side}'] = defaultRule
-        gdf_edges[f'{prefix}_rule_{side}'] = 'Assume street parking is allowed on both sides'
+        gdf_edges[f'{prefix}_rule_{side}'] = 'Assumed'
         gdf_edges[f'{prefix}_condition_{side}'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
@@ -217,7 +217,7 @@ def parking_present(gdf_edges, rating_dict):
     for side in SIDES:
         gdf_edges[f'width_parking_{side}'] = 0.0
         gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_{side}'] = 8.5 # ft
-        gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_rule_{side}'] = 'Assumed Width'
+        gdf_edges.loc[gdf_edges[f'{prefix}_{side}']=='yes', f'width_parking_rule_{side}'] = 'Assumed'
 
     return gdf_edges
 
@@ -273,7 +273,7 @@ def get_lanes(gdf_edges, default_lanes = 2):
     # if multiple lane values present, use the largest one
     # this usually happens if multiple adjacent ways are included in the edge and 
     # there's a turning lane
-    gdf_edges['lane_count'] = gdf_edges['lanes'].fillna(default_lanes).apply(
+    gdf_edges['lane_count'] = gdf_edges['lanes'].fillna(default_lanes).apply( # FIXME: change so footways default to 1 lane, maybe other road types have other defaults
         lambda x: np.array(re.split(r'; |, |\*|\n', str(x)), dtype = 'int')).apply( 
             # Converted to a raw string to avoid 'SyntaxWarning: invalid escape sequence '\*' python re',
             # check that this is doing the right thing
@@ -281,7 +281,7 @@ def get_lanes(gdf_edges, default_lanes = 2):
     
     gdf_edges['lane_rule'] = 'OSM'
     assumed = gdf_edges['lanes'] == np.nan
-    gdf_edges.loc[assumed, 'lane_rule'] = 'Assumed lane count'
+    gdf_edges.loc[assumed, 'lane_rule'] = 'Assumed'
 
     return gdf_edges
 
@@ -293,7 +293,7 @@ def get_centerlines(gdf_edges, rating_dict):
     # for side in SIDES:
     gdf_edges[f'{prefix}'] = 'yes'
     gdf_edges[f'{prefix}_rule_num'] = defaultRule
-    gdf_edges[f'{prefix}_rule'] = 'Assume centerlines'
+    gdf_edges[f'{prefix}_rule'] = 'Assumed'
     gdf_edges[f'{prefix}_condition'] = 'default'
 
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
@@ -308,9 +308,9 @@ def width_ft(gdf_edges):
 
     for side in SIDES:
         gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelane_{side}'] = 5.0
-        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelane_rule_{side}'] = 'Assumed Width'
+        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelane_rule_{side}'] = 'Assumed'
         gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelanebuffer_{side}'] = 0.0
-        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelanebuffer_rule_{side}'] = 'Assume no buffer'
+        gdf_edges.loc[gdf_edges[f'bike_lane_exist_{side}'] == 'yes', f'width_bikelanebuffer_rule_{side}'] = 'Assumed'
         
     try:
         width_bikelane, width_bikelane_rule = convert_feet_with_quotes(gdf_edges['cycleway:width'])
@@ -371,7 +371,7 @@ def define_adt(gdf_edges, rating_dict):
 
     gdf_edges[f'{prefix}'] = 1500 # FIXME is this the right default?
     gdf_edges[f'{prefix}_rule_num'] = defaultRule
-    gdf_edges[f'{prefix}_rule'] = 'Assume moderate traffic.'
+    gdf_edges[f'{prefix}_rule'] = 'Assumed'
     gdf_edges[f'{prefix}_condition'] = 'default'
 
     # for side in SIDES:
