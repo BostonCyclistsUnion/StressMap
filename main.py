@@ -9,6 +9,19 @@ import sys
 import argparse
 import constants
 
+def plot_func(args, cities=None):
+    import LTS_plot  # imported directly in the command to improve argparse performance
+    if args.city:
+        print(f'Plotting {args.city}')
+        LTS_plot.main(args.city, args.format)
+    else:
+        for city in cities:
+            try:
+                print(f'Plotting {city}')
+                LTS_plot.main(city, args.format)
+            except FileNotFoundError as e:
+                print(f'\t{e}')
+                continue
 
 class StressMapCli(object):
     def __init__(self):
@@ -45,6 +58,8 @@ class StressMapCli(object):
                             help="Single city to ")
         parser.add_argument("--rebuild", action="store_true",
                             help="Rebuild underlying data")
+        parser.add_argument("--plot", action="store_true",
+                            help="Plot directly after processing")
 
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES
@@ -63,6 +78,12 @@ class StressMapCli(object):
                          cities[args.city]['key'],
                          cities[args.city]['value'],
                          args.rebuild)
+        if args.plot:
+            args.format = 'json'
+            if args.cities:
+                plot_func(args, cities)
+            else:
+                plot_func(args)
 
     @staticmethod
     def plot():
@@ -75,18 +96,13 @@ class StressMapCli(object):
                             help="Format for plotting")
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES
-        import LTS_plot  # imported directly in the command to improve argparse performance
-        if args.city:
-            print(f'Plotting {args.city}')
-            LTS_plot.main(args.city, args.format)
+
+        if args.cities:
+            plot_func(args, cities)
         else:
-            for city in cities:
-                try:
-                    print(f'Plotting {city}')
-                    LTS_plot.main(city, args.format)
-                except FileNotFoundError as e:
-                    print(f'\t{e}')
-                    continue
+            plot_func(args)
+
+    
 
     @staticmethod
     def combine():
