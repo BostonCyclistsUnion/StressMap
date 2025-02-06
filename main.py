@@ -92,7 +92,7 @@ class StressMapCli(object):
         parser.add_argument("-city", type=str,
                             help="Single city to ")
         parser.add_argument("--format",
-                            choices=["html", "json"], default="json",
+                            choices=["json"], default="json",
                             help="Format for plotting")
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES

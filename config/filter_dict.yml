@@ -1,0 +1,2 @@
+filter1:
+  condition: (`cycleway:both` == 'separate')

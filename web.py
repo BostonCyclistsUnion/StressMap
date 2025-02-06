@@ -24,8 +24,10 @@ else:
 class Handler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):
         if self.path == "/":
+            print(f'{PLOT=}')
             return PLOT
         if self.path.startswith("/plots"):
+            print(f'{path[1:]=}')
             return path[1:]  # strip the prefix slash so it can find the plots directory
         else:
             return http.server.SimpleHTTPRequestHandler.translate_path(self, path)
