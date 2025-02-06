@@ -41,7 +41,7 @@ def apply_rules(gdf_edges, filter_dict):
 
     for key, value in rules.items():
         condition = value['condition']
-        gdf_filter = gdf_edges.eval(condition)
+        gdf_filter = gdf_edges.eval(f"{condition} & (`filterName` == 'default')")
         gdf_edges.loc[gdf_filter, 'filterName'] = key
         gdf_edges.loc[gdf_filter, 'filterValue'] = condition
 
