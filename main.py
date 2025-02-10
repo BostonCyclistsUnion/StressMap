@@ -23,6 +23,10 @@ def plot_func(args, cities=None):
                 print(f'\t{e}')
                 continue
 
+def combine_func(args):
+    import LTS_OSM  # imported directly in the command to improve argparse performance
+    LTS_OSM.combine_data('GreaterBoston', args.cities.split(','))
+
 class StressMapCli(object):
     def __init__(self):
         parser = argparse.ArgumentParser(
@@ -58,6 +62,8 @@ class StressMapCli(object):
                             help="Single city to ")
         parser.add_argument("--rebuild", action="store_true",
                             help="Rebuild underlying data")
+        parser.add_argument("--combine", action="store_true",
+                            help="Combine directly after processing")
         parser.add_argument("--plot", action="store_true",
                             help="Plot directly after processing")
 
@@ -78,7 +84,15 @@ class StressMapCli(object):
                          cities[args.city]['key'],
                          cities[args.city]['value'],
                          args.rebuild)
-        if args.plot:
+            
+        if args.combine:
+            combine_func(args)
+            if args.plot:
+                args.format = 'json'
+                args.city = 'GreaterBoston'
+                plot_func(args)
+            
+        elif args.plot:
             args.format = 'json'
             if args.cities:
                 plot_func(args, cities)
@@ -111,8 +125,7 @@ class StressMapCli(object):
         parser.add_argument("-cities", type=str,
                             help="Comma-separated list of cities")
         args = parser.parse_args(sys.argv[2:])
-        import LTS_OSM  # imported directly in the command to improve argparse performance
-        LTS_OSM.combine_data('GreaterBoston', args.cities.split(','))
+        combine_func(args)
 
 
 if __name__ == '__main__':

@@ -25,7 +25,7 @@ import osmnx as ox
 
 PORT = 8001
 PLOT = 'map/filter_test.html'
-CITY = 'Boston'
+CITY = 'Cambridge'
 dataFolder = 'data'
 
 def read_filters():
@@ -56,7 +56,8 @@ def update_filter():
 
     print('Applying filters...')
     gdf_edges_filtered = apply_rules(gdf_edges, filter_dict)
-
+    print(f'Filters showing {len(gdf_edges_filtered['osmid'].unique())} elements')
+    
     print('Converting to json...')
     geo_json = gdf_edges_filtered.to_json()
 

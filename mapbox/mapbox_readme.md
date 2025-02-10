@@ -1,7 +1,5 @@
 # Recalculate GreaterBoston completely
-py main.py process -cities Cambridge,Boston,Somerville,Brookline --rebuild
-py main.py combine -cities Cambridge,Boston,Somerville,Brookline
-py main.py plot -city GreaterBoston
+py main.py process -cities Cambridge,Boston,Somerville,Brookline --rebuild --combine --plot
 
 # Mapbox Tilesets
 https://docs.mapbox.com/help/tutorials/get-started-mts-and-tilesets-cli/
@@ -10,6 +8,8 @@ https://github.com/mapbox/tilesets-cli
 Note: Mapbox access token required 
 
 Pricing: https://www.mapbox.com/pricing#tilesets
+Billing period starts first day of month, ends last day of month. 
+Limits are based on billing period.
 
 ## Create new tileset
 tilesets upload-source skilcoyne stressmap plots/LTS.json
@@ -19,16 +19,19 @@ tilesets publish skilcoyne.stressmap_tiles
 
 ## Verify info
 List sources
-    tilesets list-sources
+    tilesets list-sources skilcoyne
 Check source
     tilesets view-source skilcoyne stressmap 
 
 ## Update data in tileset
-tilesets delete skilcoyne.stressmap_tiles
-    skilcoyne.stressmap_tiles
+<!-- tilesets delete skilcoyne.stressmap_tiles
+    skilcoyne.stressmap_tiles -->
+tilesets list-sources skilcoyne
+tilesets view-source skilcoyne stressmap
 tilesets upload-source skilcoyne stressmap plots/LTS.json --replace
-    Added the --replace tag, hopefully that cleans somethings up in the future
-tilesets create skilcoyne.stressmap_tiles --recipe mapbox/recipe.json --name "stress map"
+    <!-- Added the --replace tag, hopefully that cleans somethings up in the future -->
+tilesets view-source skilcoyne stressmap
+<!-- tilesets create skilcoyne.stressmap_tiles --recipe mapbox/recipe.json --name "stress map" -->
 tilesets publish skilcoyne.stressmap_tiles
 
 ## Update tileset recipe

@@ -380,51 +380,135 @@ centerline14:
   condition: (`highway` == 'living_street')
   centerline: 'no'
   rule_message: Assumed
+centerline15:
+  condition: (`highway` == 'cycleway')
+  centerline: 'no'
+  rule_message: Assumed
 
 # Average Daily Traffic - get_adt()
 # Assumptions are based on an email for Prof. Furth
+
+# Major roads
+ADT00:
+  condition: (`lane_count` >= 3)
+  ADT: 8001
+  rule_message: Assumed
+ADT01:
+  condition: (`highway` == 'trunk') | (`highway` == 'trunk_link')
+  ADT: 8001
+  rule_message: Assumed
+ADT02:
+  condition: (`highway` == 'primary') | (`highway` == 'primary_link')
+  ADT: 3001
+  rule_message: Assumed
+ADT03:
+  condition: (`lane_count` >= 2) & (`oneway` == True) 
+  ADT: 3001
+  rule_message: Assumed
+
+# Minimal traffic
 ADT10:
   condition: (`highway` == 'footway')
   ADT: 10
   rule_message: Assumed
-ADT20:
+ADT11:
   condition: (`highway` == 'service')
   ADT: 100
   rule_message: Assumed
+ADT12:
+  condition: (`highway` == 'cycleway')
+  ADT: 10
+  rule_message: Assumed
+
+# Residential
+ADT20:
+  condition: (`highway` == 'residential') & (`street_narrow_wide` == 'narrow')
+  ADT: 601
+  rule_message: Assumed
+ADT21:
+  condition: (`highway` == 'residential') & (`street_narrow_wide` == 'wide')
+  ADT: 1001
+  rule_message: Assumed
+ADT22: # skinny 2-way
+  condition: (`highway` == 'residential') & (`lane_count` == 1)
+  ADT: 599
+  rule_message: Assumed
+ADT23:
+  condition: (`highway` == 'residential') & (`lane_count` >= 2) & (`centerline` == 'no')
+  ADT: 1501
+  rule_message: Assumed
+ADT24:
+  condition: (`highway` == 'residential') & (`lane_count` >= 2) & (`centerline` == 'yes')
+  ADT: 2501
+  rule_message: Assumed
+
+ADT29: # catchall
+  condition: (`highway` == 'residential')
+  ADT: 1001
+  rule_message: Assumed
+
+# Secondary
 ADT30:
-  condition: (`highway` == 'primary')
-  ADT: 3001
+  condition: (`highway` == 'secondary') & (`street_narrow_wide` == 'narrow')
+  ADT: 1001
   rule_message: Assumed
 ADT31:
-  condition: (`highway` == 'primary_link')
+  condition: (`highway` == 'secondary') & (`street_narrow_wide` == 'wide')
+  ADT: 1501
+  rule_message: Assumed
+ADT32: # skinny 2-way
+  condition: (`highway` == 'secondary') & (`lane_count` == 1)
+  ADT: 1501
+  rule_message: Assumed
+ADT33:
+  condition: (`highway` == 'secondary') & (`lane_count` >= 2)
   ADT: 3001
   rule_message: Assumed
-ADT40:
-  condition: (`lane_count` >= 3)
-  ADT: 8001
-  rule_message: Traffic is high on large roads
-ADT50:
-  condition: (`lane_count` == 2) & (`centerline` == 'yes')
-  ADT: 1501
-  rule_message: Assumed - Centerline
-  # Why would there be a centerline unless traffic is high?
-ADT60:
-  condition: (`lane_count` == 2) & (`centerline` == 'no') & (`highway` == 'residential')
-  ADT: 749
-  rule_message: Assumed - Unlaned residential has low traffic
-ADT70:
-  condition: (`lane_count` == 2) & (`centerline` == 'no')
+
+ADT39: # catchall
+  condition: (`highway` == 'secondary')
   ADT: 3001
-  rule_message: Assumed - Unlaned non-residential has moderate traffic
-ADT80:
-  condition: (`lane_count` == 1) & (`highway` == 'residential') & (`oneway` == True) 
-  ADT: 599
-  rule_message: Assumed - Oneway residential has low traffic
-ADT90:
-  condition: (`lane_count` == 1) & (`oneway` == True) 
+  rule_message: Assumed
+
+# Tertiary
+ADT40:
+  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link')) & (`street_narrow_wide` == 'narrow')
   ADT: 1001
-  rule_message: Assumed - Oneway non-residential has moderate traffic
-ADT100:
-  condition: (`lane_count` == 1) & (`highway` == 'residential')
-  ADT: 599
-  rule_message: Assumed - 2 way, 1 lane residential has low traffic
+  rule_message: Assumed
+ADT41:
+  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link')) & (`street_narrow_wide` == 'wide')
+  ADT: 1501
+  rule_message: Assumed
+ADT42: # skinny 2-way
+  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link')) & (`lane_count` == 1)
+  ADT: 1501
+  rule_message: Assumed
+ADT43:
+  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link')) & (`lane_count` >= 2)
+  ADT: 3001
+  rule_message: Assumed
+
+ADT49: # catchall
+  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link'))
+  ADT: 3001
+  rule_message: Assumed
+
+
+# Other
+ADT50:
+  condition: (`lane_count` >= 2) & (`centerline` == 'yes')
+  ADT: 3001
+  rule_message: Assumed
+ADT51:
+  condition: (`lane_count` >= 2) & (`centerline` == 'no')
+  ADT: 3001
+  rule_message: Assumed
+ADT52:
+  condition: (`lane_count` == 1) & (`street_narrow_wide` == 'narrow')
+  ADT: 1001
+  rule_message: Assumed
+ADT53:
+  condition: (`lane_count` == 1) & (`street_narrow_wide` == 'wide')
+  ADT: 1501
+  rule_message: Assumed
+

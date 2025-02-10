@@ -1,2 +1,2 @@
 filter1:
-  condition: (`cycleway:both` == 'separate')
+  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link')) & (`oneway` == True)
