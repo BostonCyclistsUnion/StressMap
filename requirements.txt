@@ -14,7 +14,7 @@ click-plugins==1.1.1
 cligj==0.7.2
 colorama==0.4.6
 comm==0.2.2
-contextily==1.6.0
+contextily==1.6.2
 contourpy==1.2.1
 cycler==0.12.1
 debugpy==1.8.2
