@@ -3,8 +3,8 @@ Plotting Level of Traffic Stress
 
 This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 """
-import os
-import glob
+# import os
+# import glob
 from pathlib import Path
 import shutil
 
@@ -12,14 +12,14 @@ import numpy as np
 import pandas as pd
 
 import geopandas as gpd
-import shapely.geometry
-import contextily as cx
+# import shapely.geometry
+# import contextily as cx
 
-from matplotlib import pyplot as plt
-from matplotlib.lines import Line2D
-import plotly.express as px
-import lonboard
-from lonboard.colormap import apply_categorical_cmap
+# from matplotlib import pyplot as plt
+# from matplotlib.lines import Line2D
+# import plotly.express as px
+# import lonboard
+# from lonboard.colormap import apply_categorical_cmap
 
 dataFolder = 'data'
 queryFolder = 'query'

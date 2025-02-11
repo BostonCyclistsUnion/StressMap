@@ -10,7 +10,8 @@ just delete the file that is created at that stage. Files are numbered in the fo
 of generation.
 '''
 
-import json, yaml
+import json
+# import yaml
 import os
 from pathlib import Path
 from collections import defaultdict
@@ -34,6 +35,11 @@ import networkx as nx
 from tqdm import tqdm
 
 import lts_functions as lts
+
+ox.settings.use_cache = False 
+# Cache built up deleted ways (un-separated cycleways). When rebuilding, don't want to keep old 
+# data on accident. Unless explicitly called for (or data deleted), most processing is done on saved
+# data anyway.
 
 dataFolder = 'data'
 queryFolder = 'query'
@@ -347,7 +353,7 @@ def lts_edges(region, gdf_edges):
     '''
     global OVERWRITE
     filepathAll = f"{dataFolder}/{region}_4_all_lts.csv"
-    filepathSmall = f"{dataFolder}/{region}_5_all_lts_small.csv"
+    # filepathSmall = f"{dataFolder}/{region}_5_all_lts_small.csv"
 
     if os.path.exists(filepathAll) and (OVERWRITE is False):
         # load graph
