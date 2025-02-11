@@ -2,36 +2,36 @@
 bike_lane_exist1:
   condition: (`cycleway` == 'lane')
   bike_lane_exist: 'yes'
-  rule_message: Bike lane because cycleway='lane'
+  rule_message: OSM tag
 bike_lane_exist3:
   condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_exist: 'yes'
-  rule_message: Left side bikelane
+  rule_message: OSM tag
 bike_lane_exist4:
   condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_exist: 'no'
-  rule_message: No contraflow lane
+  rule_message: No OSM tag
 bike_lane_exist5:
   condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_exist: 'yes'
-  rule_message: Left side bikelane
+  rule_message: OSM tag
 bike_lane_exist6:
   condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_exist: 'no'
-  rule_message: No contraflow lane
+  rule_message: No OSM tag
 
 bike_lane_exist10:
   condition: (`cycleway:[both,left,right]` == 'lane')
   bike_lane_exist: 'yes'
-  rule_message: Bike lane because cycleway:*='lane'
+  rule_message: OSM tag
 bike_lane_exist12:
   condition: (`cycleway:[both,left,right]` == 'no')
   bike_lane_exist: 'no'
-  rule_message: No bike lane because cycleway:*='no'
+  rule_message: OSM tag
 bike_lane_exist14:
   condition: (`cycleway:[both,left,right]` == 'separate')
   bike_lane_exist: 'no'
-  rule_message: Bike lane displayed separately
+  rule_message: Separate
 # bike_lane_exist5:
 #   condition: (`shoulder:access:bicycle` == 'lane')
 #   bike_lane_exist: 'yes'
@@ -44,7 +44,7 @@ biking_permitted1:
   LTS: 0
   condition: (oneway == True) & (`cycleway:[left]` == 'no')
   biking_permitted: 'no'
-  rule_message: No contraflow lane
+  rule_message: No OSM tag
 biking_permitted2:
   LTS: 0
   condition: (oneway == True) & (`cycleway:[left]` != 'yes')
@@ -54,101 +54,101 @@ biking_permitted4:
   LTS: 0
   condition: (`bicycle` == 'dismount')
   biking_permitted: 'no' # FUTURE classify dismount separately to include in some analyses specially
-  rule_message: Cyclists must dismount
+  rule_message: Dismount
 biking_permitted6:
   LTS: 0
   condition: (`bicycle` == 'no')
   biking_permitted: 'no'
-  rule_message: Cycling explicitly excluded
+  rule_message: OSM tag
 biking_permitted8:
   condition: (`bicycle` == 'yes')
   biking_permitted: 'yes'
-  rule_message: Cycling explicitly allowed
+  rule_message: OSM tag
 biking_permitted10:
   LTS: 0
   condition: (`highway` == 'motorway')
   biking_permitted: 'no'
-  rule_message: "Assumed"
+  rule_message: Assumed
 biking_permitted12:
   LTS: 0
   condition: (`highway` == 'motorway_link')
   biking_permitted: 'no'
-  rule_message: "Assumed"
+  rule_message: Assumed
 biking_permitted14:
   LTS: 0
   condition: (`access` == 'no')
   biking_permitted: 'no'
-  rule_message: No access
+  rule_message: OSM tag
 biking_permitted16:
   LTS: 0
   condition: (`highway` == 'proposed')
   biking_permitted: 'no'
-  rule_message: "Assumed"
+  rule_message: Unbuilt
 biking_permitted18:
   LTS: 0
   condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'footway')
   biking_permitted: 'no'
-  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "footway"
+  rule_message: No OSM tag
 biking_permitted20:
   LTS: 0
   condition: (`footway` == 'sidewalk') & (`bicycle` != 'yes') & (`highway` == 'path')
   biking_permitted: 'no'
-  rule_message: Cycling not permitted. When footway="sidewalk" is present, there must be a bicycle="yes" when the highway is "path".
+  rule_message: No OSM tag
 biking_permitted21:
   LTS: 0
   condition: (`footway` == 'crossing') & (`bicycle` != 'yes') & (`highway` == 'footway')
   biking_permitted: 'no'
-  rule_message: Don't include crossings where bikes aren't explicitly allowed
+  rule_message: No OSM tag
 biking_permitted22:
   LTS: 0
   condition: (`crossing` == 'informal') & (`bicycle` != 'yes') & (`highway` == 'footway')
   biking_permitted: 'no'
-  rule_message: Don't include crossings where bikes aren't explicitly allowed
+  rule_message: No OSM tag
 biking_permitted23:
   LTS: 0
   condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & (`bicycle` != 'yes')
   biking_permitted: 'no'
-  rule_message: Bicycle must be yes on an access aisle footway
+  rule_message: No OSM tag
 biking_permitted24:
   LTS: 1
   condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & (`bicycle` == 'yes')
-  biking_permitted: 'no'
-  rule_message: Footway are low stress
+  biking_permitted: 'yes'
+  rule_message: OSM tag
 biking_permitted26:
   LTS: 2
   condition: (highway == 'service') & (service == 'alley')
   biking_permitted: 'yes'
-  rule_message: Service alley
+  rule_message: Assumed
 biking_permitted28:
   LTS: 2
   condition: (highway == 'service') & (service == 'driveway')
   biking_permitted: 'yes'
-  rule_message: Driveway
+  rule_message: Assumed
 biking_permitted30:
   LTS: 2
   condition: (highway == 'service')
   biking_permitted: 'yes'
-  rule_message: Service road
+  rule_message: Assumed
 biking_permitted32:
   LTS: 0
   condition: (`tunnel` == 'yes') & (`bicycle` != 'yes')
   biking_permitted: 'no'
-  rule_message: No biking in tunnels
+  rule_message: No OSM tag
 biking_permitted34:
   LTS: 0
   condition: (`tunnel` == 'building_passage') & (`bicycle` != 'yes')
   biking_permitted: 'no'
-  rule_message: No biking in tunnels
+  rule_message: No OSM tag
 biking_permitted36:
   LTS: 0
   condition: (`highway` == 'footway') & (`foot` == 'private') & (`bicycle` != 'yes')
   biking_permitted: 'no'
-  rule_message: No biking on private footways
+  rule_message: No OSM tag
 biking_permitted38:
   LTS: 0
   condition: (`bus` == 'designated') & (`bicycle` != 'yes')
   biking_permitted: 'no'
-  rule_message: No biking on busways
+  rule_message: No OSM tag
 # biking_permitted:
 #   LTS: 2
 #   condition: highway = 'footway' & footway == 'crossing'
@@ -174,40 +174,40 @@ bike_lane_separation1:
   LTS: 1
   condition: highway == 'cycleway'
   bike_lane_separation: 'yes'
-  rule_message: Separated path because highway='cycleway'
+  rule_message: OSM tag
 bike_lane_separation2:
   LTS: 1
   condition: highway == 'path'
   bike_lane_separation: 'yes'
-  rule_message: Separated path because highway='path'
+  rule_message: OSM tag
 bike_lane_separation3:
   LTS: 1
   condition: highway == 'footway' & ~(footway== 'crossing')
   bike_lane_separation: 'yes'
-  rule_message: Separated path because highway='footway' but isn't a crossing
+  rule_message: OSM tag
 bike_lane_separation4:
   LTS: 1
   condition: (`cycleway` == 'track')
   bike_lane_separation: 'yes'
-  rule_message: Separated path because cycleway='track'
+  rule_message: OSM tag
 bike_lane_separation10:
   condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_separation: 'no'
-  rule_message: Left side bikelane
+  rule_message: OSM tag
 bike_lane_separation11:
   condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_separation: 'no'
-  rule_message: No contraflow lane
+  rule_message: No OSM tag
 bike_lane_separation12:
   LTS: 1
   condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_separation: 'yes'
-  rule_message: Left side bikelane
+  rule_message: OSM tag
 bike_lane_separation13:
   LTS: 0
   condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
   bike_lane_separation: 'no'
-  rule_message: No contraflow lane
+  rule_message: No OSM tag
 # bike_lane_separation5:
 #   LTS: 1
 #   condition: (`cycleway` == 'separate')
@@ -217,7 +217,7 @@ bike_lane_separation20:
   LTS: 1
   condition: (`cycleway:[both,left,right]` == 'track')
   bike_lane_separation: 'yes'
-  rule_message: Separated path because cycleway:*='track'
+  rule_message: OSM tag
 # bike_lane_separation9:
 #   LTS: 1
 #   condition: (`cycleway:[both,left,right]` == 'separate')
@@ -229,47 +229,47 @@ bike_lane_separation20:
 parking1:
   condition: (`parking:[both,left,right]` == 'no')
   parking: 'no'
-  rule_message: Parking not allowed
+  rule_message: OSM tag
 parking2:
   condition: (`parking:[both,left,right]` == 'lane')
   parking: 'yes'
-  rule_message: Parking lane
+  rule_message: OSM tag
 parking3:
   condition: (`parking:[both,left,right]` == 'street_side')
   parking: 'yes'
-  rule_message: Parking allowed on street side
+  rule_message: OSM tag
 parking4:
   condition: (`parking:[both,left,right]` == 'separate')
   parking: 'yes'
-  rule_message: Parking separately mapped
+  rule_message: OSM mapped
 parking5:
   condition: (`parking:[both,left,right]:orientation` == 'parallel')
   parking: 'yes'
-  rule_message: Parallel parking
+  rule_message: OSM tag
 parking6:
   condition: (`parking:condition:[both,left,right]` == 'no_parking')
   parking: 'no'
-  rule_message: Parking not allowed
+  rule_message: OSM tag
 parking7:
   condition: (`parking:condition:[both,left,right]` == 'no_stopping')
   parking: 'no'
-  rule_message: Stopping not allowed
+  rule_message: OSM tag
 parking8:
   condition: (`parking:lane:[both,left,right]` == 'no')
   parking: 'no'
-  rule_message: Parking not allowed
+  rule_message: OSM tag
 parking9:
   condition: (`parking:lane:[both,left,right]` == 'no_stopping')
   parking: 'no'
-  rule_message: Stopping not allowed
+  rule_message: OSM tag
 parking10:
   condition: (`parking:lane:[both,left,right]` == 'parallel')
   parking: 'yes'
-  rule_message: Parallel parking
+  rule_message: OSM tag
 parking11:
   condition: (`parking:condition:[both,left,right]` == 'ticket;residents')
   parking: 'yes'
-  rule_message: Resident parking
+  rule_message: OSM tag
 
 # Prevailing Speed (mph) - get_max_speed()
 # Assumed speeds are worst in Cambridge - FIXME use larger region
@@ -327,11 +327,11 @@ speed12:
 centerline1:
   condition: (`lane_markings` == 'yes')
   centerline: 'yes'
-  rule_message: Has centerline due to lane_markings=yes
+  rule_message: OSM tag
 centerline2:
   condition: (`lane_markings` == 'no')
   centerline: 'no'
-  rule_message: Doesn't have centerline due to lane_markings=no
+  rule_message: OSM tag
 centerline3:
   condition: (`highway` == 'primary')
   centerline: 'yes'
