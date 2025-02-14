@@ -21,17 +21,12 @@ tilesets publish skilcoyne.stressmap_tiles
 List sources
     tilesets list-sources skilcoyne
 Check source
-    tilesets view-source skilcoyne stressmap 
+    tilesets view-source skilcoyne stressmap
 
 ## Update data in tileset
-<!-- tilesets delete skilcoyne.stressmap_tiles
-    skilcoyne.stressmap_tiles -->
-tilesets list-sources skilcoyne
 tilesets view-source skilcoyne stressmap
 tilesets upload-source skilcoyne stressmap plots/LTS.json --replace
-    <!-- Added the --replace tag, hopefully that cleans somethings up in the future -->
 tilesets view-source skilcoyne stressmap
-<!-- tilesets create skilcoyne.stressmap_tiles --recipe mapbox/recipe.json --name "stress map" -->
 tilesets publish skilcoyne.stressmap_tiles
 
 ## Update tileset recipe
