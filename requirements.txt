@@ -27,7 +27,7 @@ geopandas==1.0.1
 geopy==2.4.1
 # idna==3.10
 ipykernel==6.29.5
-ipython==8.26.0
+ipython==8.32.0
 ipywidgets==8.1.5
 # jedi==0.19.1
 # jmespath==1.0.1
