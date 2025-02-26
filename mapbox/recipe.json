@@ -15,24 +15,96 @@
                     "primary", 11,
                     "trunk", 11,
                     "motorway", 11,
-                    "motorway_link", 11,
                     "cycleway", 11,
                     "secondary", 12,
                     "tertiary", 13,
+                    "trunk_link", 13,
+                    "motorway_link", 13,
                     "residential", 14,
                     "service", 15,
                     "footway", 16,
                     "pedestrian", 16,
                     16
+                    ],
+                    "key": ["concat", 
+                        [ "case", [ ">=", [ "zoom" ], 0 ], [ "get", "name" ], "" ],
+                        [ "case", [ "<=", [ "zoom" ], 11], [ "get", "LTS" ], "" ],
+                        [ "case", [ ">", [ "zoom" ], 11], [ "get", "osmid" ], "" ]
                     ]
                 }
                 },
                 "filter": [ "<=", [ "get", "quality" ], [ "zoom" ] ],
-                "simplification": 10
+                "simplification": [ "case", [ "<=", [ "zoom" ], 12 ], 100, 20]
             },
         "tiles": {
-            "layer_size": 2500
-        }
+            "layer_size": 2500,
+            "order": "LTS",
+            "union": [
+                {
+                "group_by": [ "key" ],
+                "maintain_direction": false,
+                "simplification": {
+                    "distance": 10
+                    },
+                "aggregate": {
+                    "LTS": "comma", 
+                    "osmid": "comma", 
+                    "name": "comma", 
+                    "highway": "comma", 
+                    "speed": "comma", 
+                    "speed_rule": "comma", 
+                    "centerline": "comma", 
+                    "centerline_rule": "comma", 
+                    "ADT": "comma", 
+                    "ADT_rule": "comma", 
+                    "lane_count": "comma", 
+                    "oneway": "comma", 
+                    "street_narrow_wide": "comma", 
+                    "width_street": "comma", 
+                    "width_street_rule": "comma", 
+                    "cycleway": "comma", 
+                    "bike_lane_exist_left": "comma", 
+                    "bike_lane_exist_rule_left": "comma", 
+                    "bike_lane_separation_left": "comma", 
+                    "bike_lane_separation_rule_left": "comma", 
+                    "parking_left": "comma", 
+                    "parking_rule_left": "comma", 
+                    "width_parking_left": "comma", 
+                    "width_parking_rule_left": "comma", 
+                    "width_bikelanebuffer_left": "comma", 
+                    "width_bikelanebuffer_rule_left": "comma", 
+                    "width_bikelane_left": "comma", 
+                    "width_bikelane_rule_left": "comma", 
+                    "bikelane_reach_left": "comma", 
+                    "LTS_mixed_left": "comma", 
+                    "LTS_bikelane_noparking_left": "comma", 
+                    "LTS_bikelane_yesparking_left": "comma", 
+                    "LTS_biking_permitted_left": "comma", 
+                    "LTS_bike_lane_separation_left": "comma", 
+                    "LTS_left": "comma", 
+                    "bike_lane_exist_right": "comma", 
+                    "bike_lane_exist_rule_right": "comma", 
+                    "bike_lane_separation_right": "comma", 
+                    "bike_lane_separation_rule_right": "comma", 
+                    "parking_right": "comma", 
+                    "parking_rule_right": "comma", 
+                    "width_parking_right": "comma", 
+                    "width_parking_rule_right": "comma", 
+                    "width_bikelanebuffer_right": "comma", 
+                    "width_bikelanebuffer_rule_right": "comma", 
+                    "width_bikelane_right": "comma", 
+                    "width_bikelane_rule_right": "comma", 
+                    "bikelane_reach_right": "comma", 
+                    "LTS_mixed_right": "comma", 
+                    "LTS_bikelane_noparking_right": "comma", 
+                    "LTS_bikelane_yesparking_right": "comma", 
+                    "LTS_biking_permitted_right": "comma", 
+                    "LTS_bike_lane_separation_right": "comma", 
+                    "LTS_right": "comma"
+                }
+                }
+                ]
+            }
         }
     }
 }

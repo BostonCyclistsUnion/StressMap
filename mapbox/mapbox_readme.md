@@ -1,6 +1,10 @@
 # Recalculate GreaterBoston completely
 py main.py process -cities Cambridge,Boston,Somerville,Brookline --rebuild --combine --plot
 
+## Recalculate GreaterBoston without rebuilding 
+<!-- delete *_4_all_lts.csv for cites wanting local rebuild -->
+py main.py process -cities Cambridge,Boston,Somerville,Brookline --combine --plot
+
 # Mapbox Tilesets
 https://docs.mapbox.com/help/tutorials/get-started-mts-and-tilesets-cli/
 https://github.com/mapbox/tilesets-cli
