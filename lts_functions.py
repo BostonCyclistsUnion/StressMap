@@ -17,6 +17,11 @@ def read_rating():
         rating_dict = yaml.safe_load(yml_file)
     return rating_dict
 
+def read_parse():
+    with open('config/lane_parse.yml', 'r') as yml_file:
+        parse_dict = yaml.safe_load(yml_file)
+    return parse_dict
+
 # %% Reused Functions
 
 def apply_rules(gdf_edges, rating_dict, prefix):
@@ -142,6 +147,94 @@ def convert_feet_with_quotes(series):
     series_notes[meterValues] = 'Converted m to feet'
 
     return series, series_notes
+
+# %% Lane Direction Parsing
+def convert_both_tag(gdf_edges):
+    '''
+    For all columns that have a *:both suffix, set the value of the *:left and *:right columns to
+    both equal the value of the *:both column. 
+
+    This allows all further processing to ignore the *:both suffix and only use the sided suffixes.
+    
+    If there is a way that has both *:both and *:left/*:right columns, the side columns will be 
+    overwritten. In this case, it is indeterminate which is correct and should be fixed in OSM. This 
+    choice is due to programming ease.
+
+    FUTURE: Create a report of ways where there is overlapping *:both and *:left/*:right columns
+    '''
+
+    # Move tags with *:both suffix to both *:left/*:right suffix columns
+    tags = gdf_edges.columns[gdf_edges.columns.str.contains('both')]
+    for tag in tags:
+        tag_left = tag.replace('both', 'left')
+        tag_right = tag.replace('both', 'right')
+
+        gdf_filter = gdf_edges.loc[~gdf_edges[tag].isna()]
+        gdf_edges.loc[gdf_filter.index, tag_left] = gdf_filter[tag]
+        gdf_edges.loc[gdf_filter.index, tag_right] = gdf_filter[tag]
+    # Remove *:both columns to prevent accidental usage
+    gdf_edges = gdf_edges.drop(columns=tags)
+
+    # Convert tags implicit with *:both suffix to both *:left/*:right suffix columns
+    tags = ['cycleway']
+    for tag in tags:
+        tag_left = tag + ':left'
+        tag_right = tag + ':right'
+
+        gdf_filter = gdf_edges.loc[~gdf_edges[tag].isna()]
+        gdf_edges.loc[gdf_filter.index, tag_left] = gdf_filter[tag]
+        gdf_edges.loc[gdf_filter.index, tag_right] = gdf_filter[tag]
+    # Remove columns to prevent accidental usage
+    gdf_edges = gdf_edges.drop(columns=tags)
+
+    return gdf_edges
+
+def parse_lanes(gdf_edges):
+    # Tags to account for:
+    # bike lane side, direction, and width
+    # bike lane buffer, parking width, bike lane reach 
+    # bike lane separation
+
+    # Conditions to parse:
+    # bike lanes with direction of travel on standard side
+    # right side bike lane on oneway (standard)
+    # left side bike lane on oneway (same direction as traffic)
+    # contraflow lanes
+    # bike lane with -1 direction
+    # bi-directional bike lane
+    parse_dict = read_parse()
+
+    gdf_edges['parse'] = 'not evaluated'
+    cols = ['bike_lane_fwd', 'bike_lane_rev', 
+            'bike_allowed_fwd', 'bike_allowed_rev',
+            'parking_fwd', 'parking_rev']
+    for key in cols:
+        # gdf_edges[key] = 'not evaluated'
+        gdf_edges[key] = np.nan
+
+    # rules = {k:v for (k,v) in parse_dict.items()}
+    # for key, value in rules.items():
+    for key, value in parse_dict.items():
+        condition = value['condition']
+        try:
+            gdf_filter = gdf_edges.eval(f"{condition} & (`parse` == 'not evaluated')")
+            gdf_edges.loc[gdf_filter, 'parse'] = condition
+            if 'LTS' in value:
+                gdf_edges.loc[gdf_filter, 'LTS_bike_access'] = value['LTS']
+            for col in cols:
+                if col in value:
+                    if isinstance(value[col], bool):
+                        gdf_edges.loc[gdf_filter, col] = value[col]
+                    else:
+                        gdf_edges.loc[gdf_filter, col] = gdf_edges.loc[gdf_filter, value[col]]
+            
+
+        
+        except pd.errors.UndefinedVariableError as e:
+            print(f'Column used in condition does not exsist in this region:\n\t{e}')
+
+
+    return gdf_edges
 
 # %% Pre-Processing Functions
 

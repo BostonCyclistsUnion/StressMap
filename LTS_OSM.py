@@ -367,16 +367,26 @@ def lts_edges(region, gdf_edges):
         rating_dict = lts.read_rating()
         tables = lts.read_tables()
 
-        gdf_edges = lts.biking_permitted(gdf_edges, rating_dict)
-        gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
-        gdf_edges = lts.is_bike_lane(gdf_edges, rating_dict)
+        # Process features where side is more important than direction
         gdf_edges = lts.parking_present(gdf_edges, rating_dict)
-        gdf_edges = lts.get_prevailing_speed(gdf_edges, rating_dict)
-        gdf_edges = lts.get_lanes(gdf_edges, default_lanes = 2)
-        gdf_edges = lts.get_centerlines(gdf_edges, rating_dict)
         gdf_edges = lts.width_ft(gdf_edges)
-        gdf_edges = lts.define_narrow_wide(gdf_edges)
+
+        # Convert schema to focus on direction
+        gdf_edges = lts.convert_both_tag(gdf_edges)
+
+        # Process bike lanes
+        gdf_edges = lts.parse_lanes(gdf_edges)
+        # gdf_edges = lts.biking_permitted(gdf_edges, rating_dict)
+        gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
+        # gdf_edges = lts.is_bike_lane(gdf_edges, rating_dict)
+
+        # Process non-directional data
+        gdf_edges = lts.get_prevailing_speed(gdf_edges, rating_dict)
+        gdf_edges = lts.get_lanes(gdf_edges, default_lanes=2)
+        gdf_edges = lts.get_centerlines(gdf_edges, rating_dict)
         gdf_edges = lts.define_adt(gdf_edges, rating_dict)
+        
+        gdf_edges = lts.define_narrow_wide(gdf_edges)
 
         all_lts = lts.calculate_lts(gdf_edges, tables)
 
@@ -432,7 +442,7 @@ def lts_nodes(region, gdf_nodes, all_lts):
             # pylint: disable=bare-except
             try:
                 edges = all_lts.loc[node]
-            except:
+            except Exception as _:
                 #print("Node not found in edges: %s" %node)
                 gdf_nodes.loc[node, 'message'] = "Node not found in edges"
                 continue

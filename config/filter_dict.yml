@@ -1,2 +1,0 @@
-filter1:
-  condition: ((`highway` == 'tertiary') | (`highway` == 'tertiary_link')) & (`oneway` == True)

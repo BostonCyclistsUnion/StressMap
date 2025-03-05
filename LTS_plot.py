@@ -64,6 +64,12 @@ def load_data(region):
 
 def plot_lts_geojson(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
+
+    # Worth about 1.5% of json size (don't know if more effective when getting to mapbox)
+    # lts = lts.replace({'yes': 1, 'no': 0}).infer_objects(copy=False)
+    # Worth about 4% of json size
+    # lts = lts.replace({'Assumed': 'A'})
+
     fields_general = ['geometry', 'LTS', 'osmid', 'name', 'highway',
                     'speed', 'speed_rule',
                     'centerline', 'centerline_rule',
@@ -73,7 +79,8 @@ def plot_lts_geojson(region, all_lts):
                     'width_street', 'width_street_rule',
                     'cycleway',                    
                     ]
-    fields_sided = ['biking_permitted', 'biking_permitted_rule',
+    fields_sided = [
+                    'biking_permitted', 'biking_permitted_rule', # worth about 7.5% json size
                     'bike_lane_exist', 'bike_lane_exist_rule',
                     'bike_lane_separation', 'bike_lane_separation_rule',
                     'parking', 'parking_rule','width_parking', 'width_parking_rule', 

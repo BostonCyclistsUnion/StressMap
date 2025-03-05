@@ -1,0 +1,224 @@
+# Tags to account for:
+# bike lane side, direction, and width
+# bike lane buffer, parking width, bike lane reach 
+# bike lane separation
+
+# Conditions to parse:
+# bike lanes with direction of travel on standard side
+# right side bike lane on oneway (standard)
+# left side bike lane on oneway (same direction as traffic)
+# contraflow lanes
+# bike lane with -1 direction
+# bi-directional bike lane
+
+# pre-pre processing:
+# *:both > *:left and *:right
+# parking, bile lane buffer
+
+# Symmetric bike lanes, bi-directional traffic
+# c1:
+#   condition: (`cycleway:both` == 'yes') | (`cycleway:both` == 'lane') & (oneway != True)
+#   bike_allowed_fwd: True
+#   bike_allowed_rev: True
+#   bike_lane_fwd: True
+#   bike_lane_rev: True
+#   
+#   fwd: 'right'
+#   rev: 'left'
+# c1:
+#   condition: ((`cycleway` == 'yes') | (`cycleway` == 'lane')) & (oneway != True)
+#   bike_allowed_fwd: True
+#   bike_allowed_rev: True
+#   bike_lane_fwd: True
+#   bike_lane_rev: True
+#   
+
+# Basic Conditions
+c01:
+  condition: (`bicycle` == 'no') | (`bicycle` == 'dismount')
+  bike_allowed_fwd: False
+  bike_lane_fwd: False
+  bike_allowed_rev: False
+  bike_lane_rev: False
+  LTS: 0
+c02:
+  LTS: 0
+  condition: (`access` == 'no')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c03:
+  LTS: 0
+  condition: (`highway` == 'proposed')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+
+# Bike lanes, bi-directional traffic
+c11:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway != True)
+  bike_allowed_fwd: True
+  bike_lane_fwd: True
+  parking_fwd: 'parking_right'
+c12:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway != True)
+  bike_allowed_rev: True
+  bike_lane_rev: True
+  parking_rev: 'parking_left'
+c13:
+  condition: ((`cycleway:right` == 'no') | (`cycleway:right` == 'separate')) & (`cycleway:right:oneway` != '-1') & (oneway != True)
+  bike_allowed_fwd: True
+  bike_lane_fwd: False
+  parking_fwd: 'parking_right'
+c13:
+  condition: ((`cycleway:left` == 'no') | (`cycleway:left` == 'separate')) & (`cycleway:left:oneway` != '-1') & (oneway != True)
+  bike_allowed_rev: True
+  bike_lane_rev: False
+  parking_fwd: 'parking_left'
+  
+# Contraflow lanes, bi-directional traffic
+c20:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` == '-1') & (oneway != True)
+  bike_allowed_rev: True
+  bike_lane_rev: True
+  parking_rev: 'parking_right'
+c21:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` == '-1') & (oneway != True)
+  bike_allowed_fwd: True
+  bike_lane_fwd: True
+  parking_fwd: 'parking_left'
+  
+# Bike lanes on nominal oneways
+c30:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway == True)
+  bike_allowed_fwd: True
+  bike_lane_fwd: True
+c31:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway == True)
+  bike_allowed_fwd: True
+  bike_lane_fwd: True
+c32:
+  condition: ((`cycleway:right` == 'no') | (`cycleway:right` == 'separate')) & (oneway == True)
+  bike_allowed_fwd: True
+  bike_lane_fwd: False
+  
+# Contraflow bike lanes on nominal oneways
+c40:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` == '-1') & (oneway == True)
+  bike_allowed_rev: True
+  bike_lane_rev: True
+c41:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` == '-1') & (oneway == True)
+  bike_allowed_rev: True
+  bike_lane_rev: True
+c42:
+  condition: ((`cycleway:left` == 'no') | (`cycleway:left` == 'separate')) & (oneway == True)
+  bike_allowed_rev: False
+  bike_lane_rev: False
+c43:
+  condition: ((`cycleway:left` != 'yes') | (`cycleway:left` != 'lane')) & (oneway == True)
+  bike_allowed_rev: False
+  bike_lane_rev: False
+
+# Bike lanes on reveresed oneways
+c50:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway == -1)
+  bike_allowed_rev: True
+  bike_lane_rev: True
+c51:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway == -1)
+  bike_allowed_rev: True
+  bike_lane_rev: True
+  
+# Contraflow bike lanes on reveresed oneways
+c60:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` == '-1') & (oneway == -1)
+  bike_allowed_fwd: True
+  bike_lane_fwd: True
+c61:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` == '-1') & (oneway == -1)
+  bike_allowed_fwd: True
+  bike_lane_fwd: True
+  
+# Non-Road Areas
+c105:
+  LTS: 0
+  condition: (`footway` == 'sidewalk') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'footway')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c106:
+  LTS: 0
+  condition: (`footway` == 'sidewalk') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'path')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c107:
+  LTS: 0
+  condition: (`footway` == 'crossing') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'footway')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c108:
+  LTS: 0
+  condition: (`crossing` == 'informal') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'footway')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c109:
+  LTS: 0
+  condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c110:
+  LTS: 1
+  condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & (`bicycle` == 'yes')
+  bike_allowed_fwd: True
+  bike_allowed_rev: True
+c114:
+  LTS: 0
+  condition: (`tunnel` == 'yes') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c115:
+  LTS: 0
+  condition: (`tunnel` == 'building_passage') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c116:
+  LTS: 0
+  condition: (`highway` == 'footway') & (`foot` == 'private') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c117:
+  LTS: 0
+  condition: (`bus` == 'designated') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+
+# Assumptions
+c100:
+  condition: (`bicycle` == 'yes')
+  bike_allowed_fwd: True
+  bike_allowed_rev: True
+c101:
+  LTS: 0
+  condition: (`highway` == 'motorway')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c102:
+  LTS: 0
+  condition: (`highway` == 'motorway_link')
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
+c111:
+  LTS: 2
+  condition: (highway == 'service') & (service == 'alley')
+  bike_allowed_fwd: True
+  bike_allowed_rev: True
+c112:
+  LTS: 2
+  condition: (highway == 'service') & (service == 'driveway')
+  bike_allowed_fwd: True
+  bike_allowed_rev: True
+c113:
+  LTS: 2
+  condition: (highway == 'service')
+  bike_allowed_fwd: True
+  bike_allowed_rev: True
+
+  
