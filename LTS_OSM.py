@@ -377,16 +377,16 @@ def lts_edges(region, gdf_edges):
         # Process bike lanes
         gdf_edges = lts.parse_lanes(gdf_edges)
         # gdf_edges = lts.biking_permitted(gdf_edges, rating_dict)
-        gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
+        # gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
         # gdf_edges = lts.is_bike_lane(gdf_edges, rating_dict)
 
         # Process non-directional data
         gdf_edges = lts.get_prevailing_speed(gdf_edges, rating_dict)
         gdf_edges = lts.get_lanes(gdf_edges, default_lanes=2)
         gdf_edges = lts.get_centerlines(gdf_edges, rating_dict)
-        gdf_edges = lts.define_adt(gdf_edges, rating_dict)
         
         gdf_edges = lts.define_narrow_wide(gdf_edges)
+        gdf_edges = lts.define_adt(gdf_edges, rating_dict)
 
         all_lts = lts.calculate_lts(gdf_edges, tables)
 

@@ -1,32 +1,32 @@
 # Separated Paths - is_separated_path()
-bike_lane_separation1:
-  LTS: 1
-  condition: highway == 'cycleway'
-  bike_lane_separation: 'yes'
-  rule_message: OSM
-bike_lane_separation2:
-  LTS: 1
-  condition: highway == 'path'
-  bike_lane_separation: 'yes'
-  rule_message: OSM
-bike_lane_separation3:
-  LTS: 1
-  condition: highway == 'footway' & ~(footway== 'crossing')
-  bike_lane_separation: 'yes'
-  rule_message: OSM
+# bike_lane_separation1:
+#   LTS: 1
+#   condition: highway == 'cycleway'
+#   bike_lane_separation: 'yes'
+#   rule_message: OSM
+# bike_lane_separation2:
+#   LTS: 1
+#   condition: highway == 'path'
+#   bike_lane_separation: 'yes'
+#   rule_message: OSM
+# bike_lane_separation3:
+#   LTS: 1
+#   condition: highway == 'footway' & ~(footway == 'crossing')
+#   bike_lane_separation: 'yes'
+#   rule_message: OSM
 # bike_lane_separation4:
 #   LTS: 1
 #   condition: (`cycleway` == 'track')
 #   bike_lane_separation: 'yes'
 #   rule_message: OSM
-bike_lane_separation10:
-  condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
-  bike_lane_separation: 'no'
-  rule_message: OSM
-bike_lane_separation11:
-  condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
-  bike_lane_separation: 'no'
-  rule_message: No OSM tag
+# bike_lane_separation10:
+#   condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+#   bike_lane_separation: 'no'
+#   rule_message: OSM
+# bike_lane_separation11:
+#   condition: (`cycleway:right` != 'yes') & (`cycleway:[left]` == 'lane') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')
+#   bike_lane_separation: 'no'
+#   rule_message: No OSM tag
 bike_lane_separation12:
   LTS: 1
   condition: (`cycleway:[right]` != 'yes') & (`cycleway:left` == 'track') & (`oneway` == True) & (`cycleway:left:oneway` != '-1')

@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 SIDES = ['left', 'right']
+DIRS = ['fwd', 'rev']
 
 # %% Read Configuration Files
 def read_tables():
@@ -176,7 +177,7 @@ def convert_both_tag(gdf_edges):
     gdf_edges = gdf_edges.drop(columns=tags)
 
     # Convert tags implicit with *:both suffix to both *:left/*:right suffix columns
-    tags = ['cycleway']
+    tags = ['cycleway', 'cycleway:buffer', 'cycleway:separation', 'cycleway:width']
     for tag in tags:
         tag_left = tag + ':left'
         tag_right = tag + ':right'
@@ -186,6 +187,21 @@ def convert_both_tag(gdf_edges):
         gdf_edges.loc[gdf_filter.index, tag_right] = gdf_filter[tag]
     # Remove columns to prevent accidental usage
     gdf_edges = gdf_edges.drop(columns=tags)
+
+    # Merge direction suffixes
+    tagsPairs = [
+        ['cycleway:left:buffer',  'cycleway:buffer:left'],
+        ['cycleway:right:buffer', 'cycleway:buffer:right'],
+        ['cycleway:left:separation',  'cycleway:separation:left'],
+        ['cycleway:right:separation', 'cycleway:separation:right'],
+        ['cycleway:right:left',  'cycleway:width:left'],
+        ['cycleway:right:width', 'cycleway:width:right'],
+        ]
+    for pairs in tagsPairs:
+        gdf_filter = gdf_edges.loc[~gdf_edges[pairs[0]].isna()]
+        gdf_edges.loc[gdf_filter.index, pairs[0]] = gdf_filter[pairs[1]]
+        # Remove columns to prevent accidental usage
+        gdf_edges = gdf_edges.drop(columns=pairs[1])
 
     return gdf_edges
 
@@ -204,10 +220,15 @@ def parse_lanes(gdf_edges):
     # bi-directional bike lane
     parse_dict = read_parse()
 
-    gdf_edges['parse'] = 'not evaluated'
+    gdf_edges['parse'] = np.nan
+    gdf_edges['LTS_bike_access'] = np.nan
+
     cols = ['bike_lane_fwd', 'bike_lane_rev', 
             'bike_allowed_fwd', 'bike_allowed_rev',
-            'parking_fwd', 'parking_rev']
+            'parking_fwd', 'parking_rev',
+            'buffer_fwd', 'buffer_rev',
+            'bike_width_fwd', 'bike_width_rev',
+            'separation_fwd', 'separation_rev']
     for key in cols:
         # gdf_edges[key] = 'not evaluated'
         gdf_edges[key] = np.nan
@@ -215,23 +236,29 @@ def parse_lanes(gdf_edges):
     # rules = {k:v for (k,v) in parse_dict.items()}
     # for key, value in rules.items():
     for key, value in parse_dict.items():
+        print(f'Processing condition {key}')
         condition = value['condition']
         try:
-            gdf_filter = gdf_edges.eval(f"{condition} & (`parse` == 'not evaluated')")
-            gdf_edges.loc[gdf_filter, 'parse'] = condition
+            # gdf_filter = gdf_edges.eval(f"{condition} & (`parse` == 'not evaluated')")
+            gdf_filter = gdf_edges.eval(condition)
+            gdf_edges.loc[gdf_filter, 'parse'] = gdf_edges.loc[gdf_filter, 'parse'].astype(str) + condition + '\n'
             if 'LTS' in value:
-                gdf_edges.loc[gdf_filter, 'LTS_bike_access'] = value['LTS']
+                gdf_edges.loc[gdf_filter[gdf_filter['LTS_bike_access_left'].isna()], 'LTS_bike_access_left'] = value['LTS']
+                gdf_edges.loc[gdf_filter[gdf_filter['LTS_bike_access_right'].isna()], 'LTS_bike_access_right'] = value['LTS']
+            if 'LTS_left' in value:
+                gdf_edges.loc[gdf_filter[gdf_filter['LTS_bike_access_left'].isna()], 'LTS_bike_access_left'] = value['LTS_left']
+            if 'LTS_right' in value:
+                gdf_edges.loc[gdf_filter[gdf_filter['LTS_bike_access_right'].isna()], 'LTS_bike_access_right'] = value['LTS_right']
             for col in cols:
                 if col in value:
+                    gdf_uneval = gdf_filter[gdf_filter[col].isna()]
                     if isinstance(value[col], bool):
-                        gdf_edges.loc[gdf_filter, col] = value[col]
+                        gdf_edges.loc[gdf_uneval, col] = value[col]
                     else:
-                        gdf_edges.loc[gdf_filter, col] = gdf_edges.loc[gdf_filter, value[col]]
-            
-
+                        gdf_edges.loc[gdf_uneval, col] = gdf_edges.loc[gdf_uneval, value[col]]
         
         except pd.errors.UndefinedVariableError as e:
-            print(f'Column used in condition does not exsist in this region:\n\t{e}')
+            print(f'\tColumn used in condition does not exsist in this region:\n\t\t{e}')
 
 
     return gdf_edges
@@ -467,12 +494,6 @@ def define_adt(gdf_edges, rating_dict):
     gdf_edges[f'{prefix}_rule'] = 'Assumed'
     gdf_edges[f'{prefix}_condition'] = 'default'
 
-    # for side in SIDES:
-    #     gdf_edges[f'{prefix}_{side}'] = 1500 # FIXME is this the right default?
-    #     gdf_edges[f'{prefix}_{side}_rule_num'] = defaultRule
-    #     gdf_edges[f'{prefix}_{side}_rule'] = 'Assume moderate traffic.'
-    #     gdf_edges[f'{prefix}_{side}_condition'] = 'default'
-
     gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
 
     return gdf_edges
@@ -488,8 +509,8 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
     speedMin = tables['cols_speeds']['min']
     speedMax = tables['cols_speeds']['max']
 
-    for side in SIDES:
-        gdf_edges[f'LTS_{baseName}_{side}'] = np.nan
+    for dir in DIRS:
+        gdf_edges[f'LTS_{baseName}_{dir}'] = np.nan
 
     # conditionTable = table['conditions']
 
@@ -499,26 +520,26 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
         # print(f'{table[subTable]['conditions']=}')
         for conditionTableName in table['conditions']:
             conditionTableStr = table['conditions'][conditionTableName]
-            for side in SIDES:
-                conditionTable = conditionTableStr.replace('side', side)
+            for dir in DIRS:
+                conditionTable = conditionTableStr.replace('dir', dir)
             # print(conditionTable)
                 for conditionName in table[subTable]['conditions']:
                     bucketColumn = table['bucketColumn']
-                    bucketTable = table[subTable][f'table_{bucketColumn}'.replace('_side', '')]
+                    bucketTable = table[subTable][f'table_{bucketColumn}'.replace('_dir', '')]
                     ltsSpeeds = table[subTable]['table_speed']
                     # print(f'{subTable=} | {conditionTable=} | {conditionName=}')
-                    bucketColumn = bucketColumn.replace('side', side)
+                    bucketColumn = bucketColumn.replace('dir', dir)
                     for bucket, ltsSpeed in zip(bucketTable, ltsSpeeds):
                         conditionBucket = f'(`{bucketColumn}` >= {bucket[0]}) & (`{bucketColumn}` < {bucket[1]})'
                         for sMin, sMax, lts in zip(speedMin, speedMax, ltsSpeed):
                             condition = table[subTable]['conditions'][conditionName]
-                            condition = condition.replace('side', side)
+                            condition = condition.replace('dir', dir)
                             conditionSpeed = f'(`speed` > {sMin}) & (`speed` < {sMax})'
                             condition = f'{condition} & {conditionSpeed} & {conditionBucket} & {conditionTable}'
                             # print(f'\t{conditionName} | {condition}')
                             gdf_filter = gdf_edges.eval(f"{condition}")
                             # print(f'{baseName}: LTS={lts}\n{condition}\n{gdf_filter.value_counts()}\n')
-                            gdf_edges.loc[gdf_filter, f'LTS_{baseName}_{side}'] = lts
+                            gdf_edges.loc[gdf_filter, f'LTS_{baseName}_{dir}'] = lts
                     # gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
             
 
@@ -531,8 +552,8 @@ def calculate_lts(gdf_edges, tables):
         gdf_edges = evaluate_lts_table(gdf_edges, tables, tableName)
 
     # Use the lowest calculated LTS score for a segment (in case mixed is lower than bike lane)
-    for side in SIDES:
-        gdf_edges[f'LTS_{side}'] = gdf_edges.loc[:,( gdf_edges.columns.str.startswith('LTS') & gdf_edges.columns.str.endswith(side))].min(axis=1, skipna=True, numeric_only=True)
+    for dir in DIRS:
+        gdf_edges[f'LTS_{dir}'] = gdf_edges.loc[:,( gdf_edges.columns.str.startswith('LTS') & gdf_edges.columns.str.endswith(dir))].min(axis=1, skipna=True, numeric_only=True)
 
     gdf_edges['LTS'] = gdf_edges[['LTS_left', 'LTS_right']].max(axis=1)
 
