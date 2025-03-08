@@ -111,7 +111,7 @@ class StressMapCli(object):
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES
 
-        if args.cities:
+        if hasattr(args, 'cities'):
             plot_func(args, cities)
         else:
             plot_func(args)
