@@ -12,24 +12,11 @@
 # matching conditions won't overwrite the set value. Subsequent conditions that affect more columns
 # can set the value in the additional, unset columns. 
 
-# Tags to account for:
-# bike lane side, direction, and width
-# bike lane buffer, parking width, bike lane reach 
-# bike lane separation
-
-# Conditions to parse:
-# bike lanes with direction of travel on standard side
-# right side bike lane on oneway (standard)
-# left side bike lane on oneway (same direction as traffic)
-# contraflow lanes
-# bike lane with -1 direction
-# bi-directional bike lane
-
-# pre-pre processing:
-# *:both > *:left and *:right
-# parking, bile lane buffer  
-
 # Basic Conditions
+c00:
+  condition: (`bicycle` == 'yes')
+  bike_allowed_fwd: True
+  bike_allowed_rev: True
 c01:
   condition: (`bicycle` == 'no') | (`bicycle` == 'dismount')
   bike_allowed_fwd: False
@@ -61,30 +48,37 @@ c05:
   bike_separation_rev: True
 
 # Bike lanes, bi-directional traffic
-c11:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway != True)
+c10:
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane') | (`cycleway:right` == 'track')) & (`cycleway:right:oneway` != '-1') & (oneway != True)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
+  bike_separation_fwd: 'cycleway:right:separation'
   parking_fwd: 'parking_right'
-  parking_width_fwd: 'width_parking_right'
+  parking_width_fwd: 'parking_width_right'
   buffer_fwd: 'cycleway:right:buffer'
   bike_width_fwd: 'cycleway:right:width'
-  bike_reach_fwd: 'bikelane_reach_right'
+c11: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:right` == 'track') & (`cycleway:right:oneway` != '-1') & (oneway != True)
+  bike_separation_fwd: True
 c12:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway != True)
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane') | (`cycleway:left` == 'track')) & (`cycleway:left:oneway` != '-1') & (oneway != True)
   bike_allowed_rev: True
   bike_lane_rev: True
-  bike_separation_rev: False
+  bike_separation_rev: 'cycleway:left:separation'
   parking_rev: 'parking_left'
+  parking_width_rev: 'parking_width_left'
   buffer_rev: 'cycleway:left:buffer'
-c13:
+  bike_width_rev: 'cycleway:left:width'
+c13: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:left` == 'track') & (`cycleway:left:oneway` != '-1') & (oneway != True)
+  bike_separation_rev: True
+c14:
   condition: ((`cycleway:right` == 'no') | (`cycleway:right` == 'separate')) & (`cycleway:right:oneway` != '-1') & (oneway != True)
   bike_allowed_fwd: True
   bike_lane_fwd: False
   bike_separation_fwd: False
   parking_fwd: 'parking_right'
-c13:
+c15:
   condition: ((`cycleway:left` == 'no') | (`cycleway:left` == 'separate')) & (`cycleway:left:oneway` != '-1') & (oneway != True)
   bike_allowed_rev: True
   bike_lane_rev: False
@@ -93,36 +87,56 @@ c13:
   
 # Contraflow lanes, bi-directional traffic
 c20:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` == '-1') & (oneway != True)
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane') | (`cycleway:right` == 'track')) & (`cycleway:right:oneway` == '-1') & (oneway != True)
   bike_allowed_rev: True
   bike_lane_rev: True
-  bike_separation_rev: False
+  bike_separation_rev: 'cycleway:right:separation'
   parking_rev: 'parking_right'
+  parking_width_rev: 'parking_width_right'
   buffer_rev: 'cycleway:right:buffer'
-c21:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` == '-1') & (oneway != True)
+  bike_width_rev: 'cycleway:right:width'
+c21: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:right` == 'track') & (`cycleway:right:oneway` == '-1') & (oneway != True)
+  bike_separation_rev: True
+c22:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane') | (`cycleway:left` == 'track')) & (`cycleway:left:oneway` == '-1') & (oneway != True)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
+  bike_separation_fwd: 'cycleway:left:separation'
   parking_fwd: 'parking_left'
+  parking_width_fwd: 'parking_width_left'
   buffer_fwd: 'cycleway:left:buffer'
+  bike_width_fwd: 'cycleway:left:width'
+c23: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:left` == 'track') & (`cycleway:left:oneway` == '-1') & (oneway != True)
+  bike_separation_fwd: True
   
 # Bike lanes on nominal oneways
 c30:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway == True)
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane') | (`cycleway:right` == 'track')) & (`cycleway:right:oneway` != '-1') & (oneway == True)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
+  bike_separation_fwd: 'cycleway:right:separation'
   parking_fwd: 'parking_right'
+  parking_width_fwd: 'parking_width_right'
   buffer_fwd: 'cycleway:right:buffer'
-c31:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway == True)
+  bike_width_fwd: 'cycleway:right:width'
+c31: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:right` == 'track') & (`cycleway:right:oneway` != '-1') & (oneway == True)
+  bike_separation_fwd: True
+c32:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane') | (`cycleway:left` == 'track')) & (`cycleway:left:oneway` != '-1') & (oneway == True)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
+  bike_separation_fwd: 'cycleway:left:separation'
   parking_fwd: 'parking_left'
+  parking_width_fwd: 'parking_width_left'
   buffer_fwd: 'cycleway:left:buffer'
-c32:
+  bike_width_fwd: 'cycleway:left:width'
+c33: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:left` == 'track') & (`cycleway:left:oneway` != '-1') & (oneway == True)
+  bike_separation_fwd: True
+c34:
   condition: ((`cycleway:right` == 'no') | (`cycleway:right` == 'separate')) & (oneway == True)
   bike_allowed_fwd: True
   bike_lane_fwd: False
@@ -131,141 +145,173 @@ c32:
   
 # Contraflow bike lanes on nominal oneways
 c40:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` == '-1') & (oneway == True)
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane') | (`cycleway:right` == 'track')) & (`cycleway:right:oneway` == '-1') & (oneway == True)
   bike_allowed_rev: True
   bike_lane_rev: True
-  bike_separation_rev: False
+  bike_separation_rev: 'cycleway:right:separation'
   parking_rev: 'parking_right'
-c41:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` == '-1') & (oneway == True)
+  parking_width_rev: 'parking_width_right'
+  buffer_rev: 'cycleway:right:buffer'
+  bike_width_rev: 'cycleway:right:width'
+c41: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:right` == 'track') & (`cycleway:right:oneway` == '-1') & (oneway == True)
+  bike_separation_rev: True
+c42:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane') | (`cycleway:left` == 'track')) & (`cycleway:left:oneway` == '-1') & (oneway == True)
   bike_allowed_rev: True
   bike_lane_rev: True
-  bike_separation_rev: False
+  bike_separation_rev: 'cycleway:left:separation'
   parking_rev: 'parking_left'
-c42:
+  parking_width_rev: 'parking_width_left'
+  buffer_rev: 'cycleway:left:buffer'
+  bike_width_rev: 'cycleway:left:width'
+c43: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:left` == 'track') & (`cycleway:left:oneway` == '-1') & (oneway == True)
+  bike_separation_rev: True
+c44:
   condition: ((`cycleway:left` == 'no') | (`cycleway:left` == 'separate')) & (oneway == True)
   bike_allowed_rev: False
-  bike_lane_rev: False
-c43:
+  bike_lane_rev: False  
+c45:
   condition: ((`cycleway:left` != 'yes') | (`cycleway:left` != 'lane')) & (oneway == True)
   bike_allowed_rev: False
   bike_lane_rev: False
 
 # Bike lanes on reveresed oneways
 c50:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway == -1)
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane') | (`cycleway:right` == 'track')) & (`cycleway:right:oneway` != '-1') & (oneway == -1)
   bike_allowed_rev: True
   bike_lane_rev: True
-  bike_separation_rev: False
+  bike_separation_rev: 'cycleway:right:separation'
   parking_rev: 'parking_right'
-c51:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway == -1)
+  parking_width_rev: 'parking_width_right'
+  buffer_rev: 'cycleway:right:buffer'
+  bike_width_rev: 'cycleway:right:width'
+c51: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:right` == 'track') & (`cycleway:right:oneway` != '-1') & (oneway == -1)
+  bike_separation_rev: True
+c52:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane') | (`cycleway:left` == 'track')) & (`cycleway:left:oneway` != '-1') & (oneway == -1)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
+  bike_separation_fwd: 'cycleway:left:separation'
   parking_fwd: 'parking_left'
+  parking_width_fwd: 'parking_width_left'
+  buffer_fwd: 'cycleway:left:buffer'
+  bike_width_fwd: 'cycleway:left:width'
+c53: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:left` == 'track') & (`cycleway:left:oneway` != '-1') & (oneway == -1)
+  bike_separation_fwd: True
   
 # Contraflow bike lanes on reveresed oneways
 c60:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` == '-1') & (oneway == -1)
+  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane') | (`cycleway:right` == 'track')) & (`cycleway:right:oneway` == '-1') & (oneway == -1)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
-c61:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` == '-1') & (oneway == -1)
+  bike_separation_fwd: 'cycleway:right:separation'
+  parking_fwd: 'parking_right'
+  parking_width_fwd: 'parking_width_right'
+  buffer_fwd: 'cycleway:right:buffer'
+  bike_width_fwd: 'cycleway:right:width'
+c61: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:right` == 'track') & (`cycleway:right:oneway` == '-1') & (oneway == -1)
+  bike_separation_fwd: True
+c62:
+  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane') | (`cycleway:left` == 'track')) & (`cycleway:left:oneway` == '-1') & (oneway == -1)
   bike_allowed_fwd: True
   bike_lane_fwd: True
-  bike_separation_fwd: False
+  bike_separation_fwd: 'cycleway:left:separation'
+  parking_fwd: 'parking_left'
+  parking_width_fwd: 'parking_width_left'
+  buffer_fwd: 'cycleway:left:buffer'
+  bike_width_fwd: 'cycleway:left:width'
+c63: # Catch cycleway=track separation if not specified
+  condition: (`cycleway:left` == 'track') & (`cycleway:left:oneway` == '-1') & (oneway == -1)
+  bike_separation_fwd: True
   
 # Non-Road Areas
-c105:
+c100:
   LTS: 0
   condition: (`footway` == 'sidewalk') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'footway')
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c106:
+c101:
   LTS: 0
   condition: (`footway` == 'sidewalk') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'path')
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c107:
+c102:
   LTS: 0
   condition: (`footway` == 'crossing') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'footway')
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c108:
+c103:
   LTS: 0
   condition: (`crossing` == 'informal') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive')) & (`highway` == 'footway')
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c109:
+c104:
   LTS: 0
   condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c110:
+c105:
   LTS: 1
   condition: (`highway` == 'footway') & (`footway` == 'access_aisle') & (`bicycle` == 'yes')
   bike_allowed_fwd: True
   bike_allowed_rev: True
   bike_separation_fwd: True
   bike_separation_rev: True
-c114:
+c106:
   LTS: 0
   condition: (`tunnel` == 'yes') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c115:
+c107:
   LTS: 0
   condition: (`tunnel` == 'building_passage') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c116:
+c108:
   LTS: 0
   condition: (`highway` == 'footway') & (`foot` == 'private') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c117:
+c109:
   LTS: 0
   condition: (`bus` == 'designated') & ((`bicycle` != 'yes') | (`bicycle` != 'designated') | (`bicycle` != 'permissive'))
   bike_allowed_fwd: False
   bike_allowed_rev: False
 
 # Assumptions
-c100:
-  condition: (`bicycle` == 'yes')
-  bike_allowed_fwd: True
-  bike_allowed_rev: True
-c101:
+c200:
   LTS: 0
   condition: (`highway` == 'motorway')
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c102:
+c201:
   LTS: 0
   condition: (`highway` == 'motorway_link')
   bike_allowed_fwd: False
   bike_allowed_rev: False
-c111:
+c202:
   LTS: 2
   condition: (highway == 'service') & (service == 'alley')
   bike_allowed_fwd: True
   bike_allowed_rev: True
   bike_separation_fwd: False
   bike_separation_rev: False
-c112:
+c203:
   LTS: 2
   condition: (highway == 'service') & (service == 'driveway')
   bike_allowed_fwd: True
   bike_allowed_rev: True
   bike_separation_fwd: False
   bike_separation_rev: False
-c113:
+c204:
   LTS: 2
   condition: (highway == 'service')
   bike_allowed_fwd: True
   bike_allowed_rev: True
   bike_separation_fwd: False
   bike_separation_rev: False
-
-  

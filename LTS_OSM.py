@@ -275,12 +275,12 @@ def read_lts_csv(filepath):
             'ADT', 'ADT_rule_num', 'ADT_rule', 'ADT_condition',
             'LTS_biking_permitted', 'LTS_bike_lane_separation', 
             'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS',
-            'width_street_rule', 'biking_permitted_left', 'biking_permitted_rule_left', 'bike_lane_exist_left', 'bike_lane_exist_rule_left', 
+            'width_street_rule', 'biking_permitted_left', 'biking_permitted_rule_left', 
             'bike_lane_separation_left', 'bike_lane_separation_rule_left', 'parking_left', 'parking_rule_left', 'width_parking_left', 
             'width_parking_rule_left', 'width_bikelanebuffer_left', 'width_bikelanebuffer_rule_left', 'width_bikelane_left', 
             'width_bikelane_rule_left', 'bikelane_reach_left', 'LTS_mixed_left', 'LTS_bikelane_noparking_left', 'LTS_bikelane_yesparking_left',
             'LTS_biking_permitted_left', 'LTS_bike_lane_separation_left', 'LTS_left', 'biking_permitted_right', 'biking_permitted_rule_right',
-            'bike_lane_exist_right', 'bike_lane_exist_rule_right', 'bike_lane_separation_right', 'bike_lane_separation_rule_right', 
+            'bike_lane_separation_right', 'bike_lane_separation_rule_right', 
             'parking_right', 'parking_rule_right', 'width_parking_right', 'width_parking_rule_right', 'width_bikelanebuffer_right', 
             'width_bikelanebuffer_rule_right', 'width_bikelane_right', 'width_bikelane_rule_right', 'bikelane_reach_right', 'LTS_mixed_right',
             'LTS_bikelane_noparking_right', 'LTS_bikelane_yesparking_right', 'LTS_biking_permitted_right', 'LTS_bike_lane_separation_right', 'LTS_right'
@@ -369,21 +369,19 @@ def lts_edges(region, gdf_edges):
 
         # Process features where side is more important than direction
         gdf_edges = lts.parking_present(gdf_edges, rating_dict)
-        gdf_edges = lts.width_ft(gdf_edges)
 
         # Convert schema to focus on direction
         gdf_edges = lts.convert_both_tag(gdf_edges)
 
         # Process bike lanes
         gdf_edges = lts.parse_lanes(gdf_edges)
-        # gdf_edges = lts.biking_permitted(gdf_edges, rating_dict)
-        # gdf_edges = lts.is_separated_path(gdf_edges, rating_dict)
-        # gdf_edges = lts.is_bike_lane(gdf_edges, rating_dict)
 
         # Process non-directional data
         gdf_edges = lts.get_prevailing_speed(gdf_edges, rating_dict)
         gdf_edges = lts.get_lanes(gdf_edges, default_lanes=2)
         gdf_edges = lts.get_centerlines(gdf_edges, rating_dict)
+
+        gdf_edges = lts.width_ft(gdf_edges)
         
         gdf_edges = lts.define_narrow_wide(gdf_edges)
         gdf_edges = lts.define_adt(gdf_edges, rating_dict)
