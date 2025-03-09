@@ -221,8 +221,8 @@ def parse_lanes(gdf_edges):
     gdf_edges['LTS_bike_access_fwd'] = np.nan
     gdf_edges['LTS_bike_access_rev'] = np.nan
 
-    cols = ['bike_lane_fwd', 'bike_lane_rev', 
-            'bike_allowed_fwd', 'bike_allowed_rev',
+    cols = ['bike_allowed_fwd', 'bike_allowed_rev',
+            'bike_lane_fwd', 'bike_lane_rev', 
             'parking_fwd', 'parking_rev',
             'parking_width_fwd', 'parking_width_rev',
             'buffer_fwd', 'buffer_rev',
@@ -232,11 +232,11 @@ def parse_lanes(gdf_edges):
         # gdf_edges[key] = 'not evaluated'
         gdf_edges[key] = np.nan
 
-    # rules = {k:v for (k,v) in parse_dict.items()}
-    # for key, value in rules.items():
+    logdf = pd.DataFrame(columns=['condition'] + cols)
     for key, value in parse_dict.items():
         condition = value['condition']
         print(f'Processing condition {key}: {condition}')
+        logdf.loc[key, 'condition'] = condition
         try:
             # gdf_filter = gdf_edges.eval(f"{condition} & (`parse` == 'not evaluated')")
             gdf_filter = gdf_edges.eval(condition)
@@ -252,14 +252,16 @@ def parse_lanes(gdf_edges):
                 # print(f'\t{col}')
                 if col in value:
                     gdf_uneval = gdf_filter & gdf_edges[col].isna()
+                    logdf.loc[key, col] = gdf_uneval.values.sum()
                     if isinstance(value[col], bool):
-                        gdf_edges.loc[gdf_uneval.index, col] = value[col]
+                        gdf_edges.loc[gdf_uneval[gdf_uneval].index, col] = value[col]
                     else:
-                        gdf_edges.loc[gdf_uneval.index, col] = gdf_edges.loc[gdf_uneval, value[col]]
+                        gdf_edges.loc[gdf_uneval[gdf_uneval].index, col] = gdf_edges.loc[gdf_uneval[gdf_uneval].index, value[col]]
         
         except pd.errors.UndefinedVariableError as e:
             print(f'\tColumn used in condition does not exsist in this region:\n\t\t{e}')
 
+    logdf.to_csv('data/parse_log.csv')
 
     return gdf_edges
 
