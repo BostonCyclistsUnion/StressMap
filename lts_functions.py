@@ -182,11 +182,16 @@ def convert_both_tag(gdf_edges):
         tag_left = tag + ':left'
         tag_right = tag + ':right'
 
-        gdf_filter = gdf_edges.loc[~gdf_edges[tag].isna()]
-        gdf_edges.loc[gdf_filter.index, tag_left] = gdf_filter[tag]
-        gdf_edges.loc[gdf_filter.index, tag_right] = gdf_filter[tag]
-    # Remove columns to prevent accidental usage
-    gdf_edges = gdf_edges.drop(columns=tags)
+        try:
+            gdf_filter = gdf_edges.loc[~gdf_edges[tag].isna()]
+            gdf_edges.loc[gdf_filter.index, tag_left] = gdf_filter[tag]
+            gdf_edges.loc[gdf_filter.index, tag_right] = gdf_filter[tag]
+
+            # Remove column to prevent accidental usage
+            gdf_edges = gdf_edges.drop(columns=[tag])
+        except KeyError:
+            print(f'No {tag} column')
+    
 
     # Merge direction suffixes
     tagsPairs = [
@@ -261,6 +266,8 @@ def parse_lanes(gdf_edges):
         
         except pd.errors.UndefinedVariableError as e:
             print(f'\tColumn used in condition does not exsist in this region:\n\t\t{e}')
+        except KeyError as e:
+            print(f'\tColumn does not exsist in this region: {e}')
 
     logdf.to_csv('data/log_parse.csv')
     # gdf_edges.loc[gdf_edges['bike_allowed_fwd'].isna()].to_csv('data/log_bike_allowed_fwd_na.csv')
