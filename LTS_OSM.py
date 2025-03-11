@@ -386,6 +386,7 @@ def lts_edges(region, gdf_edges):
         gdf_edges = lts.define_narrow_wide(gdf_edges)
         gdf_edges = lts.define_adt(gdf_edges, rating_dict)
 
+        lts.column_value_counts(gdf_edges) # Useful for debugging
         all_lts = lts.calculate_lts(gdf_edges, tables)
 
         # print(f'{all_lts['LTS'].unique()=}')

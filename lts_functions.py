@@ -231,6 +231,7 @@ def parse_lanes(gdf_edges):
     for key in cols:
         # gdf_edges[key] = 'not evaluated'
         gdf_edges[key] = np.nan
+        gdf_edges[key] = gdf_edges[key].astype(object)
 
     logdf = pd.DataFrame(columns=['condition'] + cols)
     for key, value in parse_dict.items():
@@ -261,7 +262,9 @@ def parse_lanes(gdf_edges):
         except pd.errors.UndefinedVariableError as e:
             print(f'\tColumn used in condition does not exsist in this region:\n\t\t{e}')
 
-    logdf.to_csv('data/parse_log.csv')
+    logdf.to_csv('data/log_parse.csv')
+    # gdf_edges.loc[gdf_edges['bike_allowed_fwd'].isna()].to_csv('data/log_bike_allowed_fwd_na.csv')
+    # gdf_edges.loc[gdf_edges['bike_allowed_rev'].isna()].to_csv('data/log_bike_allowed_rev_na.csv')
 
     return gdf_edges
 
@@ -406,9 +409,9 @@ def width_ft(gdf_edges):
         print(f'No buffer_{dir} column')
 
     for dir in DIRS:
-        gdf_edges[f'bike_reach_{dir}'] =    gdf_edges[f'bike_width_{dir}'] + \
-                                            gdf_edges[f'parking_width_{dir}'] + \
-                                            gdf_edges[f'buffer_{dir}']
+        gdf_edges[f'bike_reach_{dir}'] =    gdf_edges[f'bike_width_{dir}'].fillna(0) + \
+                                            gdf_edges[f'parking_width_{dir}'].fillna(0) + \
+                                            gdf_edges[f'buffer_{dir}'].fillna(0)
 
     return gdf_edges
 
@@ -454,12 +457,45 @@ def define_adt(gdf_edges, rating_dict):
     return gdf_edges
 
 # %% LTS Calculations
+def column_value_counts(gdf_edges):
+    '''
+    This is a debugging function. Save what values and their quantities are in the data for each 
+    filter column.
+    '''
+    cols = ['bike_allowed_dir', 'centerline', 'lane_count', 'oneway', 'street_narrow_wide', 
+            'bike_lane_dir', 'parking_dir', 'ADT', 'bike_width_dir', 'bike_reach_dir']
+    cols_vc = []
+
+    for col in cols:
+        if 'dir' in col:
+            cols_vc.append(col.replace('dir', 'fwd'))
+            cols_vc.append(col.replace('dir', 'rev'))
+        else:
+            cols_vc.append(col)
+
+    vc_df = pd.DataFrame()
+    for col in cols_vc:
+        vc = gdf_edges[col].value_counts(dropna=False)
+        if len(vc_df) > len(vc):
+            dif = len(vc_df) - len(vc)
+            vc = pd.concat([vc, pd.Series(['_'] * dif)])
+        elif len(vc_df) < len(vc):
+            dif = len(vc) - len(vc_df)
+            vc_df = pd.concat([vc_df, pd.DataFrame([['_']*vc_df.shape[1]]*dif, columns=vc_df.columns)], ignore_index=True)
+
+        vc_df[f'{col}_values'] = vc.index
+        vc_df[f'{col}_counts'] = vc.values
+
+    vc_df.to_csv('data/log_filter_column_counts.csv')
+    print('Saved columns values and counts of filters')
+
 def evaluate_lts_table(gdf_edges, tables, tableName):
     baseName = tableName[6:]
     table = tables[tableName]
+    print(f'Evalutating LTS use {baseName} table...')
 
     subTables = [key for key in table.keys() if tableName in key]
-    print(subTables)
+    # print(subTables)
 
     speedMin = tables['cols_speeds']['min']
     speedMax = tables['cols_speeds']['max']
@@ -469,6 +505,8 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
 
     # conditionTable = table['conditions']
 
+    logdf = pd.DataFrame(columns=['subTable', 'conditionTableStr', 'conditionName', 'dir', 'condition', 'lts', 'count'])
+
     # Each LTS table split by number of lane classifications
     for subTable in subTables:
         # print(f'\n{subTable=}')
@@ -477,7 +515,7 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
             conditionTableStr = table['conditions'][conditionTableName]
             for dir in DIRS:
                 conditionTable = conditionTableStr.replace('dir', dir)
-            # print(conditionTable)
+                # print(conditionTable)
                 for conditionName in table[subTable]['conditions']:
                     bucketColumn = table['bucketColumn']
                     bucketTable = table[subTable][f'table_{bucketColumn}'.replace('_dir', '')]
@@ -495,8 +533,11 @@ def evaluate_lts_table(gdf_edges, tables, tableName):
                             gdf_filter = gdf_edges.eval(f"{condition}")
                             # print(f'{baseName}: LTS={lts}\n{condition}\n{gdf_filter.value_counts()}\n')
                             gdf_edges.loc[gdf_filter, f'LTS_{baseName}_{dir}'] = lts
+
+                            logdf.loc[len(logdf)] = [subTable, conditionTableStr, conditionName, dir, condition, lts, gdf_filter.values.sum()]
                     # gdf_edges.loc[gdf_filter, f'{prefix}_rule_num'] = key
-            
+
+    logdf.to_csv(f'data/log_lts_{baseName}.csv')
 
     return gdf_edges
 

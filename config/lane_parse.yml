@@ -301,6 +301,8 @@ c202:
   bike_allowed_rev: True
   bike_separation_fwd: False
   bike_separation_rev: False
+  parking_fwd: 'parking_right'
+  parking_rev: 'parking_left'
 c203:
   LTS: 2
   condition: (highway == 'service') & (service == 'driveway')
@@ -308,6 +310,8 @@ c203:
   bike_allowed_rev: True
   bike_separation_fwd: False
   bike_separation_rev: False
+  parking_fwd: 'parking_right'
+  parking_rev: 'parking_left'
 c204:
   LTS: 2
   condition: (highway == 'service')
@@ -315,11 +319,8 @@ c204:
   bike_allowed_rev: True
   bike_separation_fwd: False
   bike_separation_rev: False
-c205:
-  LTS: 1
-  condition: (highway == 'living_street')
-  bike_allowed_fwd: True
-  bike_allowed_rev: True
+  parking_fwd: 'parking_right'
+  parking_rev: 'parking_left'
 c206:
   condition: ((highway == 'track'))
   bike_allowed_fwd: True
@@ -327,14 +328,20 @@ c206:
   LTS: 1
 
 c210:
-  condition: ((highway == 'residential') | (highway == 'primary') | (highway == 'primary_link') | (highway == 'secondary') | (highway == 'secondary_link') | (highway == 'tertiary') | (highway == 'tertiary_link') | (highway == 'trunk') | (highway == 'trunk_link') | (highway == 'unclassified'))  & (oneway == True)
+  condition: ((highway == 'residential') | (highway == 'living_street') | (highway == 'primary') | (highway == 'primary_link') | (highway == 'secondary') | (highway == 'secondary_link') | (highway == 'tertiary') | (highway == 'tertiary_link') | (highway == 'trunk') | (highway == 'trunk_link') | (highway == 'unclassified'))  & (oneway == True)
   bike_allowed_fwd: True
   bike_allowed_rev: False
+  parking_fwd: 'parking_right'
+  parking_rev: 'parking_left'
 c211:
-  condition: ((highway == 'residential') | (highway == 'primary') | (highway == 'primary_link') | (highway == 'secondary') | (highway == 'secondary_link') | (highway == 'tertiary') | (highway == 'tertiary_link') | (highway == 'trunk') | (highway == 'trunk_link') | (highway == 'unclassified')) & (oneway == -1)
+  condition: ((highway == 'residential') | (highway == 'living_street') | (highway == 'primary') | (highway == 'primary_link') | (highway == 'secondary') | (highway == 'secondary_link') | (highway == 'tertiary') | (highway == 'tertiary_link') | (highway == 'trunk') | (highway == 'trunk_link') | (highway == 'unclassified')) & (oneway == -1)
   bike_allowed_fwd: False
   bike_allowed_rev: True
+  parking_fwd: 'parking_left'
+  parking_rev: 'parking_right'
 c212:
-  condition: ((highway == 'residential') | (highway == 'primary') | (highway == 'primary_link') | (highway == 'secondary') | (highway == 'secondary_link') | (highway == 'tertiary') | (highway == 'tertiary_link') | (highway == 'trunk') | (highway == 'trunk_link') | (highway == 'unclassified'))
+  condition: ((highway == 'residential') | (highway == 'living_street') | (highway == 'primary') | (highway == 'primary_link') | (highway == 'secondary') | (highway == 'secondary_link') | (highway == 'tertiary') | (highway == 'tertiary_link') | (highway == 'trunk') | (highway == 'trunk_link') | (highway == 'unclassified'))
   bike_allowed_fwd: True
   bike_allowed_rev: True
+  parking_fwd: 'parking_right'
+  parking_rev: 'parking_left'
