@@ -1,4 +1,4 @@
-# Parking - parking_present()
+## Parking - parking_present()
 parking1:
   condition: (`parking:[both,left,right]` == 'no')
   parking: 'no'
@@ -44,7 +44,7 @@ parking11:
   parking: 'yes'
   rule_message: OSM
 
-# Prevailing Speed (mph) - get_max_speed()
+## Prevailing Speed (mph) - get_max_speed()
 # Assumed speeds are worst in Cambridge - FIXME use larger region
 speed1:
   condition: (`highway` == 'primary')
@@ -95,7 +95,7 @@ speed12:
   speed: 25
   rule_message: Assumed
 
-# Centerlines - get_centerlines()
+## Centerlines - get_centerlines()
 # Should this be combined with speed assumptions?
 centerline1:
   condition: (`lane_markings` == 'yes')
@@ -158,7 +158,7 @@ centerline15:
   centerline: 'no'
   rule_message: Assumed
 
-# Average Daily Traffic - get_adt()
+## Average Daily Traffic - get_adt()
 # Assumptions are based on an email for Prof. Furth
 
 # Major roads
@@ -285,3 +285,49 @@ ADT53:
   ADT: 1501
   rule_message: Assumed
 
+## Zoom
+Zoom:
+  condition: (`highway` == 'primary')
+  zoom: 11
+Zoom:
+  condition: (`highway` == 'primary_link')
+  zoom: 13
+Zoom:
+  condition: (`highway` == 'trunk')
+  zoom: 11
+Zoom:
+  condition: (`highway` == 'trunk_link')
+  zoom: 13
+Zoom:
+  condition: (`highway` == 'motorway')
+  zoom: 11
+Zoom:
+  condition: (`highway` == 'motorway_link')
+  zoom: 13
+Zoom:
+  condition: (`highway` == 'cycleway')
+  zoom: 11
+Zoom:
+  condition: (`highway` == 'secondary')
+  zoom: 12
+Zoom:
+  condition: (`highway` == 'secondary_link')
+  zoom: 14
+Zoom:
+  condition: (`highway` == 'tertiary')
+  zoom: 13
+Zoom:
+  condition: (`highway` == 'tertiary_link')
+  zoom: 15
+Zoom:
+  condition: (`highway` == 'residential')
+  zoom: 14
+Zoom:
+  condition: (`highway` == 'service')
+  zoom: 15
+Zoom:
+  condition: (`highway` == 'footway')
+  zoom: 16
+Zoom:
+  condition: (`highway` == 'pedestrian')
+  zoom: 16
