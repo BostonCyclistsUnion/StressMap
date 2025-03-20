@@ -171,28 +171,28 @@
                 </tr>
                 <tr>
                     <td>Bike Permitted</td>
-                    <td>${e.features[0].properties.bike_allowed_rev} <font color="gray">${e.features[0].properties.biking_permitted_rule_left}</font></td>
-                    <td>${e.features[0].properties.bike_allowed_fwd} <font color="gray">${e.features[0].properties.biking_permitted_rule_right}</font></td>
+                    <td>${e.features[0].properties.bike_allowed_rev}</td>
+                    <td>${e.features[0].properties.bike_allowed_fwd}</td>
                 </tr>
                 <tr>
                     <td>Bike Lane</td>
-                    <td>${e.features[0].properties.bike_lane_rev} <font color="gray">${e.features[0].properties.bike_lane_exist_rule_left}</font></td>
-                    <td>${e.features[0].properties.bike_lane_fwd} <font color="gray">${e.features[0].properties.bike_lane_exist_rule_right}</font></td>
+                    <td>${e.features[0].properties.bike_lane_rev}</td>
+                    <td>${e.features[0].properties.bike_lane_fwd}</td>
                 </tr>
                 <tr>
                     <td>Separation</td>
-                    <td>${e.features[0].properties.separation_rev} <font color="gray">${e.features[0].properties.bike_lane_separation_rule_left}</font></td>
-                    <td>${e.features[0].properties.separation_fwd} <font color="gray">${e.features[0].properties.bike_lane_separation_rule_right}</font></td>
+                    <td>${e.features[0].properties.separation_rev}</td>
+                    <td>${e.features[0].properties.separation_fwd}</td>
                 </tr>
                 <tr>
                     <td>Width</td>
-                    <td>${e.features[0].properties.bike_width_rev} <font color="gray">${e.features[0].properties.width_bikelane_rule_left}</font></td>
-                    <td>${e.features[0].properties.bike_width_fwd} <font color="gray">${e.features[0].properties.width_bikelane_rule_right}</font></td>
+                    <td>${e.features[0].properties.bike_width_rev} <font color="gray">${e.features[0].properties.bike_width_rule_rev}</font></td>
+                    <td>${e.features[0].properties.bike_width_fwd} <font color="gray">${e.features[0].properties.bike_width_rule_fwd}</font></td>
                 </tr>
                 <tr>
                     <td>Buffer</td>
-                    <td>${e.features[0].properties.buffer_rev} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule_left}</font></td>
-                    <td>${e.features[0].properties.buffer_fwd} <font color="gray">${e.features[0].properties.width_bikelanebuffer_rule_right}</font></td>
+                    <td>${e.features[0].properties.buffer_rev} <font color="gray">${e.features[0].properties.bike_width_rule_rev}</font></td>
+                    <td>${e.features[0].properties.buffer_fwd} <font color="gray">${e.features[0].properties.bike_width_rule_fwd}</font></td>
                 </tr>
                 <tr>
                     <td>Reach</td>
@@ -212,18 +212,18 @@
                     <td colspan="2">${e.features[0].properties.width_street} <font color="gray">${e.features[0].properties.width_street_rule}</font></td>
                 </tr>
                 <tr>
+                    <td>Parking</td>
+                    <td>${e.features[0].properties.parking_rev}</td>
+                    <td>${e.features[0].properties.parking_fwd}</td>
+                </tr>
+                <tr>
                     <td>Parking Width</td>
-                    <td>${e.features[0].properties.parking_width_rev} <font color="gray">${e.features[0].properties.width_parking_rule_left}</font></td>
-                    <td>${e.features[0].properties.parking_width_fwd} <font color="gray">${e.features[0].properties.width_parking_rule_right}</font></td>
+                    <td>${e.features[0].properties.parking_width_rev}</td>
+                    <td>${e.features[0].properties.parking_width_fwd}</td>
                 </tr>
                 <tr>
                     <td>Lane Count</td>
-                    <td colspan="2">${e.features[0].properties.lane_count} <font color="gray">${e.features[0].properties.lane_count_rule}</font></td>
-                </tr>
-                <tr>
-                    <td>Parking</td>
-                    <td>${e.features[0].properties.parking_rev} <font color="gray">${e.features[0].properties.parking_rule_left}</font></td>
-                    <td>${e.features[0].properties.parking_fwd} <font color="gray">${e.features[0].properties.parking_rule_right}</font></td>
+                    <td colspan="2">${e.features[0].properties.lane_count}</td>
                 </tr>
                 <tr>
                     <td>Prevailing Speed</td>
@@ -246,8 +246,8 @@
                 </tr>
                 <tr>
                     <td>LTS_biking_permitted</td>
-                    <td>${e.features[0].properties.LTS_biking_permitted_left}</td>
-                    <td>${e.features[0].properties.LTS_biking_permitted_right}</td>
+                    <td>${e.features[0].properties.LTS_biking_permitted_rev}</td>
+                    <td>${e.features[0].properties.LTS_biking_permitted_fwd}</td>
                 </tr>
                 <tr>
                     <td>LTS_mixed</td>

@@ -83,10 +83,7 @@ def plot_lts_geojson(region, all_lts):
                     ]
     fields_dirs = [ 
                     'bike_allowed', 'bike_lane', 'separation',
-                    'parking', 
-                    # 'parking_rule',
-                    'parking_width',
-                    # 'parking_width_rule', 
+                    'parking', 'parking_width',
                     'buffer', 'buffer_rule', 'bike_width', 'bike_width_rule', 'bike_reach',                      
                     'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking',
                     'LTS_bike_access', 'LTS',
