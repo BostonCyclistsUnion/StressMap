@@ -273,6 +273,7 @@ def parse_lanes(gdf_edges):
     # gdf_edges.loc[gdf_edges['bike_allowed_fwd'].isna()].to_csv('data/log_bike_allowed_fwd_na.csv')
     # gdf_edges.loc[gdf_edges['bike_allowed_rev'].isna()].to_csv('data/log_bike_allowed_rev_na.csv')
 
+    print('Completed lane parsing')
     return gdf_edges
 
 # %% Pre-Processing Functions
@@ -286,7 +287,7 @@ def parking_present(gdf_edges, rating_dict):
     #     print(tag, gdfEdges[tag].unique())
 
     prefix = 'parking'
-    defaultRule = f'{prefix}0'
+    defaultRule = f'{prefix}_'
 
     for side in SIDES:
         gdf_edges[f'{prefix}_{side}'] = 'yes'
@@ -311,7 +312,7 @@ def get_prevailing_speed(gdf_edges, rating_dict):
     """
     prefix = 'speed'
     speedRules = {k:v for (k,v) in rating_dict.items() if prefix in k}
-    defaultRule = f'{prefix}0'
+    defaultRule = f'{prefix}_'
 
     # FIXME if change to apply assumed values first then replace with OSM data, can use common function
     gdf_edges['speed'] = gdf_edges['maxspeed'] 
@@ -356,10 +357,10 @@ def get_lanes(gdf_edges, default_lanes = 2):
     # this usually happens if multiple adjacent ways are included in the edge and 
     # there's a turning lane
     gdf_edges['lane_count'] = gdf_edges['lanes'].fillna(default_lanes).apply( # FIXME: change so footways default to 1 lane, maybe other road types have other defaults
-        lambda x: np.array(re.split(r'; |, |\*|\n', str(x)), dtype = 'int')).apply( 
+        lambda x: np.array(re.split(r'; |, |\*|\n', str(x)), dtype = 'float')).apply( 
             # Converted to a raw string to avoid 'SyntaxWarning: invalid escape sequence '\*' python re',
             # check that this is doing the right thing
-            lambda x: np.max(x))
+            lambda x: int(np.rint(np.max(x))))
     
     gdf_edges['lane_rule'] = 'OSM'
     assumed = gdf_edges['lanes'] == np.nan
@@ -370,7 +371,7 @@ def get_lanes(gdf_edges, default_lanes = 2):
 def get_centerlines(gdf_edges, rating_dict):
 
     prefix = 'centerline'
-    defaultRule = f'{prefix}0'
+    defaultRule = f'{prefix}_'
 
     # for side in SIDES:
     gdf_edges[f'{prefix}'] = 'yes'
@@ -408,7 +409,7 @@ def width_ft(gdf_edges):
             if 'yes' in gdf_edges[f'buffer_{dir}'].values:
                 gdf_edges.loc[gdf_edges[f'buffer_{dir}']=='yes', f'buffer_{dir}'] = "2'"
             if 'no' in gdf_edges[f'buffer_{dir}'].values:
-                gdf_edges.loc[gdf_edges[f'buffer_{dir}']=='yes', f'buffer_{dir}'] = "0.0"
+                gdf_edges.loc[gdf_edges[f'buffer_{dir}']=='no', f'buffer_{dir}'] = "0.0"
             width_bikelanebuffer, width_bikelanebuffer_rule = convert_feet_with_quotes(gdf_edges[f'buffer_{dir}'])
             gdf_edges.loc[width_bikelanebuffer.notna(), f'buffer_{dir}'] = width_bikelanebuffer
             gdf_edges.loc[width_bikelanebuffer.notna(), f'buffer_rule_{dir}'] = width_bikelanebuffer_rule
@@ -452,9 +453,26 @@ def define_adt(gdf_edges, rating_dict):
     '''
 
     prefix = 'ADT'
-    defaultRule = f'{prefix}0'
+    defaultRule = f'{prefix}_'
 
     gdf_edges[f'{prefix}'] = 1500 # FIXME is this the right default?
+    gdf_edges[f'{prefix}_rule_num'] = defaultRule
+    gdf_edges[f'{prefix}_rule'] = 'Assumed'
+    gdf_edges[f'{prefix}_condition'] = 'default'
+
+    gdf_edges = apply_rules(gdf_edges, rating_dict, prefix)
+
+    return gdf_edges
+
+def define_zoom(gdf_edges, rating_dict):
+    '''
+    Set the zoom level where the way begins to be displayed.
+    '''
+
+    prefix = 'zoom'
+    defaultRule = f'{prefix}_'
+
+    gdf_edges[f'{prefix}'] = 16
     gdf_edges[f'{prefix}_rule_num'] = defaultRule
     gdf_edges[f'{prefix}_rule'] = 'Assumed'
     gdf_edges[f'{prefix}_condition'] = 'default'

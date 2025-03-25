@@ -75,11 +75,11 @@ def plot_lts_geojson(region, all_lts):
                     'speed', 'speed_rule',
                     'centerline', 'centerline_rule',
                     'ADT', 'ADT_rule',
-                    'lane_count', 'oneway', 
-                    'street_narrow_wide', 
+                    'lane_count', 'oneway',
+                    'street_narrow_wide',
                     'width_street', 'width_street_rule',
-                    # 'cycleway', 
-                    'parse',                  
+                    # 'cycleway',
+                    'parse', 'zoom',
                     ]
     fields_dirs = [ 
                     'bike_allowed', 'bike_lane', 'separation',

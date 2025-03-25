@@ -58,7 +58,6 @@ def check_files(region):
         'waytagsFile': '',
         'graphFile': '',
         'allLtsFile': '',
-        'allLtsSmallFile': '',
         'gdfNodeFile': '',
         'ltsGraphFile': '',
     }
@@ -262,28 +261,38 @@ def read_lts_csv(filepath):
             'trolley_wire', 'trolleybus', 'tunnel', 'turn:lanes:backward', 
             'turn:lanes:conditional', 'turn:lanes:forward', 'turn:lanes', 
             'turn', 'vehicle', 'was:bridge:movable', 'width:feet', 'width',
-            'biking_permitted', 'biking_permitted_rule_num', 'biking_permitted_rule', 'biking_permitted_condition',
-            'bike_lane_separation', 'bike_lane_separation_rule_num', 'bike_lane_separation_rule', 'bike_lane_separation_condition',
-            'bike_lane_exist', 'bike_lane_exist_rule_num', 'bike_lane_exist_rule', 'bike_lane_exist_condition',
-            'parking', 'parking_rule_num', 'parking_rule', 'parking_condition', 'width_parking',
+            # 'biking_permitted', 'biking_permitted_rule_num', 'biking_permitted_rule', 'biking_permitted_condition',
+            # 'bike_lane_separation', 'bike_lane_separation_rule_num', 'bike_lane_separation_rule', 'bike_lane_separation_condition',
+            # 'bike_lane_exist', 'bike_lane_exist_rule_num', 'bike_lane_exist_rule', 'bike_lane_exist_condition',
+            # 'parking', 'parking_rule_num', 'parking_rule', 'parking_condition', 'width_parking',
             'speed', 'speed_rule_num', 'speed_rule', 'speed_condition',
             'lane_count', 'lane_source',
             'centerline', 'centerline_rule_num', 'centerline_rule', 'centerline_condition',
             'width_street', 'width_street_notes',
-            'width_bikelane', 'width_bikelane_notes', 'width_bikelanebuffer', 'width_bikelanebuffer_notes',
-            'bikelane_reach', 'street_narrow_wide',
+            # 'width_bikelane', 'width_bikelane_notes', 'width_bikelanebuffer', 'width_bikelanebuffer_notes',
+            # 'bikelane_reach', 
+            'street_narrow_wide',
             'ADT', 'ADT_rule_num', 'ADT_rule', 'ADT_condition',
-            'LTS_biking_permitted', 'LTS_bike_lane_separation', 
-            'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 'LTS',
-            'width_street_rule', 'biking_permitted_left', 'biking_permitted_rule_left', 
-            'bike_lane_separation_left', 'bike_lane_separation_rule_left', 'parking_left', 'parking_rule_left', 'width_parking_left', 
-            'width_parking_rule_left', 'width_bikelanebuffer_left', 'width_bikelanebuffer_rule_left', 'width_bikelane_left', 
-            'width_bikelane_rule_left', 'bikelane_reach_left', 'LTS_mixed_left', 'LTS_bikelane_noparking_left', 'LTS_bikelane_yesparking_left',
-            'LTS_biking_permitted_left', 'LTS_bike_lane_separation_left', 'LTS_left', 'biking_permitted_right', 'biking_permitted_rule_right',
-            'bike_lane_separation_right', 'bike_lane_separation_rule_right', 
-            'parking_right', 'parking_rule_right', 'width_parking_right', 'width_parking_rule_right', 'width_bikelanebuffer_right', 
-            'width_bikelanebuffer_rule_right', 'width_bikelane_right', 'width_bikelane_rule_right', 'bikelane_reach_right', 'LTS_mixed_right',
-            'LTS_bikelane_noparking_right', 'LTS_bikelane_yesparking_right', 'LTS_biking_permitted_right', 'LTS_bike_lane_separation_right', 'LTS_right'
+            # 'LTS_biking_permitted', 'LTS_bike_lane_separation', 
+            # 'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking', 
+            'LTS', 'width_street_rule',
+            #  'biking_permitted_left', 'biking_permitted_rule_left', 
+            # 'bike_lane_separation_left', 'bike_lane_separation_rule_left', 'parking_left', 'parking_rule_left', 'width_parking_left', 
+            # 'width_parking_rule_left', 'width_bikelanebuffer_left', 'width_bikelanebuffer_rule_left', 'width_bikelane_left', 
+            # 'width_bikelane_rule_left', 'bikelane_reach_left', 'LTS_mixed_left', 'LTS_bikelane_noparking_left', 'LTS_bikelane_yesparking_left',
+            # 'LTS_biking_permitted_left', 'LTS_bike_lane_separation_left', 'LTS_left', 'biking_permitted_right', 'biking_permitted_rule_right',
+            # 'bike_lane_separation_right', 'bike_lane_separation_rule_right', 
+            # 'parking_right', 'parking_rule_right', 'width_parking_right', 'width_parking_rule_right', 'width_bikelanebuffer_right', 
+            # 'width_bikelanebuffer_rule_right', 'width_bikelane_right', 'width_bikelane_rule_right', 'bikelane_reach_right', 'LTS_mixed_right',
+            # 'LTS_bikelane_noparking_right', 'LTS_bikelane_yesparking_right', 'LTS_biking_permitted_right', 'LTS_bike_lane_separation_right', 'LTS_right',
+            
+            'parse', 'zoom', 'bike_allowed_fwd', 'bike_lane_fwd', 'separation_fwd', 'parking_fwd', 
+            'parking_width_fwd', 'buffer_fwd', 'buffer_rule_fwd', 'bike_width_fwd', 'bike_width_rule_fwd', 
+            'bike_reach_fwd', 'LTS_mixed_fwd', 'LTS_bikelane_noparking_fwd', 'LTS_bikelane_yesparking_fwd', 
+            'LTS_bike_access_fwd', 'LTS_fwd', 'bike_allowed_rev', 'bike_lane_rev', 'separation_rev', 
+            'parking_rev', 'parking_width_rev', 'buffer_rev', 'buffer_rule_rev', 'bike_width_rev', 
+            'bike_width_rule_rev', 'bike_reach_rev', 'LTS_mixed_rev', 'LTS_bikelane_noparking_rev', 
+            'LTS_bikelane_yesparking_rev', 'LTS_bike_access_rev', 'LTS_rev'
             ]
     
     dtypeDict = {'u': 'Int64',
@@ -353,7 +362,6 @@ def lts_edges(region, gdf_edges):
     '''
     global OVERWRITE
     filepathAll = f"{dataFolder}/{region}_4_all_lts.csv"
-    # filepathSmall = f"{dataFolder}/{region}_5_all_lts_small.csv"
 
     if os.path.exists(filepathAll) and (OVERWRITE is False):
         # load graph
@@ -386,6 +394,8 @@ def lts_edges(region, gdf_edges):
         gdf_edges = lts.define_narrow_wide(gdf_edges)
         gdf_edges = lts.define_adt(gdf_edges, rating_dict)
 
+        gdf_edges = lts.define_zoom(gdf_edges, rating_dict)
+
         lts.column_value_counts(gdf_edges) # Useful for debugging
         all_lts = lts.calculate_lts(gdf_edges, tables)
 
@@ -395,21 +405,7 @@ def lts_edges(region, gdf_edges):
         all_lts.to_csv(filepathAll)
         # https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.to_file.html
 
-    # if os.path.exists(filepathSmall) & os.path.exists(filepathAll) & (OVERWRITE is False):
-    #     # load graph
-    #     print(f"Loading LTS_small for {region}")
-    #     all_lts_small = read_lts_csv(filepathSmall)
-    # else:
-    #     OVERWRITE = True
-    #     # FIXME need to figure out exactly what columns we want to save
-    #     all_lts_small = all_lts[['osmid', 'lanes', 'name', 'highway', 'geometry',
-    #                             'length', 'LTS',
-    #                             ]]
-    #     print(f'Saving LTS_small for {region}')
-    #     all_lts_small.to_csv(filepathSmall)
-    all_lts_small = None
-
-    return all_lts, all_lts_small
+    return all_lts
 
 
 def lts_nodes(region, gdf_nodes, all_lts):
@@ -469,25 +465,6 @@ def lts_nodes(region, gdf_nodes, all_lts):
 
     return gdf_nodes
 
-
-def save_LTS_graph(region, all_lts_small, gdf_nodes):
-    '''
-    Save LTS graph for plotting
-    '''
-    global OVERWRITE
-    filepath = f'{dataFolder}/{region}_7_lts.graphml'
-
-    if os.path.exists(filepath) & (OVERWRITE is False):
-        print(f'{region} LTS graph already exists')
-    else:
-        OVERWRITE = True
-        # make graph with LTS information
-        G_lts = ox.graph_from_gdfs(gdf_nodes, all_lts_small)
-
-        # save LTS graph
-        print(f'Saving {region} LTS graph')
-        ox.save_graphml(G_lts, filepath)
-
 def combine_data(fullRegion, regionList):
 
     def combine_all_lts(fullRegion, regionList):
@@ -496,8 +473,10 @@ def combine_data(fullRegion, regionList):
         allLTS = pd.DataFrame()
         for region in regionList:
             print(f'\t{region}')
+            print(f'\t\tBefore: {allLTS.shape=}')
             allLTSpath = f'{dataFolder}/{region}_4_all_lts.csv'
             allLTS = pd.concat([allLTS, read_lts_csv(allLTSpath)])
+            print(f'\t\tAfter:  {allLTS.shape=}')
         allLTS.to_csv(allLTSpathCombined)
 
     def combine_gdf_nodes(fullRegion, regionList):
@@ -510,23 +489,8 @@ def combine_data(fullRegion, regionList):
             gdfNodes = pd.concat([gdfNodes, pd.read_csv(gdfNodesPath, index_col=0)])
         gdfNodes.to_csv(gdfNodesPathCombined)
 
-    def combine_lts_graph(fullRegion, regionList):
-        print('LTS Graph - 7')
-        print(datetime.datetime.now())
-        graphPathCombined = f'{dataFolder}/{fullRegion}_7_lts.graphml'
-        G_lts = []
-        for region in regionList:
-            print(f'\t{region}')
-            graphPath = f'{dataFolder}/{region}_7_lts.graphml'
-            G_lts.append(ox.load_graphml(graphPath))
-        G_lts_all = nx.compose_all(G_lts)
-        ox.save_graphml(G_lts_all, graphPathCombined)
-        print(datetime.datetime.now())
-
     combine_all_lts(fullRegion, regionList)
     # combine_gdf_nodes(fullRegion, regionList)
-    # combine_lts_graph(fullRegion, regionList)
-
 
 # %% Run as Script
 def main(region, key, value, rebuild=False):
@@ -538,9 +502,8 @@ def main(region, key, value, rebuild=False):
     download_osm(region)
     extract_tags(region)
     gdfNodes, gdfEdges = download_data(region)
-    all_lts, all_lts_small = lts_edges(region, gdfEdges)
+    all_lts = lts_edges(region, gdfEdges)
     # gdf_nodes = lts_nodes(region, gdfNodes, all_lts) # Not using this yet/atm.
-    # save_LTS_graph(region, all_lts_small, gdf_nodes) # Pretty sure this isn't needed, I think it's duplicated/superceded by LTS_plot.plot_lts_geojson()
 
 if __name__ == '__main__':
     # city = ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts']

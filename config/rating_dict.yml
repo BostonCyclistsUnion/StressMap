@@ -286,48 +286,83 @@ ADT53:
   rule_message: Assumed
 
 ## Zoom
-Zoom:
+zoom01:
+  condition: (`cycleway:right` == 'separate')
+  zoom: 15
+  rule_message: _
+zoom02:
+  condition: (`cycleway:left` == 'separate')
+  zoom: 15
+  rule_message: _
+zoom03:
+  condition: (`cycleway:both` == 'separate')
+  zoom: 15
+  rule_message: _
+zoom04:
+  condition: (`cycleway` == 'separate')
+  zoom: 15
+  rule_message: _
+zoom05:
+  condition: (`bicycle` == 'designated')
+  zoom: 11
+  rule_message: _
+zoom10:
   condition: (`highway` == 'primary')
   zoom: 11
-Zoom:
+  rule_message: _
+zoom11:
   condition: (`highway` == 'primary_link')
   zoom: 13
-Zoom:
+  rule_message: _
+zoom12:
   condition: (`highway` == 'trunk')
   zoom: 11
-Zoom:
+  rule_message: _
+zoom13:
   condition: (`highway` == 'trunk_link')
   zoom: 13
-Zoom:
+  rule_message: _
+zoom14:
   condition: (`highway` == 'motorway')
   zoom: 11
-Zoom:
+  rule_message: _
+zoom15:
   condition: (`highway` == 'motorway_link')
   zoom: 13
-Zoom:
+  rule_message: _
+zoom16:
   condition: (`highway` == 'cycleway')
   zoom: 11
-Zoom:
+  rule_message: _
+zoom18:
   condition: (`highway` == 'secondary')
   zoom: 12
-Zoom:
+  rule_message: _
+zoom19:
   condition: (`highway` == 'secondary_link')
   zoom: 14
-Zoom:
+  rule_message: _
+zoom20:
   condition: (`highway` == 'tertiary')
   zoom: 13
-Zoom:
+  rule_message: _
+zoom21:
   condition: (`highway` == 'tertiary_link')
   zoom: 15
-Zoom:
+  rule_message: _
+zoom23:
   condition: (`highway` == 'residential')
   zoom: 14
-Zoom:
+  rule_message: _
+zoom25:
   condition: (`highway` == 'service')
   zoom: 15
-Zoom:
+  rule_message: _
+zoom27:
   condition: (`highway` == 'footway')
   zoom: 16
-Zoom:
+  rule_message: _
+zoom29:
   condition: (`highway` == 'pedestrian')
   zoom: 16
+  rule_message: _

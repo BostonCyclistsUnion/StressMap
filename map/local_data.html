@@ -126,6 +126,8 @@
         },
         'road-label-simple' // Add layer below labels
     );
+    map.setFilter('lts-layer', ['<=', ['get', 'zoom'], map.getZoom()]);
+    
     // create legend
     const legend = document.getElementById('legend');
 
@@ -243,6 +245,10 @@
                 <tr>
                     <td>OSMid</td>
                     <td colspan="2"><a href="https://www.openstreetmap.org/way/${e.features[0].properties.osmid}" target="_blank">${e.features[0].properties.osmid}</a></td>
+                </tr>                
+                <tr>
+                    <td>Zoom</td>
+                    <td colspan="2">${e.features[0].properties.zoom}</td>
                 </tr>
                 <tr>
                     <td>LTS_biking_permitted</td>
@@ -294,6 +300,7 @@
 
         map.on('zoom', () => {
             document.getElementById('zoom').textContent = map.getZoom().toFixed(2);
+            map.setFilter('lts-layer', ['<=', ['get', 'zoom'], map.getZoom()]);
         });
     })
 
