@@ -245,7 +245,7 @@
                 <tr>
                     <td>OSMid</td>
                     <td colspan="2"><a href="https://www.openstreetmap.org/way/${e.features[0].properties.osmid}" target="_blank">${e.features[0].properties.osmid}</a></td>
-                </tr>                
+                </tr>
                 <tr>
                     <td>Zoom</td>
                     <td colspan="2">${e.features[0].properties.zoom}</td>
@@ -269,6 +269,15 @@
                     <td>LTS_bikelane_yesparking</td>
                     <td>${e.features[0].properties.LTS_bikelane_yesparking_rev}</td>
                     <td>${e.features[0].properties.LTS_bikelane_yesparking_fwd}</td>
+                </tr>
+                <tr>
+                    <td>LTS_separation</td>
+                    <td>${e.features[0].properties.LTS_separation_rev}</td>
+                    <td>${e.features[0].properties.LTS_separation_fwd}</td>
+                </tr>
+                <tr>
+                    <td>Parse</td>
+                    <td colspan="2">${e.features[0].properties.parse}</td>
                 </tr>
             </table>`;
 

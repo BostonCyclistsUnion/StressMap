@@ -266,7 +266,6 @@ ADT49: # catchall
   ADT: 3001
   rule_message: Assumed
 
-
 # Other
 ADT50:
   condition: (`lane_count` >= 2) & (`centerline` == 'yes')
@@ -314,55 +313,67 @@ zoom11:
   condition: (`highway` == 'primary_link')
   zoom: 13
   rule_message: _
-zoom12:
-  condition: (`highway` == 'trunk')
-  zoom: 11
-  rule_message: _
 zoom13:
-  condition: (`highway` == 'trunk_link')
+  condition: (`highway` == 'trunk') & (`LTS` > 3)
   zoom: 13
   rule_message: _
 zoom14:
-  condition: (`highway` == 'motorway')
+  condition: (`highway` == 'trunk')
   zoom: 11
   rule_message: _
 zoom15:
+  condition: (`highway` == 'trunk_link')
+  zoom: 13
+  rule_message: _
+zoom17:
+  condition: (`highway` == 'trunk_link')
+  zoom: 13
+  rule_message: _
+zoom18:
+  condition: (`highway` == 'trunk_link')
+  zoom: 13
+  rule_message: _
+zoom19:
+  condition: (`highway` == 'motorway')
+  zoom: 11
+  rule_message: _
+zoom20:
   condition: (`highway` == 'motorway_link')
   zoom: 13
   rule_message: _
-zoom16:
+zoom30:
   condition: (`highway` == 'cycleway')
   zoom: 11
   rule_message: _
-zoom18:
+zoom32:
   condition: (`highway` == 'secondary')
   zoom: 12
   rule_message: _
-zoom19:
+zoom33:
   condition: (`highway` == 'secondary_link')
   zoom: 14
   rule_message: _
-zoom20:
+zoom35:
   condition: (`highway` == 'tertiary')
   zoom: 13
   rule_message: _
-zoom21:
+zoom36:
   condition: (`highway` == 'tertiary_link')
   zoom: 15
   rule_message: _
-zoom23:
+zoom38:
   condition: (`highway` == 'residential')
   zoom: 14
   rule_message: _
-zoom25:
+zoom40:
   condition: (`highway` == 'service')
   zoom: 15
   rule_message: _
-zoom27:
+zoom42:
   condition: (`highway` == 'footway')
   zoom: 16
   rule_message: _
-zoom29:
+zoom44:
   condition: (`highway` == 'pedestrian')
   zoom: 16
   rule_message: _

@@ -73,7 +73,7 @@ def apply_rules(gdf_edges, rating_dict, prefix):
                         print(namespaceVal)
                     SYM = False
                     apply_rule(SYM, LEFT, RIGHT)
-        elif prefix in ['bike_lane_exist', 'biking_permitted', 'bike_lane_separation']:
+        elif prefix in ['bike_lane', 'biking_allowed', 'separation']:
             condition = value['condition']
             SYM = False
             LEFT = True
@@ -205,7 +205,7 @@ def convert_both_tag(gdf_edges):
     for pairs in tagsPairs:
         if pairs[1] in gdf_edges.columns:
             if pairs[0] in gdf_edges.columns:
-                gdf_filter = gdf_edges.loc[~gdf_edges[pairs[0]].isna()]
+                gdf_filter = gdf_edges.loc[gdf_edges[pairs[0]].isna()]
                 gdf_edges.loc[gdf_filter.index, pairs[0]] = gdf_filter[pairs[1]]
             else:
                 gdf_edges.loc[gdf_edges.index, pairs[0]] = gdf_edges[pairs[1]]
@@ -226,13 +226,15 @@ def parse_lanes(gdf_edges):
     gdf_edges['LTS_bike_access_fwd'] = np.nan
     gdf_edges['LTS_bike_access_rev'] = np.nan
 
-    cols = ['bike_allowed_fwd', 'bike_allowed_rev',
-            'bike_lane_fwd', 'bike_lane_rev', 
-            'parking_fwd', 'parking_rev',
-            'parking_width_fwd', 'parking_width_rev',
-            'buffer_fwd', 'buffer_rev',
-            'bike_width_fwd', 'bike_width_rev',
-            'separation_fwd', 'separation_rev']
+    cols = [
+        'bike_allowed_fwd', 'bike_allowed_rev',
+        'bike_lane_fwd', 'bike_lane_rev', 
+        'parking_fwd', 'parking_rev',
+        'parking_width_fwd', 'parking_width_rev',
+        'buffer_fwd', 'buffer_rev',
+        'bike_width_fwd', 'bike_width_rev',
+        'separation_fwd', 'separation_rev'
+            ]
     for key in cols:
         # gdf_edges[key] = 'not evaluated'
         gdf_edges[key] = np.nan
@@ -246,7 +248,7 @@ def parse_lanes(gdf_edges):
         try:
             # gdf_filter = gdf_edges.eval(f"{condition} & (`parse` == 'not evaluated')")
             gdf_filter = gdf_edges.eval(condition)
-            gdf_edges.loc[gdf_filter, 'parse'] = gdf_edges.loc[gdf_filter, 'parse'].astype(str) + condition + '\n'
+            gdf_edges.loc[gdf_filter, 'parse'] = gdf_edges.loc[gdf_filter, 'parse'].astype(str) + key + ': ' + condition + '\n'
             if 'LTS' in value:
                 gdf_edges.loc[gdf_edges['LTS_bike_access_fwd'].isna() & gdf_filter, 'LTS_bike_access_fwd'] = value['LTS']
                 gdf_edges.loc[gdf_edges['LTS_bike_access_rev'].isna() & gdf_filter, 'LTS_bike_access_rev'] = value['LTS']
@@ -482,6 +484,24 @@ def define_zoom(gdf_edges, rating_dict):
     return gdf_edges
 
 # %% LTS Calculations
+
+def LTS_separation(gdf_edges):
+    '''
+    Define quality of separation
+    '''
+
+    prefix = 'separation'
+
+    for dir in DIRS:
+        gdf_edges[f'LTS_separation_{dir}'] = np.nan
+        # print(gdf_edges[f'{prefix}_{dir}'].unique())
+        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']==True, f'LTS_separation_{dir}'] = 1 # noqa: E712
+        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='yes', f'LTS_separation_{dir}'] = 1
+        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='kerb', f'LTS_separation_{dir}'] = 1
+        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='flex_post', f'LTS_separation_{dir}'] = 2
+
+    return gdf_edges
+
 def column_value_counts(gdf_edges):
     '''
     This is a debugging function. Save what values and their quantities are in the data for each 

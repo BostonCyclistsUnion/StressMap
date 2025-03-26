@@ -15,7 +15,7 @@ import json
 import os
 from pathlib import Path
 from collections import defaultdict
-import datetime
+# import datetime
 
 import requests
 
@@ -292,7 +292,8 @@ def read_lts_csv(filepath):
             'LTS_bike_access_fwd', 'LTS_fwd', 'bike_allowed_rev', 'bike_lane_rev', 'separation_rev', 
             'parking_rev', 'parking_width_rev', 'buffer_rev', 'buffer_rule_rev', 'bike_width_rev', 
             'bike_width_rule_rev', 'bike_reach_rev', 'LTS_mixed_rev', 'LTS_bikelane_noparking_rev', 
-            'LTS_bikelane_yesparking_rev', 'LTS_bike_access_rev', 'LTS_rev'
+            'LTS_bikelane_yesparking_rev', 'LTS_bike_access_rev', 'LTS_rev',
+            'LTS_separation_fwd', 'LTS_separation_rev'
             ]
     
     dtypeDict = {'u': 'Int64',
@@ -394,10 +395,12 @@ def lts_edges(region, gdf_edges):
         gdf_edges = lts.define_narrow_wide(gdf_edges)
         gdf_edges = lts.define_adt(gdf_edges, rating_dict)
 
-        gdf_edges = lts.define_zoom(gdf_edges, rating_dict)
+        gdf_edges = lts.LTS_separation(gdf_edges)
 
         lts.column_value_counts(gdf_edges) # Useful for debugging
         all_lts = lts.calculate_lts(gdf_edges, tables)
+
+        gdf_edges = lts.define_zoom(gdf_edges, rating_dict)
 
         # print(f'{all_lts['LTS'].unique()=}')
         
