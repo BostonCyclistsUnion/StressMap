@@ -142,10 +142,11 @@ def convert_feet_with_quotes(series):
 
     # Convert (assumed) meter values to feet
     series[meterValues] = series[meterValues].astype(float) * 3.28084
+    series[meterValues] = series[meterValues].round(2)
 
     series_notes = pd.Series('No Width', index=series.index)
     series_notes[quoteValues] = 'Converted ft-in to decimal feet'
-    series_notes[meterValues] = 'Converted m to feet'
+    series_notes[meterValues] = 'Converted to feet'
 
     return series, series_notes
 

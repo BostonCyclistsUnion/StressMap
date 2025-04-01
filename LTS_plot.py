@@ -79,7 +79,7 @@ def plot_lts_geojson(region, all_lts):
                     'street_narrow_wide',
                     'width_street', 'width_street_rule',
                     'zoom',
-                    'parse', 
+                    # 'parse',
                     ]
     fields_dirs = [ 
                     'bike_allowed', 'bike_lane', 'separation',

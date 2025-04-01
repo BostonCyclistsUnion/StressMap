@@ -16,7 +16,7 @@
                     ]
                 }
                 },
-                "filter": [ "<=", [ "get", "quality" ], [ "zoom" ] ],
+                "filter": [ "<=", [ "get", "zoom" ], [ "zoom" ] ],
                 "simplification": [ "case", [ "<=", [ "zoom" ], 12 ], 40, 10]
             },
         "tiles": {
