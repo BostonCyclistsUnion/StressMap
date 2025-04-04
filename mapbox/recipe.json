@@ -21,64 +21,7 @@
             },
         "tiles": {
             "layer_size": 2500,
-            "order": "LTS",
-            "union": [
-                {
-                "group_by": [ "key" ],
-                "maintain_direction": false,
-                "simplification": {
-                    "distance": 10
-                    },
-                "aggregate": {
-                    "LTS": "comma", 
-                    "osmid": "comma", 
-                    "name": "comma", 
-                    "highway": "comma", 
-                    "speed": "comma", 
-                    "speed_rule": "comma", 
-                    "centerline": "comma", 
-                    "centerline_rule": "comma", 
-                    "ADT": "comma", 
-                    "ADT_rule": "comma", 
-                    "lane_count": "comma", 
-                    "oneway": "comma", 
-                    "street_narrow_wide": "comma", 
-                    "width_street": "comma", 
-                    "width_street_rule": "comma", 
-                    "parse": "comma", 
-                    "bike_allowed_fwd": "comma", 
-                    "bike_lane_fwd": "comma", 
-                    "separation_fwd": "comma", 
-                    "parking_fwd": "comma", 
-                    "parking_width_fwd": "comma", 
-                    "buffer_fwd": "comma", 
-                    "buffer_rule_fwd": "comma", 
-                    "bike_width_fwd": "comma", 
-                    "bike_width_rule_fwd": "comma", 
-                    "bike_reach_fwd": "comma", 
-                    "LTS_mixed_fwd": "comma", 
-                    "LTS_bikelane_noparking_fwd": "comma", 
-                    "LTS_bikelane_yesparking_fwd": "comma", 
-                    "LTS_bike_access_fwd": "comma", 
-                    "LTS_fwd": "comma", 
-                    "bike_allowed_rev": "comma", 
-                    "bike_lane_rev": "comma", 
-                    "separation_rev": "comma", 
-                    "parking_rev": "comma", 
-                    "parking_width_rev": "comma", 
-                    "buffer_rev": "comma", 
-                    "buffer_rule_rev": "comma", 
-                    "bike_width_rev": "comma", 
-                    "bike_width_rule_rev": "comma", 
-                    "bike_reach_rev": "comma", 
-                    "LTS_mixed_rev": "comma", 
-                    "LTS_bikelane_noparking_rev": "comma", 
-                    "LTS_bikelane_yesparking_rev": "comma", 
-                    "LTS_bike_access_rev": "comma", 
-                    "LTS_rev": "comma"
-                }
-                }
-                ]
+            "order": "LTS"
             }
         }
     }
