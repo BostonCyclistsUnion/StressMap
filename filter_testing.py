@@ -25,11 +25,11 @@ import osmnx as ox
 
 PORT = 8001
 PLOT = 'map/filter_test.html'
-CITY = 'Cambridge'
+CITY = 'Boston'
 dataFolder = 'data'
 
 def read_filters():
-    with open('config/filter_dict.yml', 'r') as yml_file:
+    with open('config/filter_test.yml', 'r') as yml_file:
         filter_dict = yaml.safe_load(yml_file)
     print('loaded filters')
     return filter_dict

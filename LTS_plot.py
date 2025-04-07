@@ -64,28 +64,33 @@ def load_data(region):
 
 def plot_lts_geojson(region, all_lts):
     lts = all_lts[all_lts['LTS'] > 0]
-    fields_general = ['geometry', 'LTS', 'osmid', 'name', 'highway',
+
+    # Worth about 1.5% of json size (don't know if more effective when getting to mapbox)
+    # lts = lts.replace({'yes': 1, 'no': 0}).infer_objects(copy=False)
+    # Worth about 4% of json size
+    # lts = lts.replace({'Assumed': 'A'})
+
+    fields_general = [
+                    'geometry', 'LTS', 'osmid', 'name', 'highway',
                     'speed', 'speed_rule',
                     'centerline', 'centerline_rule',
                     'ADT', 'ADT_rule',
-                    'lane_count', 'oneway', 
-                    'street_narrow_wide', 
+                    'lane_count', 'oneway',
+                    'street_narrow_wide',
                     'width_street', 'width_street_rule',
-                    'cycleway',                    
+                    'zoom',
+                    # 'parse',
                     ]
-    fields_sided = ['biking_permitted', 'biking_permitted_rule',
-                    'bike_lane_exist', 'bike_lane_exist_rule',
-                    'bike_lane_separation', 'bike_lane_separation_rule',
-                    'parking', 'parking_rule','width_parking', 'width_parking_rule', 
-                    'width_bikelanebuffer', 'width_bikelanebuffer_rule',
-                    'width_bikelane', 'width_bikelane_rule', 'bikelane_reach',                      
+    fields_dirs = [ 
+                    'bike_allowed', 'bike_lane', 'separation',
+                    'parking', 'parking_width',
+                    'buffer', 'buffer_rule', 'bike_width', 'bike_width_rule', 'bike_reach',                      
                     'LTS_mixed', 'LTS_bikelane_noparking', 'LTS_bikelane_yesparking',
-                    'LTS_biking_permitted', 'LTS_bike_lane_separation',
-                    'LTS',
+                    'LTS_bike_access', 'LTS_separation', 'LTS',
                     ]
     
-    fields_sided = [field + '_left' for field in fields_sided] + [field + '_right' for field in fields_sided]
-    geo_json = lts[fields_general + fields_sided].to_json()
+    fields_dirs = [field + '_fwd' for field in fields_dirs] + [field + '_rev' for field in fields_dirs]
+    geo_json = lts[fields_general + fields_dirs].to_json()
 
     # Save GeoJson
     json_plot_file = f'{plotFolder}/{region}_LTS.json'
