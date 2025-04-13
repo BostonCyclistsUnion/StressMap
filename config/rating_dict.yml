@@ -305,14 +305,20 @@ zoom05:
   condition: (`bicycle` == 'designated')
   zoom: 11
   rule_message: _
+
 zoom10:
+  condition: (`highway` == 'primary') & (`LTS` > 3)
+  zoom: 13
+  rule_message: _
+zoom11:
   condition: (`highway` == 'primary')
   zoom: 11
   rule_message: _
-zoom11:
+zoom12:
   condition: (`highway` == 'primary_link')
   zoom: 13
   rule_message: _
+
 zoom13:
   condition: (`highway` == 'trunk') & (`LTS` > 3)
   zoom: 13
@@ -325,26 +331,25 @@ zoom15:
   condition: (`highway` == 'trunk_link')
   zoom: 13
   rule_message: _
+
+zoom16:
+  condition: (`highway` == 'motorway') & (`LTS` > 3)
+  zoom: 13
+  rule_message: _
 zoom17:
-  condition: (`highway` == 'trunk_link')
-  zoom: 13
-  rule_message: _
-zoom18:
-  condition: (`highway` == 'trunk_link')
-  zoom: 13
-  rule_message: _
-zoom19:
   condition: (`highway` == 'motorway')
   zoom: 11
   rule_message: _
-zoom20:
+zoom18:
   condition: (`highway` == 'motorway_link')
   zoom: 13
   rule_message: _
+
 zoom30:
   condition: (`highway` == 'cycleway')
   zoom: 11
   rule_message: _
+  
 zoom32:
   condition: (`highway` == 'secondary')
   zoom: 12
