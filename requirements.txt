@@ -46,7 +46,7 @@ matplotlib-inline==0.1.7
 # nest-asyncio==1.6.0
 networkx==3.4.2
 numpy==2.2.4
-osmnx==2.0.1
+osmnx==2.0.2
 # packaging==24.1
 # palettable==3.3.3
 pandas==2.2.3
