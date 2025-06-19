@@ -1,4 +1,4 @@
 filter1:
-  condition: ((`cycleway:right` == 'yes') | (`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway == -1)
-filter2:
-  condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway == -1)
+  condition: ((`cycleway:right` == 'lane')) & (`cycleway:right:oneway` != '-1') & (oneway == True)
+# filter2:
+#   condition: ((`cycleway:left` == 'yes') | (`cycleway:left` == 'lane')) & (`cycleway:left:oneway` != '-1') & (oneway == -1)

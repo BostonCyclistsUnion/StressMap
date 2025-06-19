@@ -26,6 +26,7 @@ import osmnx as ox
 PORT = 8001
 PLOT = 'map/filter_test.html'
 CITY = 'Boston'
+CITY = 'Brookline'
 dataFolder = 'data'
 
 def read_filters():
@@ -86,5 +87,5 @@ with socketserver.TCPServer(("", PORT), Handler) as httpd:
     G = ox.load_graphml(filepath)
     _, GDF_EDGES = ox.graph_to_gdfs(G)
 
-    print("serving at port", PORT)
+    print(f"Serving at localhost:{PORT}")
     httpd.serve_forever()

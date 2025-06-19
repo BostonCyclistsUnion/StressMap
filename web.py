@@ -37,5 +37,5 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print("serving at port", PORT)
+    print(f"Serving at localhost:{PORT}")
     httpd.serve_forever()

@@ -227,6 +227,15 @@ def parse_lanes(gdf_edges):
     gdf_edges['LTS_bike_access_fwd'] = np.nan
     gdf_edges['LTS_bike_access_rev'] = np.nan
 
+    # This prevents conditions from failing if they call a column not used within a given city
+    # This may be better moved earlier in process for things like filter testing
+    mandatoryCols = ['cycleway:right:oneway', 'cycleway', 
+                     'cycleway:right:width', 'cycleway:left:width', 
+                     'cycleway:right:separation', 'cycleway:left:separation']
+    for col in mandatoryCols:
+        if col not in gdf_edges:
+            gdf_edges[col] = np.nan
+
     cols = [
         'bike_allowed_fwd', 'bike_allowed_rev',
         'bike_lane_fwd', 'bike_lane_rev', 
@@ -499,6 +508,7 @@ def LTS_separation(gdf_edges):
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']==True, f'LTS_separation_{dir}'] = 1 # noqa: E712
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='yes', f'LTS_separation_{dir}'] = 1
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='kerb', f'LTS_separation_{dir}'] = 1
+        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='bump', f'LTS_separation_{dir}'] = 1
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='flex_post', f'LTS_separation_{dir}'] = 2
 
     return gdf_edges

@@ -3,7 +3,7 @@
     "layers": {
       "lts": {
         "source": "mapbox://tileset-source/skilcoyne/stressmap",
-        "minzoom": 11,
+        "minzoom": 12,
         "maxzoom": 16,
         "features": {
             "id": [ "get", "osmid"],
