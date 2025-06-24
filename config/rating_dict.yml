@@ -48,7 +48,7 @@ parking11:
 # Assumed speeds are worst in Cambridge - FIXME use larger region
 speed1:
   condition: (`highway` == 'primary')
-  speed: 50
+  speed: 35
   rule_message: Assumed
 speed2:
   condition: (`highway` == 'primary_link')
@@ -64,7 +64,7 @@ speed4:
   rule_message: Assumed
 speed5:
   condition: (`highway` == 'secondary')
-  speed: 35
+  speed: 30
   rule_message: Assumed
 speed6:
   condition: (`highway` == 'residential')
@@ -92,7 +92,7 @@ speed11:
   rule_message: Assumed
 speed12:
   condition: (`highway` == 'living_street')
-  speed: 25
+  speed: 20
   rule_message: Assumed
 
 ## Centerlines - get_centerlines()
