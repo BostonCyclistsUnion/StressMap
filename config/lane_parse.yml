@@ -72,6 +72,11 @@ c12:
   bike_allowed_rev: True
   separation_fwd: True
   separation_rev: True
+c13:
+  LTS: 0
+  condition: ((`public_transport` == 'platform') | (`public_transport` == 'platform_access')) & ((`bicycle` != 'yes') & (`bicycle` != 'designated'))
+  bike_allowed_fwd: False
+  bike_allowed_rev: False
 
 # Bike lanes, bi-directional traffic
 c20:
