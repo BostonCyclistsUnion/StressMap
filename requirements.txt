@@ -39,7 +39,7 @@ jupyter_core==5.8.1
 jupyterlab_widgets==3.0.15
 # kiwisolver==1.4.5
 # lonboard==0.10.3
-mapbox-tilesets==1.13.0
+mapbox-tilesets==1.14.0
 matplotlib==3.10.1
 matplotlib-inline==0.1.7
 # mercantile==1.1.6
