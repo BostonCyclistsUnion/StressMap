@@ -1,3 +1,15 @@
+# This is a configuration file to evaluate conditions based on OSM tags 
+# and define values to be used in LTS calculations. 
+# 
+# Each section has a prefix (e.g. 'parking') that identies which function
+# in lts_functions.py reads that condition. Each condition has a 'condition'
+# value that filters the ways. Inside the `` is the OSM tag key and it has
+# an evaluation of what tag values it is filtering for.
+# 
+# If the tag value includes [], that is a list of variations of the tag key
+# that will be evaluated. Possible values are [both,left,right].
+
+
 ## Parking - parking_present()
 parking1:
   condition: (`parking:[both,left,right]` == 'no')
@@ -48,7 +60,7 @@ parking11:
 # Assumed speeds are worst in Cambridge - FIXME use larger region
 speed1:
   condition: (`highway` == 'primary')
-  speed: 50
+  speed: 40
   rule_message: Assumed
 speed2:
   condition: (`highway` == 'primary_link')
