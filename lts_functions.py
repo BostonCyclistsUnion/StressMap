@@ -1,3 +1,7 @@
+'''
+Here are the functions used to process OSM data and calculate LTS. 
+'''
+
 import re
 import yaml
 
@@ -9,16 +13,19 @@ DIRS = ['fwd', 'rev']
 
 # %% Read Configuration Files
 def read_tables():
+    # tables.yml replicates the LTS tables from /config/LTS-Tables-v2.2.pdf
     with open('config/tables.yml', 'r') as yml_file:
         tables = yaml.safe_load(yml_file)
     return tables
 
 def read_rating():
+    # Set assumptions used in LTS calculations based on segment conditions
     with open('config/rating_dict.yml', 'r') as yml_file:
         rating_dict = yaml.safe_load(yml_file)
     return rating_dict
 
 def read_parse():
+    # Convert OSM tags to functional information for LTS calculations
     with open('config/lane_parse.yml', 'r') as yml_file:
         parse_dict = yaml.safe_load(yml_file)
     return parse_dict
@@ -26,6 +33,12 @@ def read_parse():
 # %% Reused Functions
 
 def apply_rules(gdf_edges, rating_dict, prefix):
+    '''
+    Evaluate the given section of rating_dict.yml.
+
+    Each way and respective tag is evaluated for both sides of a way. For tags that implicitly or explicitly
+    mean directional symmetry, the output value of is applied to both directions of the way.
+    '''
     def apply_rule(SYM, LEFT, RIGHT):
         sides = set()
         if SYM:
@@ -115,10 +128,14 @@ def apply_rules(gdf_edges, rating_dict, prefix):
     return gdf_edges
 
 def convert_feet_with_quotes(series):
+    '''
+    If OSM tag values for length include quotes ('/"), that implies the units are in feet/inches.
+    This will convert those string values to a decimal float to be used in calculations. 
+    '''
     series = series.copy()
     # Calculate decimal feet and inches when each given separately
     quoteValues = series.str.contains('\'')
-    meterValues = quoteValues == False
+    meterValues = quoteValues == False # noqa: E712
 
     quoteValues[quoteValues.isna()] = False
     quoteValues = quoteValues.astype(bool)
@@ -291,9 +308,9 @@ def parse_lanes(gdf_edges):
 # %% Pre-Processing Functions
 
 def parking_present(gdf_edges, rating_dict):
-    """
+    '''
     Detect where parking is and isn't allowed.
-    """
+    '''
     # tags = gdfEdges.columns[gdfEdges.columns.str.contains('parking')]
     # for tag in tags.sort_values():
     #     print(tag, gdfEdges[tag].unique())
@@ -317,11 +334,11 @@ def parking_present(gdf_edges, rating_dict):
     return gdf_edges
 
 def get_prevailing_speed(gdf_edges, rating_dict):
-    """
+    '''
     Get the speed limit for ways
     If not available, make assumptions based on road type
     This errs on the high end of assumptions
-    """
+    '''
     prefix = 'speed'
     speedRules = {k:v for (k,v) in rating_dict.items() if prefix in k}
     defaultRule = f'{prefix}_'
@@ -361,7 +378,12 @@ def get_prevailing_speed(gdf_edges, rating_dict):
     return gdf_edges
 
 def get_lanes(gdf_edges, default_lanes = 2):
+    '''
+    Defines the lane count for a way.
 
+    OSM lane count tagging can be messy, this attempts to get a clean
+    integer lane count from the OSM tag string.
+    '''
     # make new assumed lanes column for use in calculations
 
     # fill na with default lanes
@@ -381,6 +403,13 @@ def get_lanes(gdf_edges, default_lanes = 2):
     return gdf_edges
 
 def get_centerlines(gdf_edges, rating_dict):
+    '''
+    Centerlines and other lane markings are used on roads with higher volumes. 
+    This identifies ways that are explicitly tagged with lane markings and
+    assumes based on other tag combinations if the way has lane markings.
+
+    Elsewhere, the precense of centerlines will be used to estimate ADT. 
+    '''
 
     prefix = 'centerline'
     defaultRule = f'{prefix}_'
@@ -436,6 +465,10 @@ def width_ft(gdf_edges):
     return gdf_edges
 
 def define_narrow_wide(gdf_edges):
+    '''
+    LTS has a concept of "narrow" and "wide" oneway streets. Based on whether a street is narrow or wide,
+    different tables for calculating the LTS are used. 
+    '''
     gdf_edges['street_narrow_wide'] = 'not oneway'
 
     gdf_edges.loc[(gdf_edges['oneway']), 'street_narrow_wide'] = 'wide'
@@ -478,7 +511,13 @@ def define_adt(gdf_edges, rating_dict):
 
 def define_zoom(gdf_edges, rating_dict):
     '''
-    Set the zoom level where the way begins to be displayed.
+    Set the zoom level where the way begins to be displayed. 
+    Note: This only affects display on the map, not LTS calculations.
+
+    This value is used by Mapbox when generating tiles.
+    Mapbox has limits to how much data can be displayed at a given time and 
+    by showing selected levels of display, the use can better understand the 
+    data without being overloaded with information.
     '''
 
     prefix = 'zoom'
@@ -497,7 +536,7 @@ def define_zoom(gdf_edges, rating_dict):
 
 def LTS_separation(gdf_edges):
     '''
-    Define quality of separation
+    Where there is a separated bike lane, set the upper limit of the LTS. Distinguish the types of separation if included in OSM.
     '''
 
     prefix = 'separation'
