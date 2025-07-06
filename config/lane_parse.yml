@@ -67,7 +67,7 @@ c11:
   separation_rev: True
 c12:
   LTS: 1
-  condition: (highway == 'footway') & ~(footway == 'crossing') & (`footway` != 'sidewalk')
+  condition: (highway == 'footway') & ~(footway == 'crossing') & (`footway` != 'sidewalk') & (`footway` != 'traffic_island') & (`footway` != 'access_aisle')
   bike_allowed_fwd: True
   bike_allowed_rev: True
   separation_fwd: True
