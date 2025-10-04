@@ -27,7 +27,7 @@ geopandas==1.0.1
 # geopy==2.4.1
 # idna==3.10
 ipykernel==6.29.5
-ipython==9.0.2
+ipython==9.4.0
 ipywidgets==8.1.7
 # jedi==0.19.1
 # jmespath==1.0.1
@@ -52,7 +52,7 @@ osmnx==2.0.4
 pandas==2.3.0
 # parso==0.8.4
 # pillow==10.4.0
-# pip==24.2
+pip
 # platformdirs==4.2.2
 # plotly==5.22.0
 # prompt_toolkit==3.0.47
