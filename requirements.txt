@@ -41,7 +41,7 @@ jupyterlab_widgets==3.0.15
 # lonboard==0.10.3
 mapbox-tilesets==1.14.0
 matplotlib==3.10.7
-matplotlib-inline==0.1.7
+matplotlib-inline==0.2.1
 # mercantile==1.1.6
 # nest-asyncio==1.6.0
 networkx==3.4.2
