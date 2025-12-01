@@ -1,0 +1,7 @@
+[timeout:600][out:json][maxsize:2000000000];
+area["wikipedia"="en:WIKI_CITY"]->.search_area;
+.search_area out body;
+(
+	relation[type=route][route=bicycle](area.search_area);
+)->.relations;
+.relations out;
