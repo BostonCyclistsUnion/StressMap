@@ -567,7 +567,7 @@ def insert_nodes(node_data_file: str, cursor: Cursor, update_rows: bool):
     node_data_file (str): File containing Node OSM data
     cursor (Cursor): Cursor to connect to the database with
     """
-    with open(node_data_file, "r") as f:
+    with open(node_data_file, "r", encoding='utf-8') as f:
         nodes_response = json.load(f)
 
     nodes_df = pd.json_normalize(
@@ -655,7 +655,7 @@ def insert_relations(relation_data_file: str, cursor: Cursor, update_rows: bool)
     relation_data_file (str): File containing Relation OSM data
     cursor (Cursor): Cursor to connect to the database with
     """
-    with open(relation_data_file, "r") as f:
+    with open(relation_data_file, "r", encoding='utf-8') as f:
         relations_response = json.load(f)
 
     relations_df = pd.json_normalize(

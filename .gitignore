@@ -11,3 +11,4 @@ temp.ipynb
 test.ipynb
 secrets/
 .DS_Store
+database/*.db
