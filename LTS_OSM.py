@@ -83,6 +83,7 @@ def build_query(region, key, value):
 (
     way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
     way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
+    way[footway=traffic_island](area.search_area);
 );
 out;
             """)
@@ -509,7 +510,16 @@ def main(region, key, value, rebuild=False):
     # gdf_nodes = lts_nodes(region, gdfNodes, all_lts) # Not using this yet/atm.
 
 if __name__ == '__main__':
-    # city = ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts']
-    city = ['Boston', 'wikipedia', 'en:Boston']
-
-    main(*city, True)
+    cities = [
+        # ['Boston', 'wikipedia', 'en:Boston'],
+        # ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts'],
+        ['Somerville', 'wikipedia', 'en:Somerville, Massachusetts'],
+        # ['Brookline', 'wikipedia', 'en:Brookline, Massachusetts'],
+        # ['Chelsea', 'wikipedia', 'en:Chelsea, Massachusetts']
+        # ['Everett', 'wikipedia', 'en:Everett, Massachusetts'],
+        # ['Milton', 'wikipedia', 'en:Milton, Massachusetts'],
+        # ['Newton', 'wikipedia', 'en:Newton, Massachusetts'],
+        # ['Watertown', 'wikipedia', 'en:Watertown, Massachusetts']
+    ]
+    for city in cities:
+        main(*city, True)
