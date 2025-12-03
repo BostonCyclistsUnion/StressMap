@@ -70,6 +70,88 @@ def to_camel_case(text):
     return s[0].lower() + "".join(i.capitalize() for i in s[1:])
 
 
+class WaySegment:
+    def __init__(self, osm_id: int, node_subset: Union[list[int], None] = None, exclude_nodes: Union[list[int], None] = None, go_boston: Union[str, None] = None):
+        self.osm_id = osm_id
+        self.node_subset = node_subset
+        self.exclude_nodes = exclude_nodes
+        self.go_boston = go_boston
+
+    def to_geojson_feature(self, cursor: Cursor) -> Feature:
+        query = f"""
+                SELECT W.*, LTS.LTS
+                FROM WAY W
+                    LEFT JOIN LEVEL_OF_TRAFFIC_STRESS LTS ON W.OSM_ID = LTS.WAY_OSM_ID
+                WHERE OSM_ID = {self.osm_id}
+            """
+        way_record = cursor.execute(query).fetchone()
+        if not way_record:
+            print(f"Way [{self.osm_id} does not exist in the LTS database. Did you load all required cities?]", sys.stderr)
+            return None
+            # raise ValueError(f"Way [{self.osm_id} does not exist in the LTS database]")
+        
+        props = {
+            "osmId": self.osm_id,
+            "name": way_record[1],
+            "highway": way_record[2],
+            "speed": way_record[3],
+            "speedSource": way_record[4],
+            "lanes": way_record[5],
+            "lanesSource": way_record[6],
+            "oneWay": bool(way_record[7]),
+            "condition": way_record[8],
+            "length": way_record[9],
+            "lts": way_record[10],
+            "goBoston": self.go_boston
+        }
+
+        cycleway_record = cursor.execute(
+            f"SELECT * FROM CYCLEWAY WHERE WAY_OSM_ID = {self.osm_id}"
+        ).fetchone()
+
+        if cycleway_record:
+            cycleway_dict = {}
+            for index, column in enumerate(cycleway_columns):
+                if cycleway_record[index]:
+                    cycleway_dict[column] = cycleway_record[index]
+            props["cycleway"] = cycleway_dict
+
+        nodes_subset_query = (
+            f"AND WN.NODE_OSM_ID IN ({",".join([str(node_id) for node_id in self.node_subset])})"
+            if self.node_subset
+            else ""
+        )
+        excluded_nodes_query = (
+            f"AND WN.NODE_OSM_ID NOT IN ({",".join([str(node_id) for node_id in self.exclude_nodes])})"
+            if self.exclude_nodes
+            else ""
+        )
+
+        node_records = cursor.execute(
+            f"""
+                SELECT N.* FROM
+                WAY_NODE WN
+                    LEFT JOIN NODE N ON WN.NODE_OSM_ID = N.OSM_ID
+                WHERE WAY_OSM_ID = {self.osm_id}
+                {nodes_subset_query}
+                {excluded_nodes_query}
+                ORDER BY POSITION ASC
+            """
+        ).fetchall()
+        
+        long_lats = []
+        for node_record in node_records:
+            node_dict = {}
+            for index, column in enumerate(node_columns):
+                if node_record[index]:
+                    node_dict[column] = node_record[index]
+            props["trafficCalmed"] = "trafficCalming" in node_dict
+            long_lats.append([node_dict["longitude"], node_dict["latitude"]])
+
+        line_string = LineString(long_lats)
+        return Feature(f"way/{self.osm_id}", line_string, props)
+
+
 class WaysWithName:
     def __init__(self,
                  name: str,
@@ -80,6 +162,11 @@ class WaysWithName:
         self.go_boston = go_boston
         self.exclude_ways = exclude_ways
         self.highway = highway
+    
+    def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
+        way_ids = self.get_way_ids(cursor)
+        return [WaySegment(way_id, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
+
         
     def get_way_ids(self, cursor: Cursor):
         exclude_ways_clause = f'and osm_id not in ({",".join(str(id) for id in self.exclude_ways)})' if self.exclude_ways else ""
@@ -96,10 +183,14 @@ class WaysInRelation:
     def __init__(self,
                  name: str,
                  go_boston: Union[str, None] = None,
-                 exclude_ways: Union[list[int], None] = None,):
+                 exclude_ways: list[int] = []):
         self.name = name
         self.go_boston = go_boston
         self.exclude_ways = exclude_ways
+
+    def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
+        way_ids = self.get_way_ids(cursor)
+        return [WaySegment(way_id, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
         
     def get_way_ids(self, cursor: Cursor):
         exclude_ways_clause = f'and wr.way_osm_id not in ({",".join(str(id) for id in self.exclude_ways)})' if self.exclude_ways else ""
@@ -215,6 +306,10 @@ class WayRange:
         self.exclude_nodes = exclude_nodes
         self.no_goes = no_goes if no_goes else []
         self.go_boston = go_boston
+
+    def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
+        way_ids = self.get_way_ids(cursor)
+        return [WaySegment(way_id, exclude_nodes=self.exclude_nodes, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
         
     def get_way_ids(self, cursor: Cursor):
         way_start_ends = retrieve_way_start_ends(self.name, self.highway, cursor)
@@ -244,15 +339,19 @@ class WayFill:
                  start_osm_id: int,
                  name: Union[str, None] = None,
                  highway: Union[str, None] = None,
-                 exclude_nodes: Union[list[int], None] = None,
-                 no_goes: Union[list[int], None] = None,
+                 exclude_nodes: list[int] = [],
+                 no_goes: list[int] = [],
                  go_boston: Union[str, None] = None):
         self.start_osm_id = start_osm_id
         self.name = name
         self.highway = highway
         self.exclude_nodes = exclude_nodes
-        self.no_goes = no_goes if no_goes else []
+        self.no_goes = no_goes
         self.go_boston = go_boston
+
+    def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
+        way_ids = self.get_way_ids(cursor)
+        return [WaySegment(way_id, exclude_nodes=self.exclude_nodes, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
         
     def get_way_ids(self, cursor: Cursor):
         way_start_ends = retrieve_way_start_ends(self.name, self.highway, cursor)
@@ -277,86 +376,30 @@ class WayFill:
         return way_ids
 
 
-class WaySegment:
-    def __init__(self, osm_id: int, node_subset: Union[list[int], None] = None, exclude_nodes: Union[list[int], None] = None, go_boston: Union[str, None] = None):
-        self.osm_id = osm_id
-        self.node_subset = node_subset
+class WayMultiFill:
+    def __init__(self,
+                start_ids: list[int],
+                no_goes: list[int],
+                exclude_nodes: list[int],
+                name: Union[str, None] = None,
+                highway: Union[str, None] = None,
+                go_boston: Union[str, None] = None):
+        self.start_ids = start_ids
+        self.no_goes = no_goes
         self.exclude_nodes = exclude_nodes
+        self.name = name
+        self.highway = highway
         self.go_boston = go_boston
 
-    def to_geojson_feature(self, cursor: Cursor):
-        query = f"""
-                SELECT W.*, LTS.LTS
-                FROM WAY W
-                    LEFT JOIN LEVEL_OF_TRAFFIC_STRESS LTS ON W.OSM_ID = LTS.WAY_OSM_ID
-                WHERE OSM_ID = {self.osm_id}
-            """
-        way_record = cursor.execute(query).fetchone()
-        if not way_record:
-            print(f"Way [{self.osm_id} does not exist in the LTS database. Did you load all required cities?]", sys.stderr)
-            return None
-            # raise ValueError(f"Way [{self.osm_id} does not exist in the LTS database]")
-        
-        props = {
-            "osmId": self.osm_id,
-            "name": way_record[1],
-            "highway": way_record[2],
-            "speed": way_record[3],
-            "speedSource": way_record[4],
-            "lanes": way_record[5],
-            "lanesSource": way_record[6],
-            "oneWay": bool(way_record[7]),
-            "condition": way_record[8],
-            "length": way_record[9],
-            "lts": way_record[10],
-            "goBoston": self.go_boston
-        }
+    def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
+        return [feature for way_fill in self.get_way_fills() for feature in way_fill.to_geojson_features(cursor)]
 
-        cycleway_record = cursor.execute(
-            f"SELECT * FROM CYCLEWAY WHERE WAY_OSM_ID = {self.osm_id}"
-        ).fetchone()
 
-        if cycleway_record:
-            cycleway_dict = {}
-            for index, column in enumerate(cycleway_columns):
-                if cycleway_record[index]:
-                    cycleway_dict[column] = cycleway_record[index]
-            props["cycleway"] = cycleway_dict
-
-        nodes_subset_query = (
-            f"AND WN.NODE_OSM_ID IN ({",".join([str(node_id) for node_id in self.node_subset])})"
-            if self.node_subset
-            else ""
-        )
-        excluded_nodes_query = (
-            f"AND WN.NODE_OSM_ID NOT IN ({",".join([str(node_id) for node_id in self.exclude_nodes])})"
-            if self.exclude_nodes
-            else ""
-        )
-
-        node_records = cursor.execute(
-            f"""
-                SELECT N.* FROM
-                WAY_NODE WN
-                    LEFT JOIN NODE N ON WN.NODE_OSM_ID = N.OSM_ID
-                WHERE WAY_OSM_ID = {self.osm_id}
-                {nodes_subset_query}
-                {excluded_nodes_query}
-                ORDER BY POSITION ASC
-            """
-        ).fetchall()
-        
-        long_lats = []
-        for node_record in node_records:
-            node_dict = {}
-            for index, column in enumerate(node_columns):
-                if node_record[index]:
-                    node_dict[column] = node_record[index]
-            props["trafficCalmed"] = "trafficCalming" in node_dict
-            long_lats.append([node_dict["longitude"], node_dict["latitude"]])
-
-        line_string = LineString(long_lats)
-        return Feature(f"way/{self.osm_id}", line_string, props)
+    def get_way_fills(self):
+        return [
+            WayFill(start_id, self.name, self.highway, self.exclude_nodes, self.no_goes, self.go_boston)
+            for start_id in self.start_ids
+        ]
 
 
 def process_file(route_json: str, cursor: Cursor):
@@ -386,23 +429,29 @@ def process_file(route_json: str, cursor: Cursor):
                 way["noGoes"] if "noGoes" in way else None,
                 way["goBoston"] if "goBoston" in way else None
             )
-            way_ids = time_call(lambda: way_range.get_way_ids(cursor), "way_range_get_ids " + way["highway"] if "highway" in way else way["name"])
-            if way_ids:
-                features = [*features, *[WaySegment(way_id, exclude_nodes=way_range.exclude_nodes, go_boston=way_range.go_boston).to_geojson_feature(cursor) for way_id in way_ids]]
+            features = [*features, *way_range.to_geojson_features(cursor)]
         
         if way["type"] == "way_fill":
             way_fill = WayFill(
                 way["startId"],
                 way["name"] if "name" in way else None,
                 way["highway"] if "highway" in way else None,
-                way["excludeNodes"] if "excludeNodes" in way else None,
-                way["noGoes"] if "noGoes" in way else None,
+                way["excludeNodes"] if "excludeNodes" in way else [],
+                way["noGoes"] if "noGoes" in way else [],
+                way["goBoston"] if "goBoston" in way else []
+            )
+            features = [*features, *way_fill.to_geojson_features(cursor)]
+        
+        if way["type"] == "way_multi_fill":
+            way_multi_fill = WayMultiFill(
+                way["startIds"],
+                way["noGoes"] if "noGoes" in way else [],
+                way["excludeNodes"] if "excludeNodes" in way else [],
+                way["name"] if "name" in way else None,
+                way["highway"] if "highway" in way else None,
                 way["goBoston"] if "goBoston" in way else None
             )
-            way_ids = time_call(lambda: way_fill.get_way_ids(cursor), "way_fill_get_ids " + f'{way["highway"] if "highway" in way else ""} - {way["name"] if "name" in way else ""}')
-            if way_ids:
-                features = [*features, *[WaySegment(way_id, exclude_nodes=way_fill.exclude_nodes, go_boston=way_fill.go_boston).to_geojson_feature(cursor) for way_id in way_ids]]
-        
+            features = [*features, *way_multi_fill.to_geojson_features(cursor)]
 
         if way["type"] == "ways_with_name":
             ways_with_name = WaysWithName(
@@ -411,8 +460,7 @@ def process_file(route_json: str, cursor: Cursor):
                 way["excludeWays"] if "excludeWays" in way else None,
                 way["highway"] if "highway" in way else None,
             )
-            way_ids = time_call(lambda: ways_with_name.get_way_ids(cursor), "ways_with_name")
-            features = [*features, *[WaySegment(way_id, go_boston=ways_with_name.go_boston).to_geojson_feature(cursor) for way_id in way_ids]]
+            features = [*features, *ways_with_name.to_geojson_features(cursor)]
             
         if way["type"] == "ways":
             features = [*features, *[WaySegment(way_id, go_boston=way["goBoston"] if "goBoston" in way else None, exclude_nodes=way["excludeNodes"] if "excludeNodes" in way else None).to_geojson_feature(cursor) for way_id in way["ids"]]]
@@ -424,10 +472,9 @@ def process_file(route_json: str, cursor: Cursor):
             ways_in_relation = WaysInRelation(
                 way["name"],
                 way["goBoston"] if "goBoston" in way else None,
-                way["excludeWays"] if "excludeWays" in way else None,
+                way["excludeWays"] if "excludeWays" in way else [],
             )
-            way_ids = time_call(lambda: ways_in_relation.get_way_ids(cursor), "ways_in_relation")
-            features = [*features, *[WaySegment(way_id, go_boston=ways_in_relation.go_boston).to_geojson_feature(cursor) for way_id in way_ids]]
+            features = [*features, *ways_in_relation.to_geojson_features(cursor)]
          
     return features
 
