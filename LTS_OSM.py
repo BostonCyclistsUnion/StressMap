@@ -110,6 +110,7 @@ def download_osm(region):
         response = requests.get(overpass_url,
                                 params={'data': overpass_query},
                                 timeout=60*5)
+        response.raise_for_status() # Raise error if status code not 200
         data = response.json()
 
         print(f'\tDownloaded OSM map data for {region}')
@@ -308,7 +309,7 @@ def read_lts_csv(filepath):
                  'lanes': 'object',
                  'lanes:forward': 'object',
                  'lanes:backward': 'object',
-                 'layer': 'Int32',
+                 'layer': 'Float32',
                  'oneway': 'bool',
                  'geometry': 'object',
                 }
