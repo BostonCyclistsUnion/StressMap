@@ -23,7 +23,7 @@
 # fonttools==4.53.1
 # geographiclib==2.0
 # geojson==2.5.0
-geopandas==1.1.1
+geopandas==1.1.2
 # geopy==2.4.1
 # idna==3.10
 ipython==9.6.0
