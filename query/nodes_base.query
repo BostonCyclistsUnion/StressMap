@@ -1,0 +1,12 @@
+[timeout:600][out:json][maxsize:2000000000];
+area["wikipedia"="en:WIKI_CITY"]->.search_area;
+.search_area out body;
+(
+    way[footway=sidewalk][highway=cycleway](area.search_area);
+    way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
+    way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
+    way[footway=traffic_island](area.search_area);
+)->.ways;
+(.ways;>;)->.nodes;
+.nodes out;
+.ways out skel;
