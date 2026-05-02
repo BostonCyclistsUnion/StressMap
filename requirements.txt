@@ -49,7 +49,7 @@ numpy==2.3.5
 osmnx==2.1.0
 # packaging==24.1
 # palettable==3.3.3
-pandas==2.3.3
+pandas==3.0.2
 # parso==0.8.4
 # pillow==10.4.0
 pip
