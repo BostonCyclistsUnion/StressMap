@@ -7,4 +7,3 @@ area["wikipedia"="en:Somerville, Massachusetts"]->.search_area;
     way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
 );
 out;
-            
