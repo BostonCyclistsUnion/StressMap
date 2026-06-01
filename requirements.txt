@@ -36,7 +36,7 @@ ipywidgets==8.1.8
 # jsonseq==1.0.0
 jupyter_client==8.8.0
 jupyter_core==5.9.1
-jupyterlab_widgets==3.0.15
+jupyterlab_widgets==3.0.16
 # kiwisolver==1.4.5
 # lonboard==0.10.3
 mapbox-tilesets==1.14.0
