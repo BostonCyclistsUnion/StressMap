@@ -29,7 +29,7 @@ def main():
         if args.schema:
             create_tables(args.schema, cursor)
 
-        process_data(args.lts_data, args.node_data, args.relation_data, cursor, args.update_ways, args.update_lts, args.update_cycleways, args.update_nodes, args.update_relations)
+        process_data(args.city, args.lts_data, args.node_data, args.relation_data, cursor, args.update_ways, args.update_lts, args.update_cycleways, args.update_nodes, args.update_relations)
     except ValueError as ve:
         print(ve, file=sys.stderr)
         conn.rollback()
@@ -56,6 +56,12 @@ def create_argparser():
                                               """
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--city",
+        type=str,
+        help="City for which this data resides in",
+        required=True,
     )
     parser.add_argument(
         "--lts-data",
@@ -127,7 +133,7 @@ def create_tables(schema_file: str, cursor: Cursor):
     cursor.connection.commit()
 
 
-def process_data(lts_data_file: str, node_data_file: str, relation_data_file: str, cursor: Cursor, update_ways: bool, update_lts: bool, update_cycleways: bool, update_nodes: bool, update_relations: bool):
+def process_data(city, lts_data_file: str, node_data_file: str, relation_data_file: str, cursor: Cursor, update_ways: bool, update_lts: bool, update_cycleways: bool, update_nodes: bool, update_relations: bool):
     """Inserts OSM data into the database
 
     Parameters:
@@ -137,8 +143,10 @@ def process_data(lts_data_file: str, node_data_file: str, relation_data_file: st
     """
     df = pd.read_csv(lts_data_file, index_col="osmid", low_memory=False)
 
+    city_id = insert_city(city, cursor)
+
     osm_ids: set[int] = set(df.index.array)
-    insert_ways(df, osm_ids, cursor, update_ways)
+    insert_ways(df, city_id, osm_ids, cursor, update_ways)
     cursor.connection.commit()
 
     insert_lts(df, osm_ids, cursor, update_lts)
@@ -153,8 +161,30 @@ def process_data(lts_data_file: str, node_data_file: str, relation_data_file: st
     insert_relations(relation_data_file, cursor, update_relations)
     cursor.connection.commit()
 
+def insert_city(city: str, cursor: Cursor):
+    """Upserts a city into the CITY table
+    
+    Parameters:
+    city (str): City to upsert
+    cursor (Cursor): DB Cursor
 
-def insert_ways(df: DataFrame, osm_ids, cursor, update_rows):
+    Returns: The city id
+    """
+
+    city_upper = city.upper()
+    select_query = f"SELECT ID FROM CITY WHERE CITY_NAME = '{city_upper}';"
+
+    cursor.execute(select_query)
+    id = cursor.fetchone()
+    if id:
+        return id[0]
+    
+    cursor.execute(f"INSERT INTO CITY (CITY_NAME) VALUES ('{city_upper}');")
+    cursor.execute(select_query)
+    id = cursor.fetchone()
+    return id[0]
+
+def insert_ways(df: DataFrame, city_id: int, osm_ids, cursor, update_rows):
     """Inserts data into the WAY table
 
     Parameters:
@@ -165,6 +195,7 @@ def insert_ways(df: DataFrame, osm_ids, cursor, update_rows):
     """
     way_columns = [
         ("OSM_ID", "INTEGER", "osmid"),
+        ("CITY_ID", "INTEGER", "city_id"),
         ("WAY_NAME", "TEXT", "name"),
         ("HIGHWAY", "TEXT", "highway"),
         ("MAXSPEED_MPH", "INTEGER", "speed"),
@@ -173,10 +204,13 @@ def insert_ways(df: DataFrame, osm_ids, cursor, update_rows):
         ("LANE_COUNT_RULE", "TEXT", "lane_rule"),
         ("ONE_WAY", "BOOLEAN", "oneway"),
         ("CONDITION", "TEXT", "condition"),
+        ("SURFACE", "TEXT", "surface"),
         ("WAY_LENGTH", "REAL", "length"),
         (None, None, "u"),
         (None, None, "v")
     ]
+
+    df['city_id'] = city_id
 
     db_insert_dataframe(
         df.get([column[2] for column in way_columns[1:]]),

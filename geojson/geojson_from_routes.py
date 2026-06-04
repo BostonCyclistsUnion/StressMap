@@ -9,6 +9,7 @@ from os import listdir
 from os.path import isfile, join
 from timeit import default_timer as timer
 import functools
+import jq
 
 
 cycleway_columns = [
@@ -42,6 +43,8 @@ node_columns = [
 ]
 
 def go_boston_sort_fn(feature: Feature):
+    if not hasattr(feature, 'properties'):
+        return 4
     if "goBoston" not in feature.properties:
         return 4
     go_boston = feature.properties["goBoston"]
@@ -71,11 +74,21 @@ def to_camel_case(text):
 
 
 class WaySegment:
-    def __init__(self, osm_id: int, node_subset: Union[list[int], None] = None, exclude_nodes: Union[list[int], None] = None, go_boston: Union[str, None] = None):
+
+    @classmethod
+    def from_dict(cls, way: dict): 
+        return cls(      
+            way["id"],
+            way["nodesSubset"] if "nodesSubset" in way else None,
+            way["excludeNodes"] if "excludeNodes" in way else None,
+            way["props"] if "props" in way else {}
+        )
+
+    def __init__(self, osm_id: int, node_subset: Union[list[int], None] = None, exclude_nodes: Union[list[int], None] = None, props: Union[dict, None] = {}):
         self.osm_id = osm_id
         self.node_subset = node_subset
         self.exclude_nodes = exclude_nodes
-        self.go_boston = go_boston
+        self.props = props
 
     def to_geojson_feature(self, cursor: Cursor) -> Feature:
         query = f"""
@@ -92,17 +105,19 @@ class WaySegment:
         
         props = {
             "osmId": self.osm_id,
-            "name": way_record[1],
-            "highway": way_record[2],
-            "speed": way_record[3],
-            "speedSource": way_record[4],
-            "lanes": way_record[5],
-            "lanesSource": way_record[6],
-            "oneWay": bool(way_record[7]),
-            "condition": way_record[8],
-            "length": way_record[9],
-            "lts": way_record[10],
-            "goBoston": self.go_boston
+            "cityId": way_record[1],
+            "name": way_record[2],
+            "highway": way_record[3],
+            "speed": way_record[4],
+            "speedSource": way_record[5],
+            "lanes": way_record[6],
+            "lanesSource": way_record[7],
+            "oneWay": bool(way_record[8]),
+            "condition": way_record[9],
+            "surface": way_record[10],
+            "length": way_record[11],
+            "lts": way_record[12],
+            **self.props
         }
 
         cycleway_record = cursor.execute(
@@ -153,19 +168,29 @@ class WaySegment:
 
 
 class WaysWithName:
+
+    @classmethod
+    def from_dict(cls, way: dict):
+        return cls(
+                way["name"],
+                way["props"] if "props" in way else {},
+                way["excludeWays"] if "excludeWays" in way else None,
+                way["highway"] if "highway" in way else None
+        )
+
     def __init__(self,
                  name: str,
-                 go_boston: Union[str, None] = None,
+                 props: Union[dict, None] = {},
                  exclude_ways: Union[list[int], None] = None,
                  highway: Union[str, None] = None):
         self.name = name
-        self.go_boston = go_boston
+        self.props = props
         self.exclude_ways = exclude_ways
         self.highway = highway
     
     def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
         way_ids = self.get_way_ids(cursor)
-        return [WaySegment(way_id, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
+        return [WaySegment(way_id, props=self.props).to_geojson_feature(cursor) for way_id in way_ids]
 
         
     def get_way_ids(self, cursor: Cursor):
@@ -180,17 +205,26 @@ class WaysWithName:
 
 
 class WaysInRelation:
+
+    @classmethod
+    def from_dict(cls, way: dict):
+        return cls(
+                way["name"],
+                way["props"] if "props" in way else {},
+                way["excludeWays"] if "excludeWays" in way else []
+        )
+
     def __init__(self,
                  name: str,
-                 go_boston: Union[str, None] = None,
+                 props: Union[dict, None] = {},
                  exclude_ways: list[int] = []):
         self.name = name
-        self.go_boston = go_boston
+        self.props = props
         self.exclude_ways = exclude_ways
 
     def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
         way_ids = self.get_way_ids(cursor)
-        return [WaySegment(way_id, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
+        return [WaySegment(way_id, props=self.props).to_geojson_feature(cursor) for way_id in way_ids]
         
     def get_way_ids(self, cursor: Cursor):
         exclude_ways_clause = f'and wr.way_osm_id not in ({",".join(str(id) for id in self.exclude_ways)})' if self.exclude_ways else ""
@@ -222,8 +256,6 @@ class WayGeometry:
         self.geometries = [Geometry(g) for g in way["geometries"]]
         self.order = way["order"] if "order" in way else None
         self.props = way["props"]
-        if "goBoston" in way:
-            self.props["goBoston"] = way["goBoston"]
 
     def to_geojson_feature(self):
         geometries = []
@@ -291,6 +323,19 @@ def retrieve_way_start_ends(way_name: Union[str, None], way_highway: Union[str, 
 
 
 class WayRange:
+
+    @classmethod
+    def from_dict(cls, way: dict):
+        return cls(
+                way["fromId"],
+                way["toId"],
+                way["name"] if "name" in way else None,
+                way["highway"] if "highway" in way else None,
+                way["excludeNodes"] if "excludeNodes" in way else None,
+                way["noGoes"] if "noGoes" in way else None,
+                way["props"] if "props" in way else {}
+        )
+
     def __init__(self,
                  from_osm_id: int,
                  to_osm_id: int,
@@ -298,18 +343,18 @@ class WayRange:
                  highway: Union[str, None] = None,
                  exclude_nodes: Union[list[int], None] = None,
                  no_goes: Union[list[int], None] = None,
-                 go_boston: Union[str, None] = None):
+                 props: Union[dict, None] = {}):
         self.from_osm_id = from_osm_id
         self.to_osm_id = to_osm_id
         self.name = name
         self.highway = highway
         self.exclude_nodes = exclude_nodes
         self.no_goes = no_goes if no_goes else []
-        self.go_boston = go_boston
+        self.props = props
 
     def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
         way_ids = self.get_way_ids(cursor)
-        return [WaySegment(way_id, exclude_nodes=self.exclude_nodes, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
+        return [WaySegment(way_id, exclude_nodes=self.exclude_nodes, props=self.props).to_geojson_feature(cursor) for way_id in way_ids]
         
     def get_way_ids(self, cursor: Cursor):
         way_start_ends = retrieve_way_start_ends(self.name, self.highway, cursor)
@@ -335,23 +380,35 @@ class WayRange:
 
 
 class WayFill:
+
+    @classmethod
+    def from_dict(cls, way: dict):
+        return cls(
+                way["startId"],
+                way["name"] if "name" in way else None,
+                way["highway"] if "highway" in way else None,
+                way["excludeNodes"] if "excludeNodes" in way else [],
+                way["noGoes"] if "noGoes" in way else [],
+                way["props"] if "props" in way else {}
+        )
+
     def __init__(self,
                  start_osm_id: int,
                  name: Union[str, None] = None,
                  highway: Union[str, None] = None,
                  exclude_nodes: list[int] = [],
                  no_goes: list[int] = [],
-                 go_boston: Union[str, None] = None):
+                 props: Union[dict, None] = {}):
         self.start_osm_id = start_osm_id
         self.name = name
         self.highway = highway
         self.exclude_nodes = exclude_nodes
         self.no_goes = no_goes
-        self.go_boston = go_boston
+        self.props = props
 
     def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
         way_ids = self.get_way_ids(cursor)
-        return [WaySegment(way_id, exclude_nodes=self.exclude_nodes, go_boston=self.go_boston).to_geojson_feature(cursor) for way_id in way_ids]
+        return [WaySegment(way_id, exclude_nodes=self.exclude_nodes, props=self.props).to_geojson_feature(cursor) for way_id in way_ids]
         
     def get_way_ids(self, cursor: Cursor):
         way_start_ends = retrieve_way_start_ends(self.name, self.highway, cursor)
@@ -377,19 +434,31 @@ class WayFill:
 
 
 class WayMultiFill:
+
+    @classmethod
+    def from_dict(cls, way: dict):
+        return cls(
+                way["startIds"],
+                way["noGoes"] if "noGoes" in way else [],
+                way["excludeNodes"] if "excludeNodes" in way else [],
+                way["name"] if "name" in way else None,
+                way["highway"] if "highway" in way else None,
+                way["props"] if "props" in way else {}
+        )
+
     def __init__(self,
                 start_ids: list[int],
                 no_goes: list[int],
                 exclude_nodes: list[int],
                 name: Union[str, None] = None,
                 highway: Union[str, None] = None,
-                go_boston: Union[str, None] = None):
+                props: Union[dict, None] = {}):
         self.start_ids = start_ids
         self.no_goes = no_goes
         self.exclude_nodes = exclude_nodes
         self.name = name
         self.highway = highway
-        self.go_boston = go_boston
+        self.props = props
 
     def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
         return [feature for way_fill in self.get_way_fills() for feature in way_fill.to_geojson_features(cursor)]
@@ -397,84 +466,85 @@ class WayMultiFill:
 
     def get_way_fills(self):
         return [
-            WayFill(start_id, self.name, self.highway, self.exclude_nodes, self.no_goes, self.go_boston)
+            WayFill(start_id, self.name, self.highway, self.exclude_nodes, self.no_goes, self.props)
             for start_id in self.start_ids
         ]
+    
+class WayQuery:
+
+    @classmethod
+    def from_dict(cls, way: dict):
+        return cls(
+                way["query"],
+                way["props"] if "props" in way else {},
+        )
+
+    def __init__(self,
+                 query: str,
+                 props: Union[dict, None] = {}):
+        self.query = query
+        self.props = props
+
+    def to_geojson_features(self, cursor: Cursor) -> list[Feature]:
+        return [WaySegment(way_id, exclude_nodes=None, props=self.props).to_geojson_feature(cursor) for way_id in self.get_way_ids(cursor)]
+
+    def get_way_ids(self, cursor: Cursor):
+        cursor.execute(self.query)
+        result = cursor.fetchall()
+        way_ids = [r[0] for r in result]
+        return way_ids
 
 
-def process_file(route_json: str, cursor: Cursor):
+def process_file(route_json: str, cursor: Cursor, jq_filter=None):
     with open(route_json, "r") as f:
         route = json.load(f)
     ways = route["ways"]
+    top_level_props = route.get("props", {})
     features = []
+    compiled_jq = None
+    if jq_filter:
+        compiled_jq = jq.compile(jq_filter)
     for way in ways:
+        way["props"] = {**way.get("props", {}), **top_level_props}
+        if compiled_jq:
+            result = compiled_jq.input_value(way).first()
+            if result:
+                continue
+        if way.get("props", {}).get("goBoston") == "existing":
+            continue
         if way["type"] == "way":
-            way_segment = WaySegment(
-                way["id"],
-                way["nodesSubset"] if "nodesSubset" in way else None,
-                way["excludeNodes"] if "excludeNodes" in way else None,
-                way["goBoston"] if "goBoston" in way else None
-            )
+            way_segment = WaySegment.from_dict(way)
             feature = way_segment.to_geojson_feature(cursor)
             if feature:
                 features.append(feature)
                 
         if way["type"] == "way_range":
-            way_range = WayRange(
-                way["fromId"],
-                way["toId"],
-                way["name"] if "name" in way else None,
-                way["highway"] if "highway" in way else None,
-                way["excludeNodes"] if "excludeNodes" in way else None,
-                way["noGoes"] if "noGoes" in way else None,
-                way["goBoston"] if "goBoston" in way else None
-            )
+            way_range = WayRange.from_dict(way)
             features = [*features, *way_range.to_geojson_features(cursor)]
         
         if way["type"] == "way_fill":
-            way_fill = WayFill(
-                way["startId"],
-                way["name"] if "name" in way else None,
-                way["highway"] if "highway" in way else None,
-                way["excludeNodes"] if "excludeNodes" in way else [],
-                way["noGoes"] if "noGoes" in way else [],
-                way["goBoston"] if "goBoston" in way else []
-            )
+            way_fill = WayFill.from_dict(way)
             features = [*features, *way_fill.to_geojson_features(cursor)]
         
         if way["type"] == "way_multi_fill":
-            way_multi_fill = WayMultiFill(
-                way["startIds"],
-                way["noGoes"] if "noGoes" in way else [],
-                way["excludeNodes"] if "excludeNodes" in way else [],
-                way["name"] if "name" in way else None,
-                way["highway"] if "highway" in way else None,
-                way["goBoston"] if "goBoston" in way else None
-            )
+            way_multi_fill = WayMultiFill.from_dict(way)
             features = [*features, *way_multi_fill.to_geojson_features(cursor)]
 
         if way["type"] == "ways_with_name":
-            ways_with_name = WaysWithName(
-                way["name"],
-                way["goBoston"] if "goBoston" in way else None,
-                way["excludeWays"] if "excludeWays" in way else None,
-                way["highway"] if "highway" in way else None,
-            )
+            ways_with_name = WaysWithName.from_dict(way)
             features = [*features, *ways_with_name.to_geojson_features(cursor)]
             
         if way["type"] == "ways":
-            features = [*features, *[WaySegment(way_id, go_boston=way["goBoston"] if "goBoston" in way else None, exclude_nodes=way["excludeNodes"] if "excludeNodes" in way else None).to_geojson_feature(cursor) for way_id in way["ids"]]]
+            features = [*features, *[WaySegment(way_id, props=way["props"] if "props" in way else {}, exclude_nodes=way["excludeNodes"] if "excludeNodes" in way else None).to_geojson_feature(cursor) for way_id in way["ids"]]]
         
         if way["type"] == "way_geometry":
             features = [*features, WayGeometry(way).to_geojson_feature()]
         
         if way["type"] == "way_relation":
-            ways_in_relation = WaysInRelation(
-                way["name"],
-                way["goBoston"] if "goBoston" in way else None,
-                way["excludeWays"] if "excludeWays" in way else [],
-            )
+            ways_in_relation = WaysInRelation.from_dict(way)
             features = [*features, *ways_in_relation.to_geojson_features(cursor)]
+        if way["type"] == "query":
+            features = [*features, *WayQuery.from_dict(way).to_geojson_features(cursor)]
          
     return features
 
@@ -488,7 +558,7 @@ def main():
 
     features = []
     if args.route_json:
-        features = [*process_file(args.route_json, cursor)]
+        features = [*process_file(args.route_json, cursor, args.exclude)]
     
     if args.route_jsons:
         for route_json in args.route_jsons:
@@ -541,6 +611,14 @@ def create_argparser():
     parser.add_argument(
         "--output", type=str, help="The file to write the FeatureCollection to", required=True
     )
+    parser.add_argument(
+        "--exclude",
+        type=str,
+        required=False,
+        default=None,
+        help="A JQ expression returning true/false to filter ways by. A 'way' object is passed to the expression."
+    )
+
     return parser
 
 
