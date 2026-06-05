@@ -78,7 +78,7 @@ def build_query(region, key, value):
     else:
         OVERWRITE = True
         with filepath.open(mode='w') as f:
-            f.write('[timeout:600][out:json][maxsize:2000000000];\n')
+            f.write('[timeout:180][out:json];\n')
             f.write(f'area["{key}"="{value}"]->.search_area;\n')
             f.write('.search_area out body;\n')
             f.write("""
@@ -86,7 +86,7 @@ def build_query(region, key, value):
     way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
     way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
 );
-out;
+out tags qt;
             """)
         print(f'{filepath} created')
 
