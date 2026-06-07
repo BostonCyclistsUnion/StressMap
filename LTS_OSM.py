@@ -42,10 +42,12 @@ ox.settings.use_cache = False
 # data on accident. Unless explicitly called for (or data deleted), most processing is done on saved
 # data anyway.
 
+useragent = {'User-Agent': 'bcu-labs'}
+
 dataFolder = 'data'
 queryFolder = 'query'
 
-overpass_url = "http://overpass-api.de/api/interpreter"
+overpass_url = "https://overpass-api.de/api/interpreter"
 
 OVERWRITE = False
 
@@ -106,13 +108,14 @@ def download_osm(region):
         OVERWRITE = True
         with open(queryFilepath, 'r') as f:
             lines = f.readlines()
-        overpass_query = ''.join(lines)
+        overpass_query = ''.join(lines).replace('\n','').replace('  ','')
         # print(overpass_query)
 
         print(f'Downloaing OSM map data for {region}...')
         response_code = None
         while response_code != 200:
             response = requests.get(overpass_url,
+                                    headers=useragent,
                                     params={'data': overpass_query},
                                     timeout=60*5)
             response_code = response.status_code
@@ -319,7 +322,7 @@ def read_lts_csv(filepath):
                  'lanes': 'object',
                  'lanes:forward': 'object',
                  'lanes:backward': 'object',
-                 'layer': 'Int32',
+                 'layer': 'Float32',
                  'oneway': 'bool',
                  'geometry': 'object',
                 }

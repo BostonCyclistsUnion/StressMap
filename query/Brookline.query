@@ -8,4 +8,3 @@ area["wikipedia"="en:Brookline, Massachusetts"]->.search_area;
     way[footway=traffic_island](area.search_area);
 );
 out;
-            

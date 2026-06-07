@@ -1,3 +1,6 @@
+# Activate venv
+.\.venv\Scripts\activate.bat 
+
 # Recalculate GreaterBoston completely
 py main.py process -cities Cambridge,Boston,Somerville,Brookline --rebuild --combine --plot
 
