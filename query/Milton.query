@@ -1,5 +1,5 @@
 [timeout:600][out:json][maxsize:2000000000];
-area["wikipedia"="en:Boston"]->.search_area;
+area["wikipedia"="en:Milton, Massachusetts"]->.search_area;
 .search_area out body;
 
 (
@@ -8,3 +8,4 @@ area["wikipedia"="en:Boston"]->.search_area;
     way[footway=traffic_island](area.search_area);
 );
 out;
+            

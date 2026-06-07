@@ -25,6 +25,7 @@ def build_query(region, key, value):
 (
     way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
     way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
+    way[footway=traffic_island](area.search_area);
 );
 out;
             """)

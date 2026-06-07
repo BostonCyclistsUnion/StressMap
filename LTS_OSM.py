@@ -10,6 +10,7 @@ just delete the file that is created at that stage. Files are numbered in the fo
 of generation.
 '''
 
+import sys
 import json
 # import yaml
 import os
@@ -85,6 +86,8 @@ def build_query(region, key, value):
 (
     way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
     way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
+    way[highway=service][bicycle=yes](area.search_area);
+    way[footway=traffic_island](area.search_area);
 );
 out;
             """)
@@ -109,12 +112,19 @@ def download_osm(region):
         # print(overpass_query)
 
         print(f'Downloaing OSM map data for {region}...')
-        response = requests.get(overpass_url,
-                                headers=useragent,
-                                params={'data': overpass_query},
-                                timeout=60*5)
-        response.raise_for_status() # Raise error if status code not 200
-        data = response.json()
+        response_code = None
+        while response_code != 200:
+            response = requests.get(overpass_url,
+                                    headers=useragent,
+                                    params={'data': overpass_query},
+                                    timeout=60*5)
+            response_code = response.status_code
+            try:
+                data = response.json()
+            except Exception as e:
+                print("Failed to decode JSON from overpass: ", file=sys.stderr)
+                print(response, file=sys.stderr)
+                print(response.text, file=sys.stderr)
 
         print(f'\tDownloaded OSM map data for {region}')
 
@@ -513,7 +523,16 @@ def main(region, key, value, rebuild=False):
     # gdf_nodes = lts_nodes(region, gdfNodes, all_lts) # Not using this yet/atm.
 
 if __name__ == '__main__':
-    # city = ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts']
-    city = ['Boston', 'wikipedia', 'en:Boston']
-
-    main(*city, True)
+    cities = [
+        ['Boston', 'wikipedia', 'en:Boston'],
+        # ['Cambridge', 'wikipedia', 'en:Cambridge, Massachusetts'],
+        # ['Somerville', 'wikipedia', 'en:Somerville, Massachusetts'],
+        # ['Brookline', 'wikipedia', 'en:Brookline, Massachusetts'],
+        # ['Chelsea', 'wikipedia', 'en:Chelsea, Massachusetts']
+        # ['Everett', 'wikipedia', 'en:Everett, Massachusetts'],
+        # ['Milton', 'wikipedia', 'en:Milton, Massachusetts'],
+        # ['Newton', 'wikipedia', 'en:Newton, Massachusetts'],
+        # ['Watertown', 'wikipedia', 'en:Watertown, Massachusetts']
+    ]
+    for city in cities:
+        main(*city, True)
