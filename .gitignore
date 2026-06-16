@@ -1,14 +1,23 @@
+# Auto-Generated folders
 .venv
 .vscode
-.idea/
+.DS_Store
+__pycache__/
+
+# Folders with data that shouldn't be commited
 data/
 plots/
 cache/
-__pycache__/
+secrets/
+
+# Personal Sandboxes
+.idea/
 test.py
 temp.py
 temp.ipynb
 test.ipynb
-secrets/
-.DS_Store
 database/*.db
+
+# Keep Git cleaner
+*/*.query
+!*/base_*.query

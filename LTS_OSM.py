@@ -12,6 +12,7 @@ of generation.
 
 import sys
 import json
+import time
 # import yaml
 import os
 from pathlib import Path
@@ -46,6 +47,7 @@ useragent = {'User-Agent': 'bcu-labs'}
 
 dataFolder = 'data'
 queryFolder = 'query'
+elements = ['ways', 'nodes', 'relations']
 
 overpass_url = "https://overpass-api.de/api/interpreter"
 
@@ -72,26 +74,22 @@ def check_files(region):
 
 def build_query(region, key, value):
     global OVERWRITE
-    filepath = Path('query') / (region + '.query')
-    filepath.parent.mkdir(exist_ok=True)
-    if filepath.exists():
-        print(f"{region} query already exists")
-    else:
-        OVERWRITE = True
-        with filepath.open(mode='w') as f:
-            f.write('[timeout:600][out:json][maxsize:2000000000];\n')
-            f.write(f'area["{key}"="{value}"]->.search_area;\n')
-            f.write('.search_area out body;\n')
-            f.write("""
-(
-    way[highway][footway!=sidewalk][service!=parking_aisle](area.search_area);
-    way[footway=sidewalk][bicycle][bicycle!=no][bicycle!=dismount](area.search_area);
-    way[highway=service][bicycle=yes](area.search_area);
-    way[footway=traffic_island](area.search_area);
-);
-out;
-            """)
-        print(f'{filepath} created')
+    for element in elements:
+        basepath = Path(f'{queryFolder}/base_{element}.query')
+        outpath = Path(f'{queryFolder}/{region}_{element}.query')
+        if outpath.exists():
+            print(f"{region} {element} query already exists")
+        else:
+            OVERWRITE = True
+            with basepath.open(mode='r') as f:
+                data = f.read()
+                data = data.replace('KEY', key)
+                data = data.replace('VALUE', value)
+
+            with outpath.open(mode='w') as f:
+                f.write(data)
+
+            print(f'{outpath} created')
 
 def download_osm(region):
     '''
@@ -99,38 +97,45 @@ def download_osm(region):
     https://towardsdatascience.com/loading-data-from-openstreetmap-with-python-and-the-overpass-api-513882a27fd0
     '''
     global OVERWRITE
-    queryFilepath = os.path.join(queryFolder, f'{region}.query')
-    dataFilepath = os.path.join(dataFolder, f'{region}_1.json')
+    for element in elements:
+        queryFilepath = Path(f'{queryFolder}/{region}_{element}.query')
+        if element == 'ways':
+            dataFilepath = Path(f'{dataFolder}/{region}_1.json')
+        else:
+            dataFilepath = Path(f'{dataFolder}/{region}_{element}.json')
 
-    if os.path.exists(dataFilepath) and (OVERWRITE is False):
-        print(f'OSM data already downloaded for {region}')
-    else:
-        OVERWRITE = True
-        with open(queryFilepath, 'r') as f:
-            lines = f.readlines()
-        overpass_query = ''.join(lines).replace('\n','').replace('  ','')
-        # print(overpass_query)
+        if dataFilepath.exists and (OVERWRITE is False):
+            print(f'OSM data already downloaded for {region} {element}')
+        else:
+            OVERWRITE = True
+            with open(queryFilepath, 'r') as f:
+                lines = f.readlines()
+            overpass_query = ''.join(lines).replace('\n','').replace('  ','')
+            # print(overpass_query)
 
-        print(f'Downloaing OSM map data for {region}...')
-        response_code = None
-        while response_code != 200:
-            response = requests.get(overpass_url,
-                                    headers=useragent,
-                                    params={'data': overpass_query},
-                                    timeout=60*5)
-            response_code = response.status_code
-            try:
-                data = response.json()
-            except Exception as e:
-                print("Failed to decode JSON from overpass: ", file=sys.stderr)
-                print(response, file=sys.stderr)
-                print(response.text, file=sys.stderr)
+            print(f'Downloaing OSM {element} for {region}...')
+            response_code = None
+            while response_code != 200:
+                time.sleep(5)
+                response = requests.get(overpass_url,
+                                        headers=useragent,
+                                        params={'data': overpass_query},
+                                        timeout=60*5)
+                response_code = response.status_code
+                try:
+                    data = response.json()
+                except Exception as e:
+                    print("Failed to decode JSON from overpass: ", file=sys.stderr)
+                    print(response, file=sys.stderr)
+                    print(response.text, file=sys.stderr)
 
-        print(f'\tDownloaded OSM map data for {region}')
+            print(f'\tDownloaded OSM {element} for {region}')
 
-        with open(dataFilepath, 'w') as f:
-            json.dump(data, f)
-            print(f'Saved {region} map data')
+            with open(dataFilepath, 'w') as f:
+                json.dump(data, f)
+                print(f'Saved {region} map {element}')
+            if element is not elements[-1]:
+                time.sleep(1) # Try not to ask for data too fast
 
 def extract_tags(region):
     '''
