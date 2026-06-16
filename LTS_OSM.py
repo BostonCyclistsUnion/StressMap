@@ -135,7 +135,7 @@ def download_osm(region):
                 json.dump(data, f)
                 print(f'Saved {region} map {element}')
             if element is not elements[-1]:
-                time.sleep(1) # Try not to ask for data too fast
+                time.sleep(5) # Try not to ask for data too fast
 
 def extract_tags(region):
     '''
