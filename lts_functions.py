@@ -59,7 +59,7 @@ def apply_rules(gdf_edges, rating_dict, prefix):
                     gdf_edges.loc[gdf_filter, f'LTS_{prefix}{side}'] = value['LTS']
             
             except pd.errors.UndefinedVariableError as e:
-                print(f'Column used in condition does not exsist in this region:\n\t{e}')
+                print(f'Column used in condition does not exist in this region:\n\t{e}')
 
     rules = {k:v for (k,v) in rating_dict.items() if prefix in k}
         
@@ -294,9 +294,9 @@ def parse_lanes(gdf_edges):
                         gdf_edges.loc[gdf_uneval[gdf_uneval].index, col] = gdf_edges.loc[gdf_uneval[gdf_uneval].index, value[col]]
         
         except pd.errors.UndefinedVariableError as e:
-            print(f'\tColumn used in condition does not exsist in this region:\n\t\t{e}')
+            print(f'\tColumn used in condition does not exist in this region:\n\t\t{e}')
         except KeyError as e:
-            print(f'\tColumn does not exsist in this region: {e}')
+            print(f'\tColumn does not exist in this region: {e}')
 
     logdf.to_csv('data/log_parse.csv')
     # gdf_edges.loc[gdf_edges['bike_allowed_fwd'].isna()].to_csv('data/log_bike_allowed_fwd_na.csv')

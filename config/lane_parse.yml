@@ -1,6 +1,6 @@
 # This configuration file is used to process OSM tags and determine the which direction(s) biking is
 # permitted and what street features are relavant to biking in that direction. OSM tags primarily 
-# concern the physical side of the feature and the non-exsistance of tags have implied values, but
+# concern the physical side of the feature and the non-existance of tags have implied values, but
 # notably with oneway streets, the implied values can be different than on 2-way streets. The 
 # following conditions aims to be comprehensive of tag combinations that may be encountered. 
 # Additionally, when the left and right values are the same they are usually tagged using *:both or

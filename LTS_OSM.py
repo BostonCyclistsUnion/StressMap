@@ -113,7 +113,7 @@ def download_osm(region):
             overpass_query = ''.join(lines).replace('\n','').replace('  ','')
             # print(overpass_query)
 
-            print(f'Downloaing OSM {element} for {region}...')
+            print(f'Downloading OSM {element} for {region}...')
             response_code = None
             while response_code != 200:
                 time.sleep(5)
