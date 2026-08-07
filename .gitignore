@@ -21,3 +21,5 @@ database/*.db
 # Keep Git cleaner
 */*.query
 !*/base_*.query
+logs/*.out
+logs/*.err
