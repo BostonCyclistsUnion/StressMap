@@ -22,6 +22,7 @@ def plot_func(args, cities=None):
             except FileNotFoundError as e:
                 print(f'\t{e}')
                 continue
+    print("Plotting complete!")
 
 def combine_func(args):
     import LTS_OSM  # imported directly in the command to improve argparse performance
