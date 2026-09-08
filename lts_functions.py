@@ -142,17 +142,19 @@ def convert_feet_with_quotes(series):
 
     feetinch = series[quoteValues].str.strip('"').str.split('\'', expand=True)
     if feetinch.shape[0] > 0:
-        feetinch.loc[feetinch[1] == '', 1] = 0
+        feetinch[0] = feetinch[0].astype(int)
+        feetinch.loc[feetinch[1] == '', 1] = '0'
+        feetinch[1] = feetinch[1].astype(int)
         feetinch = feetinch.apply(lambda x: np.array(x, dtype = 'int'))
     # if feetinch.shape[0] > 0:
         feet = feetinch[0] + feetinch[1] / 12
-        series[quoteValues] = feet
+        series[quoteValues] = feet.astype(str)
 
     # Use larger value if given multiple
     multiWidth = series.str.contains(';', na=False) 
 
     maxWidth = series[multiWidth].str.split(';', expand=True).fillna(value=np.nan).astype(float).max(axis=1)
-    series[multiWidth] = maxWidth
+    series[multiWidth] = maxWidth.astype(str)
 
     series = pd.to_numeric(series, errors='coerce')
     # series = series.apply(lambda x: np.array(x, dtype = 'float'))
@@ -458,9 +460,13 @@ def width_ft(gdf_edges):
         print(f'No buffer_{dir} column')
 
     for dir in DIRS:
-        gdf_edges[f'bike_reach_{dir}'] =    gdf_edges[f'bike_width_{dir}'].fillna(0) + \
-                                            gdf_edges[f'parking_width_{dir}'].fillna(0) + \
-                                            gdf_edges[f'buffer_{dir}'].fillna(0)
+        # print(f'bike_width_{dir}', gdf_edges.dtypes[f'bike_width_{dir}'], gdf_edges[f'bike_width_{dir}'].unique())
+        # print(f'parking_width_{dir}', gdf_edges.dtypes[f'parking_width_{dir}'], gdf_edges[f'parking_width_{dir}'].unique())
+        # print(f'buffer_{dir}', gdf_edges.dtypes[f'buffer_{dir}'], gdf_edges[f'buffer_{dir}'].unique())
+        gdf_edges[f'bike_reach_{dir}'] =    gdf_edges[f'bike_width_{dir}'].fillna(0).astype(float) + \
+                                            gdf_edges[f'parking_width_{dir}'].fillna(0).infer_objects(copy=False) + \
+                                            gdf_edges[f'buffer_{dir}'].fillna(0).infer_objects(copy=False) 
+                                            # Use .infer_objects(copy=False) to downcast (simple suggested change from Pandas FutureWarning)
 
     return gdf_edges
 

@@ -492,12 +492,25 @@ def combine_data(fullRegion, regionList):
     def combine_all_lts(fullRegion, regionList):
         print('All LTS - 4')
         allLTSpathCombined = f'{dataFolder}/{fullRegion}_4_all_lts.csv'
-        allLTS = pd.DataFrame()
         for region in regionList:
             print(f'\t{region}')
-            print(f'\t\tBefore: {allLTS.shape=}')
             allLTSpath = f'{dataFolder}/{region}_4_all_lts.csv'
-            allLTS = pd.concat([allLTS, read_lts_csv(allLTSpath)])
+            if 'allLTS' not in locals(): 
+                # Don't concat an empty df anymore
+                print(f'\t\tCreating `allLTS` from {region}')
+                allLTS = read_lts_csv(allLTSpath)
+            else:
+                regionLTS = read_lts_csv(allLTSpath)
+                print(f'\t\tBefore: {allLTS.shape=} | {regionLTS.shape=}')
+
+                # Set the dtype of columns in regionLTS that are all NaN values to match allLTS. Prevents concatenation of empty columns affecting resulting dtype.
+                regionLTSna = regionLTS.columns[regionLTS.isnull().all(0)]
+                allLTSna = allLTS[regionLTS.columns[regionLTS.isnull().all(0)]].dtypes
+                setDtypes = {r:a for r,a in zip(regionLTSna, allLTSna)}
+                regionLTS = regionLTS.astype(setDtypes)
+
+                allLTS = pd.concat([allLTS, regionLTS]) 
+
             print(f'\t\tAfter:  {allLTS.shape=}')
         allLTS.to_csv(allLTSpathCombined)
 
@@ -523,8 +536,10 @@ def main(region, key, value, rebuild=False):
     build_query(region, key, value)
     download_osm(region)
     extract_tags(region)
-    gdfNodes, gdfEdges = download_data(region)
-    all_lts = lts_edges(region, gdfEdges)
+    _, gdfEdges = download_data(region)
+    lts_edges(region, gdfEdges)
+    # gdfNodes, gdfEdges = download_data(region)
+    # all_lts = lts_edges(region, gdfEdges)
     # gdf_nodes = lts_nodes(region, gdfNodes, all_lts) # Not using this yet/atm.
 
 if __name__ == '__main__':
