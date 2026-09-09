@@ -1,15 +1,15 @@
-import sqlite3
-from sqlite3 import Connection, Cursor
-import pandas as pd
-from pandas import DataFrame, Series
-import math
-import sys
-import json
 import argparse
+import json
+import math
+import sqlite3
+import sys
 import textwrap
 from collections.abc import Callable
+from sqlite3 import Connection, Cursor
 from typing import Union
 
+import pandas as pd
+from pandas import DataFrame, Series
 
 
 def main():
@@ -34,7 +34,7 @@ def main():
         print(ve, file=sys.stderr)
         conn.rollback()
         conn.close()
-        exit(1)
+        sys.exit(1)
 
     conn.close()
 
@@ -355,9 +355,9 @@ def db_insert_cycleway_dataframe(
 
     df_labels = set(df.columns.values)
     cycleway_labels_that_exist = set.intersection(
-        set([column[2] for column in columns]), df_labels
+        {column[2] for column in columns}, df_labels
     )
-    query = set([f"`{label}`.notnull()" for label in cycleway_labels_that_exist])
+    query = {f"`{label}`.notnull()" for label in cycleway_labels_that_exist}
 
     query_cycleway_result = df.query("or".join(query))
 
@@ -367,8 +367,7 @@ def db_insert_cycleway_dataframe(
         osm_ids_with_cycleway, db_table_name, columns[0], cursor, update_rows
     )
 
-    done = 0
-    for osm_id in osm_ids_to_load:
+    for done, osm_id in enumerate(osm_ids_to_load):
         query_result = df.query(f"osmid == {osm_id}").get(
             list(cycleway_labels_that_exist)
         )
@@ -393,7 +392,6 @@ def db_insert_cycleway_dataframe(
 
         cursor.execute(insert_statement)
 
-        done += 1
         if done % 1000 == 0:
             print(f"Analyzed and inserted {db_table_name} rows for {done} OSM_WAY_IDs")
 
@@ -496,9 +494,7 @@ def db_insert_dataframe(
 
     osm_ids_to_load = find_new_osm_ids(osm_ids, db_table_name, columns[0], cursor, update_rows)
 
-    done = 0
-
-    for osm_id in osm_ids_to_load:
+    for done, osm_id in enumerate(osm_ids_to_load):
         query_result = df.query(f"osmid == {osm_id}")
         sub_df = query_result.get([column[2] for column in columns[1:]])
 
@@ -510,7 +506,7 @@ def db_insert_dataframe(
             agg_func(sub_df, first_series)
 
         db_insert(db_table_name, osm_id, columns, first_series, cursor, update_rows)
-        done += 1
+
         if done % 1000 == 0:
             print(f"Analyzed and inserted {db_table_name} rows for {done} OSM_WAY_IDs")
 
@@ -565,7 +561,7 @@ def find_new_osm_ids(
     return osm_ids_to_load
 
 
-def sameness_check(df: DataFrame, osm_id: int, type: str, ignore_labels=[]) -> Series:
+def sameness_check(df: DataFrame, osm_id: int, type: str, ignore_labels=None) -> Series:
     """Check to see if all rows in the DataFrame are equal.
     This check is to ensure that all the node-pairs in the DataFrame for a Way match.
     They should, but this makes absolutely sure.
@@ -573,6 +569,8 @@ def sameness_check(df: DataFrame, osm_id: int, type: str, ignore_labels=[]) -> S
     Returns:
     Series: A representative Series containing values to insert. None if rows are not equal.
     """
+    if ignore_labels is None:
+        ignore_labels = []
     all_same = True
     first_series = None
     cmp = None
@@ -628,15 +626,15 @@ def insert_nodes(node_data_file: str, cursor: Cursor, update_rows: bool):
 
     df_labels = set(nodes_df.columns.values)
     node_labels_that_exist = set.intersection(
-        set([column[2] for column in node_columns]), df_labels
+        {column[2] for column in node_columns}, df_labels
     )
 
     node_ids = set(nodes_df.id.array)
     node_ids_to_load = find_new_osm_ids(node_ids, "NODE", node_columns[0], cursor, update_rows)
 
-    way_ids_in_db = set(
-        [row[0] for row in cursor.execute("SELECT OSM_ID FROM WAY").fetchall()]
-    )
+    way_ids_in_db = {
+        row[0] for row in cursor.execute("SELECT OSM_ID FROM WAY").fetchall()
+    }
 
     done = 0
     for _, node in nodes_df.get(list(node_labels_that_exist)).iterrows():
@@ -705,15 +703,15 @@ def insert_relations(relation_data_file: str, cursor: Cursor, update_rows: bool)
 
     df_labels = set(relations_df.columns.values)
     relation_labels_that_exist = set.intersection(
-        set([column[2] for column in relation_columns]), df_labels
+        {column[2] for column in relation_columns}, df_labels
     )
 
     relation_ids = set(relations_df.id.array)
     relation_ids_to_load = find_new_osm_ids(relation_ids, "RELATION", relation_columns[0], cursor, update_rows)
 
-    way_ids_in_db = set(
-        [row[0] for row in cursor.execute("SELECT OSM_ID FROM WAY").fetchall()]
-    )
+    way_ids_in_db = {
+        row[0] for row in cursor.execute("SELECT OSM_ID FROM WAY").fetchall()
+    }
 
     done = 0
     for _, relation in relations_df.get(list(relation_labels_that_exist)).iterrows():

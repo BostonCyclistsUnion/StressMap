@@ -1,16 +1,17 @@
-from typing import Union
-from geojson import FeatureCollection, Feature, LineString
-import sqlite3
-from sqlite3 import Cursor, Connection
 import argparse
+import functools
 import json
+import sqlite3
 import sys
 from os import listdir
 from os.path import isfile, join
+from sqlite3 import Connection, Cursor
 from timeit import default_timer as timer
-import functools
+from typing import Union
+
 import jq
 
+from geojson import Feature, FeatureCollection, LineString
 
 cycleway_columns = [
     "wayOsmId",
@@ -62,7 +63,7 @@ def time_call(func, label, show = False):
     result = func()
     end = timer()
     if (show):
-        print(label, '{:f}'.format(end - start))
+        print(label, f'{end - start:f}')
     return result
 
 def to_camel_case(text):
@@ -423,13 +424,13 @@ class WayFill:
 
     def find_paths(self, start: WayStartEnd, acc: set[int], no_goes: list[int]):
         if len(start.connections) == 0:
-            return set([*acc, start.osm_id])
+            return {*acc, start.osm_id}
         if start.osm_id in acc or start.osm_id in no_goes:
             return acc
         way_ids = []
         for connection in start.connections:
             if connection.osm_id not in acc:
-                way_ids = set([*way_ids, *self.find_paths(connection, [*acc, start.osm_id], no_goes)])
+                way_ids = {*way_ids, *self.find_paths(connection, [*acc, start.osm_id], no_goes)}
         return way_ids
 
 

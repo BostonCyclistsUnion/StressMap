@@ -3,10 +3,10 @@ Here are the functions used to process OSM data and calculate LTS.
 '''
 
 import re
-import yaml
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+import yaml
 
 SIDES = ['left', 'right']
 DIRS = ['fwd', 'rev']
@@ -135,7 +135,7 @@ def convert_feet_with_quotes(series):
     series = series.copy()
     # Calculate decimal feet and inches when each given separately
     quoteValues = series.str.contains('\'')
-    meterValues = quoteValues == False # noqa: E712
+    meterValues = quoteValues == False
 
     quoteValues[quoteValues.isna()] = False
     quoteValues = quoteValues.astype(bool)
@@ -550,7 +550,7 @@ def LTS_separation(gdf_edges):
     for dir in DIRS:
         gdf_edges[f'LTS_separation_{dir}'] = np.nan
         # print(gdf_edges[f'{prefix}_{dir}'].unique())
-        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']==True, f'LTS_separation_{dir}'] = 1 # noqa: E712
+        gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']==True, f'LTS_separation_{dir}'] = 1
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='yes', f'LTS_separation_{dir}'] = 1
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='kerb', f'LTS_separation_{dir}'] = 1
         gdf_edges.loc[gdf_edges[f'{prefix}_{dir}']=='bump', f'LTS_separation_{dir}'] = 1

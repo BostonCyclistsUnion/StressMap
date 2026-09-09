@@ -5,13 +5,13 @@ This notebook plots the Level of Traffic Stress map calculated in `LTS_OSM'.
 """
 # import os
 # import glob
-from pathlib import Path
 import shutil
+from pathlib import Path
 
+import geopandas as gpd
 import numpy as np
 import pandas as pd
 
-import geopandas as gpd
 # import shapely.geometry
 # import contextily as cx
 
@@ -98,7 +98,6 @@ def plot_lts_geojson(region, all_lts):
         f.write(geo_json + '\n')
 
     shutil.copy(json_plot_file, f'{plotFolder}/LTS.json')
-    return
 
 def main(region, format="json"):
     Path(plotFolder).mkdir(exist_ok=True)

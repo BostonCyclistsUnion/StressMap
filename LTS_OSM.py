@@ -10,30 +10,29 @@ just delete the file that is created at that stage. Files are numbered in the fo
 of generation.
 '''
 
-import sys
 import json
-import time
+
 # import yaml
 import os
-from pathlib import Path
+import sys
+import time
 from collections import defaultdict
-# import datetime
-
-import requests
-
-import numpy as np
-import pandas as pd
-from pandas.api.types import CategoricalDtype
-
+from pathlib import Path
 
 import geopandas as gpd
+
+# import networkx as nx
+import numpy as np
 import osmnx as ox
-import networkx as nx
+import pandas as pd
+
+# import datetime
+import requests
+from pandas.api.types import CategoricalDtype
 
 # import matplotlib
 # from matplotlib import pyplot as plt
 # from mpl_toolkits.axes_grid1 import make_axes_locatable
-
 from tqdm import tqdm
 
 import lts_functions as lts
@@ -126,6 +125,7 @@ def download_osm(region):
                     data = response.json()
                 except Exception as e:
                     print("Failed to decode JSON from overpass: ", file=sys.stderr)
+                    print(f'Error: {e}')
                     print(response, file=sys.stderr)
                     print(response.text, file=sys.stderr)
 

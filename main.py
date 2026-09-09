@@ -5,9 +5,11 @@ Intermediary files will be saved to make subsequent runs faster.
 Just delete the file you want to start from and everything after
 will be recreated.
 """
-import sys
 import argparse
+import sys
+
 import constants
+
 
 def plot_func(args, cities=None):
     import LTS_plot  # imported directly in the command to improve argparse performance
@@ -28,7 +30,7 @@ def combine_func(args):
     import LTS_OSM  # imported directly in the command to improve argparse performance
     LTS_OSM.combine_data('GreaterBoston', args.cities.split(','))
 
-class StressMapCli(object):
+class StressMapCli:
     def __init__(self):
         parser = argparse.ArgumentParser(
             description='StressMap LTS tool for calculating and plotting bike '
@@ -48,7 +50,7 @@ class StressMapCli(object):
         if not hasattr(self, args.command):
             print('Unrecognized command')
             parser.print_help()
-            exit(1)
+            sys.exit(1)
 
         # use dispatch pattern to invoke method with same name
         getattr(StressMapCli, args.command)()
@@ -71,7 +73,7 @@ class StressMapCli(object):
         args = parser.parse_args(sys.argv[2:])
         cities = constants.CITIES
         if args.cities and args.city:
-            raise "Cannot specify both cities and city"
+            raise ValueError("Cannot specify both cities and city")
 
         import LTS_OSM  # imported directly in the command to improve argparse performance
         if args.cities:

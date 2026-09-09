@@ -1,8 +1,7 @@
+import argparse
 import http.server
 import socketserver
-import argparse
 import sys
-
 
 parser = argparse.ArgumentParser(
     description='Fetch and process OSM data into LTS')
