@@ -45,7 +45,7 @@ matplotlib==3.11.0
 matplotlib-inline==0.2.2
 # mercantile==1.1.6
 # nest-asyncio==1.6.0
-networkx==3.6
+networkx==3.7
 numpy==2.3.5
 osmnx==2.1.0
 # packaging==24.1
