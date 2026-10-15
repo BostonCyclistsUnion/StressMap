@@ -1,0 +1,8 @@
+scenario_id,1,2
+home_school,20000,
+home_office,20000,
+home_healthcare,3000,
+home_transit,2000,
+home_greenspace,2000,
+home_store,3000,
+TOTAL,50000,
