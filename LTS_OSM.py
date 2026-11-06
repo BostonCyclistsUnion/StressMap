@@ -13,6 +13,7 @@ of generation.
 import sys
 import json
 import time
+import random
 # import yaml
 import os
 from pathlib import Path
@@ -49,7 +50,10 @@ dataFolder = 'data'
 queryFolder = 'query'
 elements = ['ways', 'nodes', 'relations']
 
-overpass_url = "https://overpass-api.de/api/interpreter"
+PUBLIC_OVERPASS_ENDPOINTS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+]
 
 OVERWRITE = False
 
@@ -117,7 +121,7 @@ def download_osm(region):
             response_code = None
             while response_code != 200:
                 time.sleep(5)
-                response = requests.get(overpass_url,
+                response = requests.get(random.choice(PUBLIC_OVERPASS_ENDPOINTS),
                                         headers=useragent,
                                         params={'data': overpass_query},
                                         timeout=60*5)
