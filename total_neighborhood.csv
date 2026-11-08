@@ -1,996 +1,661 @@
 neighborhood,LTS,highway,length
-Allston,0.0,construction,5826.53482326843
+Allston,0.0,construction,6678.536070806131
 Allston,0.0,cycleway,101.24346521758692
-Allston,0.0,footway,148645.1133492397
-Allston,0.0,pedestrian,502.60159801708716
-Allston,0.0,primary,1673.2183091732068
-Allston,0.0,primary_link,168.9287854541994
-Allston,0.0,service,684.2589627545736
-Allston,0.0,track,16.768500488325035
-Allston,0.0,trunk,315.62919126950226
-Allston,0.0,trunk_link,491.16570512366536
-Allston,1.0,cycleway,22940.748526096806
-Allston,1.0,footway,33942.85957505347
-Allston,1.0,path,4241.348482027286
-Allston,1.0,residential,286.5200710322823
-Allston,1.0,service,1657.5715668748242
-Allston,1.0,trunk,671.3928403753596
-Allston,2.0,living_street,2176.2968054296844
-Allston,2.0,primary,5185.531209874438
-Allston,2.0,residential,35360.75298497187
-Allston,2.0,secondary,4614.61155000888
-Allston,2.0,service,38770.760290951526
-Allston,2.0,tertiary,10481.176972243675
-Allston,2.0,unclassified,1128.1811522917421
-Allston,3.0,living_street,
-Allston,3.0,primary,11389.764385880784
-Allston,3.0,primary_link,264.86374365477093
-Allston,3.0,residential,3253.5818309847905
-Allston,3.0,secondary,1257.9338246235263
+Allston,0.0,footway,144196.736280325
+Allston,0.0,pedestrian,502.64822430145085
+Allston,0.0,primary,1790.0808476781801
+Allston,0.0,primary_link,182.1425773392752
+Allston,0.0,service,877.2203765894512
+Allston,0.0,track,17.033031265548097
+Allston,0.0,trunk,12476.215701788264
+Allston,0.0,trunk_link,3483.752384621605
+Allston,1.0,cycleway,23032.313405893507
+Allston,1.0,footway,32211.797825339632
+Allston,1.0,path,4245.283055333318
+Allston,1.0,residential,315.9319642863834
+Allston,1.0,service,2796.7726169075427
+Allston,2.0,living_street,2174.5156272277277
+Allston,2.0,primary,1923.819212713289
+Allston,2.0,residential,37398.84930320094
+Allston,2.0,secondary,3535.5866875042525
+Allston,2.0,service,43362.3717647335
+Allston,2.0,tertiary,8591.682036286307
+Allston,2.0,trunk,486.2945660455812
+Allston,2.0,unclassified,508.5343835692821
+Allston,3.0,living_street,334.9372044057781
+Allston,3.0,primary,9968.431763772156
+Allston,3.0,primary_link,
+Allston,3.0,residential,
+Allston,3.0,secondary,2270.6045790046032
 Allston,3.0,secondary_link,
-Allston,3.0,tertiary,714.9085787669271
-Allston,3.0,trunk,
+Allston,3.0,tertiary,
+Allston,3.0,trunk,146.55905253239396
 Allston,3.0,unclassified,
 Allston,4.0,primary,
-Allston,4.0,trunk,
-Allston,4.0,unclassified,427.5487172928299
+Allston,4.0,trunk,1038.4017031042397
+Allston,4.0,trunk_link,
+Allston,4.0,unclassified,
+Back Bay,0.0,construction,963.3432605232188
 Back Bay,0.0,cycleway,646.5683886523607
-Back Bay,0.0,footway,93865.32817719865
+Back Bay,0.0,footway,95278.51156982589
 Back Bay,0.0,path,129.55107696817132
-Back Bay,0.0,pedestrian,109.57576121483241
-Back Bay,0.0,primary,64.11539987144307
-Back Bay,0.0,service,3557.563275911679
-Back Bay,0.0,track,386.50499362439444
-Back Bay,1.0,cycleway,4655.735084386805
-Back Bay,1.0,footway,11753.9276797507
-Back Bay,1.0,path,1471.2332489808466
-Back Bay,1.0,primary,602.0978573352263
-Back Bay,1.0,residential,66.81159212070155
-Back Bay,1.0,secondary,555.298566890777
-Back Bay,1.0,service,13625.429546444673
-Back Bay,2.0,primary,7256.479276139903
-Back Bay,2.0,residential,6322.951492308707
-Back Bay,2.0,secondary,652.3370858147969
-Back Bay,2.0,service,8532.185457061347
-Back Bay,3.0,primary,7457.77840249039
-Back Bay,3.0,primary_link,
-Back Bay,3.0,residential,
-Back Bay,3.0,secondary,4708.985435714139
+Back Bay,0.0,pedestrian,157.34937928188225
+Back Bay,0.0,primary,256.1102202974251
+Back Bay,0.0,primary_link,115.39086323160862
+Back Bay,0.0,service,3835.8166222774153
+Back Bay,0.0,track,431.6005466797439
+Back Bay,0.0,trunk,5186.513002162181
+Back Bay,0.0,trunk_link,1814.1372233406041
+Back Bay,1.0,cycleway,4673.397640818665
+Back Bay,1.0,footway,9301.467219755057
+Back Bay,1.0,path,2100.5222522409863
+Back Bay,1.0,residential,564.1814645721815
+Back Bay,1.0,service,18386.88104257717
+Back Bay,1.0,unclassified,310.8078326756674
+Back Bay,2.0,primary,649.4230877152013
+Back Bay,2.0,primary_link,1171.6591045085324
+Back Bay,2.0,residential,7373.704110326371
+Back Bay,2.0,secondary,719.4930303275745
+Back Bay,2.0,service,2706.1003284270787
+Back Bay,3.0,primary,20883.49925822357
+Back Bay,3.0,primary_link,717.7676668729331
+Back Bay,3.0,residential,4543.470669404542
+Back Bay,3.0,secondary,7031.527508754934
 Back Bay,3.0,secondary_link,
 Back Bay,3.0,trunk_link,
-Baldwin,0.0,footway,39359.45453520929
-Baldwin,0.0,pedestrian,769.9855003997276
-Baldwin,1.0,cycleway,593.3254950433044
-Baldwin,1.0,footway,16501.95065785166
-Baldwin,1.0,path,800.0445910731722
-Baldwin,1.0,pedestrian,189.44139601910757
-Baldwin,1.0,residential,345.6080243845503
-Baldwin,1.0,service,531.5341863265712
-Baldwin,2.0,primary,
-Baldwin,2.0,primary_link,
-Baldwin,2.0,residential,9831.776893145518
-Baldwin,2.0,secondary,
-Baldwin,2.0,service,4141.823711682604
-Baldwin,2.0,tertiary,2309.2276264653
-Baldwin,3.0,primary,
-Baldwin,3.0,primary_link,
-Baldwin,3.0,residential,
-Baldwin,3.0,secondary,576.9339965881043
-Bay Village,0.0,footway,10208.895608956023
+Back Bay,4.0,primary,165.2729546854687
+Bay Village,0.0,footway,9792.62979601745
 Bay Village,0.0,pedestrian,65.44983247383846
 Bay Village,0.0,service,31.776638252014294
 Bay Village,1.0,footway,148.04196519188758
-Bay Village,1.0,primary,
-Bay Village,1.0,service,498.3196864174486
-Bay Village,2.0,primary,225.5562434036296
-Bay Village,2.0,residential,1786.3180960576296
-Bay Village,2.0,secondary,
-Bay Village,2.0,service,382.04503747923286
-Bay Village,3.0,primary,508.52835232634476
-Bay Village,3.0,secondary,
+Bay Village,1.0,service,555.7080723793614
+Bay Village,2.0,primary,74.81468996241789
+Bay Village,2.0,residential,2776.862503249359
+Bay Village,2.0,service,324.6566515173201
+Bay Village,3.0,primary,880.0147727198716
+Bay Village,3.0,secondary,192.68073096124448
 Bay Village,3.0,tertiary,
-Beacon Hill,0.0,cycleway,408.6664839540087
-Beacon Hill,0.0,footway,72660.09478130833
-Beacon Hill,0.0,path,39.49722342655237
-Beacon Hill,0.0,pedestrian,420.0166147595251
-Beacon Hill,0.0,residential,139.59171493923466
-Beacon Hill,0.0,service,545.9764571928102
-Beacon Hill,0.0,track,64.84938067522101
-Beacon Hill,1.0,cycleway,2578.0782817363215
-Beacon Hill,1.0,footway,4945.3149273788
-Beacon Hill,1.0,path,146.76747146575977
-Beacon Hill,1.0,primary,226.94261950144553
-Beacon Hill,1.0,residential,850.611213173437
-Beacon Hill,1.0,service,390.41988484204666
-Beacon Hill,2.0,primary,1809.1430213446604
-Beacon Hill,2.0,residential,8463.38609204014
-Beacon Hill,2.0,service,1036.76583604614
+Beacon Hill,0.0,cycleway,467.1241891484398
+Beacon Hill,0.0,footway,72997.52913707065
+Beacon Hill,0.0,path,31.87413351265244
+Beacon Hill,0.0,pedestrian,525.9854337299815
+Beacon Hill,0.0,service,711.9516562303996
+Beacon Hill,0.0,track,67.53833080648306
+Beacon Hill,0.0,trunk,2539.1172309383037
+Beacon Hill,0.0,trunk_link,1154.4072881833526
+Beacon Hill,1.0,cycleway,2485.052375119365
+Beacon Hill,1.0,footway,3885.548076647343
+Beacon Hill,1.0,path,1173.6816511017328
+Beacon Hill,1.0,residential,536.3166871883091
+Beacon Hill,1.0,service,708.3461246043382
+Beacon Hill,2.0,primary,355.811778379437
+Beacon Hill,2.0,residential,9433.292713857787
+Beacon Hill,2.0,service,910.1416476587021
 Beacon Hill,2.0,trunk,
-Beacon Hill,3.0,primary,2901.626856346092
-Beacon Hill,3.0,primary_link,16.046721331828703
+Beacon Hill,3.0,primary,7184.174336368258
+Beacon Hill,3.0,primary_link,57.06094159868822
 Beacon Hill,3.0,residential,
-Beacon Hill,3.0,secondary,883.6272481461814
-Beacon Hill,3.0,trunk,
-Beacon Hill,3.0,trunk_link,
-Beacon Hill,3.0,unclassified,
-Beacon Hill,4.0,trunk,
-Brighton,0.0,construction,4165.140351359347
-Brighton,0.0,footway,335139.9204335703
-Brighton,0.0,pedestrian,286.66187230818707
-Brighton,0.0,primary,3368.31849481075
-Brighton,0.0,primary_link,181.55797078048235
-Brighton,0.0,secondary,731.6826142467876
-Brighton,0.0,service,259.41158691615254
-Brighton,0.0,unclassified,174.36172013643463
-Brighton,1.0,cycleway,18168.777402614644
-Brighton,1.0,footway,34730.91030165245
-Brighton,1.0,path,4790.268521717457
-Brighton,1.0,primary,3761.150614607105
-Brighton,1.0,residential,3487.471132699394
-Brighton,1.0,secondary,
-Brighton,1.0,service,928.709325189471
-Brighton,2.0,primary,5696.7214607911665
-Brighton,2.0,residential,87537.19115078225
-Brighton,2.0,secondary,7780.072283128413
-Brighton,2.0,service,70507.50924692575
-Brighton,2.0,tertiary,20291.10963277303
-Brighton,2.0,unclassified,3664.6109456537692
-Brighton,3.0,primary,12866.103693391426
-Brighton,3.0,primary_link,2093.790085307786
+Beacon Hill,3.0,secondary,884.3386630186877
+Beacon Hill,3.0,tertiary,
+Beacon Hill,3.0,trunk,552.053863134392
+Beacon Hill,3.0,trunk_link,487.15331246994066
+Beacon Hill,4.0,primary,156.95470534425087
+Beacon Hill,4.0,trunk,457.79550306473664
+Beacon Hill,4.0,trunk_link,129.0696056521899
+Brighton,0.0,construction,3486.1241876008858
+Brighton,0.0,footway,313438.79821709037
+Brighton,0.0,residential,34.22216703322202
+Brighton,0.0,service,276.4757450309239
+Brighton,1.0,cycleway,15060.364512870341
+Brighton,1.0,footway,29688.047931094578
+Brighton,1.0,path,7972.7089526556265
+Brighton,1.0,residential,3353.559168944196
+Brighton,1.0,service,278.9227918840733
+Brighton,2.0,primary,17.108101081891636
+Brighton,2.0,residential,99992.62940346895
+Brighton,2.0,secondary,4204.676501842865
+Brighton,2.0,service,83448.93520427812
+Brighton,2.0,tertiary,15584.693945030254
+Brighton,3.0,living_street,
+Brighton,3.0,primary,19795.52164805292
+Brighton,3.0,primary_link,2280.657010707879
 Brighton,3.0,residential,
-Brighton,3.0,secondary,5732.557592081094
+Brighton,3.0,secondary,10420.534828142761
 Brighton,3.0,secondary_link,
-Brighton,3.0,tertiary,3739.0633563793867
-Brighton,4.0,secondary,1389.4864086471412
-Brighton,4.0,unclassified,3655.6037614133047
-Cambridge Highlands,0.0,footway,25064.41488752844
-Cambridge Highlands,0.0,service,88.08352258445154
-Cambridge Highlands,1.0,cycleway,11135.52536613432
-Cambridge Highlands,1.0,footway,4170.648143132202
-Cambridge Highlands,1.0,path,4805.532449733328
-Cambridge Highlands,2.0,primary,
-Cambridge Highlands,2.0,residential,8687.24789074066
-Cambridge Highlands,2.0,secondary,844.6588193463823
-Cambridge Highlands,2.0,service,18473.472853266998
-Cambridge Highlands,2.0,tertiary,967.4490817276683
-Cambridge Highlands,3.0,primary,2272.122724494834
-Cambridge Highlands,3.0,residential,
-Cambridge Highlands,3.0,tertiary_link,
-Cambridge Highlands,3.0,trunk,
-Cambridge Highlands,4.0,trunk,
-Cambridge Highlands,4.0,unclassified,358.55955468172596
-Cambridgeport,0.0,busway,65.95682423547177
-Cambridgeport,0.0,construction,2358.836618913786
-Cambridgeport,0.0,footway,87038.00553579819
-Cambridgeport,0.0,pedestrian,277.0377751354896
-Cambridgeport,0.0,service,272.1123096132111
-Cambridgeport,0.0,trunk,1644.1945037665546
-Cambridgeport,1.0,cycleway,3529.9737095743326
-Cambridgeport,1.0,footway,11661.090348220672
-Cambridgeport,1.0,path,796.0400826271884
-Cambridgeport,1.0,pedestrian,156.6867960695373
-Cambridgeport,1.0,primary,
-Cambridgeport,1.0,residential,3640.023605074033
-Cambridgeport,1.0,service,747.9764710460115
-Cambridgeport,1.0,track,123.5197496993661
-Cambridgeport,1.0,trunk,
-Cambridgeport,2.0,living_street,282.41537141608165
-Cambridgeport,2.0,primary,2900.662943406226
-Cambridgeport,2.0,residential,11746.168473562646
-Cambridgeport,2.0,secondary,4458.068200459179
-Cambridgeport,2.0,service,6504.389313900196
-Cambridgeport,2.0,tertiary,6399.544280724409
-Cambridgeport,2.0,unclassified,244.7212986938228
-Cambridgeport,3.0,primary,2069.0016147598462
-Cambridgeport,3.0,primary_link,
-Cambridgeport,3.0,residential,
-Cambridgeport,3.0,secondary,142.60952738430703
-Cambridgeport,3.0,tertiary,
-Cambridgeport,3.0,trunk,1113.830085006325
-Cambridgeport,3.0,trunk_link,
-Cambridgeport,4.0,trunk,586.9931049816394
-Cambridgeport,4.0,trunk_link,
-Cambridgeport,4.0,unclassified,231.79336223769533
-Charlestown,0.0,footway,156487.67600688396
-Charlestown,0.0,pedestrian,2018.158105352512
-Charlestown,0.0,primary,7614.110740360187
-Charlestown,0.0,residential,87.1704536796908
-Charlestown,0.0,service,2148.708168253189
-Charlestown,0.0,track,442.045334304781
-Charlestown,1.0,cycleway,8944.302570955027
-Charlestown,1.0,footway,36994.09371444826
-Charlestown,1.0,path,4020.9081357169293
-Charlestown,1.0,pedestrian,978.509214769408
-Charlestown,1.0,primary,
-Charlestown,1.0,residential,1821.7181609899158
-Charlestown,1.0,service,518.1619739755166
-Charlestown,1.0,track,200.4080937438251
-Charlestown,2.0,primary,3170.9999830615516
-Charlestown,2.0,residential,35815.737355327365
-Charlestown,2.0,secondary,2274.1396150641285
-Charlestown,2.0,service,35812.29497808191
-Charlestown,2.0,tertiary,77.67362021602648
-Charlestown,2.0,unclassified,2112.226163483235
-Charlestown,3.0,primary,5586.488253344122
+Brighton,3.0,tertiary,1151.5305383965965
+Brighton,3.0,tertiary_link,
+Brighton,4.0,primary,4848.3305890064275
+Brighton,4.0,secondary,1035.8962578542237
+Brighton,4.0,unclassified,3420.5492588462516
+Charlestown,0.0,construction,961.5300062959649
+Charlestown,0.0,footway,155712.1141710731
+Charlestown,0.0,pedestrian,3500.8890552292046
+Charlestown,0.0,primary,7674.642993629726
+Charlestown,0.0,service,2018.266843535579
+Charlestown,1.0,cycleway,8009.004813622124
+Charlestown,1.0,footway,35295.48832381321
+Charlestown,1.0,path,3581.262170892585
+Charlestown,1.0,residential,1816.4642785083215
+Charlestown,1.0,service,1168.3788786499608
+Charlestown,1.0,track,642.4534280486062
+Charlestown,2.0,residential,35526.81945244198
+Charlestown,2.0,secondary,2367.0375421586614
+Charlestown,2.0,service,34313.68087111409
+Charlestown,2.0,tertiary,77.7170568885508
+Charlestown,2.0,unclassified,2116.856465200804
+Charlestown,3.0,primary,3909.5565537019256
 Charlestown,3.0,primary_link,
-Charlestown,3.0,residential,662.4291015196749
-Charlestown,3.0,secondary,13174.93901920642
+Charlestown,3.0,residential,
+Charlestown,3.0,secondary,12785.60736627173
 Charlestown,3.0,tertiary,
 Charlestown,3.0,unclassified,
-Charlestown,4.0,primary,206.58193349211348
+Charlestown,4.0,primary,5573.529777581505
 Charlestown,4.0,secondary,
-Charlestown,4.0,unclassified,5364.269029301592
-Chinatown,0.0,footway,19132.392915643373
-Chinatown,0.0,pedestrian,116.545100502103
-Chinatown,0.0,service,32.22127464290438
-Chinatown,1.0,cycleway,844.6016391514801
-Chinatown,1.0,footway,1276.7884724729527
+Charlestown,4.0,unclassified,5369.246034631087
+Chinatown,0.0,footway,19030.89018333396
+Chinatown,0.0,pedestrian,206.42241086724798
+Chinatown,0.0,primary,19.78899609197109
+Chinatown,0.0,residential,66.47770499103652
+Chinatown,0.0,service,14.256546762900442
+Chinatown,1.0,cycleway,942.4192770231936
+Chinatown,1.0,footway,1250.9272704449031
 Chinatown,1.0,path,102.92778783950257
-Chinatown,1.0,pedestrian,88.40129281205556
-Chinatown,1.0,primary,23.08247266586303
-Chinatown,1.0,residential,471.43863593181175
-Chinatown,1.0,unclassified,196.72853922825877
-Chinatown,2.0,primary,395.04644152509536
-Chinatown,2.0,residential,2052.2360791281044
+Chinatown,1.0,residential,325.86537385475634
+Chinatown,1.0,service,328.30481965018146
+Chinatown,2.0,primary,83.13208468371997
+Chinatown,2.0,residential,2410.4118448622708
 Chinatown,2.0,secondary,
-Chinatown,2.0,service,393.5776465884578
-Chinatown,3.0,primary,1398.9301895325307
-Chinatown,3.0,residential,
-Chinatown,3.0,secondary,1302.2754063389223
-Chinatown,3.0,secondary_link,
-Chinatown,3.0,unclassified,
-Chinatown,4.0,primary,
-Dorchester,0.0,busway,3192.4762664690434
-Dorchester,0.0,footway,290047.2152893239
-Dorchester,0.0,path,383.4592331482721
-Dorchester,0.0,pedestrian,227.03717745611033
-Dorchester,0.0,primary,149.42445817865007
-Dorchester,0.0,residential,60.157172020767
-Dorchester,0.0,service,1127.036127045913
-Dorchester,0.0,tertiary,30.745571854892315
-Dorchester,0.0,track,1318.3379483009523
-Dorchester,0.0,trunk,63.07876359342889
-Dorchester,0.0,unclassified,59.27568609052719
-Dorchester,1.0,cycleway,25347.320437649403
-Dorchester,1.0,footway,61519.012521612305
-Dorchester,1.0,path,11370.811083039012
-Dorchester,1.0,primary,174.4846830362161
-Dorchester,1.0,residential,6536.537557506017
-Dorchester,1.0,secondary,1027.3226588562395
-Dorchester,1.0,service,2755.385934895684
-Dorchester,1.0,tertiary,1043.6828591111846
-Dorchester,1.0,track,372.2673849812931
-Dorchester,1.0,unclassified,757.9114927266867
-Dorchester,2.0,primary,7648.672056273922
-Dorchester,2.0,residential,254802.28699678776
-Dorchester,2.0,secondary,25419.330787960138
-Dorchester,2.0,service,113468.71902969938
-Dorchester,2.0,tertiary,22686.690241274347
-Dorchester,2.0,unclassified,5700.48848469318
-Dorchester,3.0,primary,24813.548893211402
-Dorchester,3.0,primary_link,1738.9144397721718
-Dorchester,3.0,residential,
-Dorchester,3.0,secondary,36149.7770290321
-Dorchester,3.0,tertiary,7770.726239633169
+Chinatown,2.0,service,704.5786328306394
+Chinatown,3.0,primary,1307.0823234147495
+Chinatown,3.0,residential,181.87226430773234
+Chinatown,3.0,secondary,1390.8418138514285
+Chinatown,3.0,secondary_link,98.29688974371477
+Chinatown,4.0,primary,930.00917249435
+Chinatown,4.0,secondary,89.08870509306739
+Dorchester,0.0,construction,2103.217572838757
+Dorchester,0.0,footway,179861.7841857146
+Dorchester,0.0,path,380.02052061653376
+Dorchester,0.0,residential,87.05946295653072
+Dorchester,0.0,service,4494.412974000669
+Dorchester,0.0,track,1148.5955004975788
+Dorchester,1.0,cycleway,23500.782305573284
+Dorchester,1.0,footway,51330.77344408016
+Dorchester,1.0,path,14362.455698081792
+Dorchester,1.0,residential,6359.848729736145
+Dorchester,1.0,service,1526.79212068766
+Dorchester,1.0,track,851.7056567706626
+Dorchester,2.0,living_street,182.5201787750096
+Dorchester,2.0,primary,5318.761811537482
+Dorchester,2.0,residential,256559.96543326648
+Dorchester,2.0,secondary,3838.51980986254
+Dorchester,2.0,service,138949.39708803396
+Dorchester,2.0,tertiary,23640.917376782516
+Dorchester,2.0,unclassified,4850.972216325788
+Dorchester,3.0,living_street,
+Dorchester,3.0,primary,23851.00053356367
+Dorchester,3.0,primary_link,1472.309308606833
+Dorchester,3.0,residential,8445.79835996048
+Dorchester,3.0,secondary,52774.25914592744
+Dorchester,3.0,tertiary,8656.940007906167
 Dorchester,3.0,tertiary_link,
-Dorchester,3.0,trunk,1014.9672193809304
+Dorchester,3.0,trunk,989.4046993970594
 Dorchester,3.0,trunk_link,
-Dorchester,3.0,unclassified,3191.9626682344096
-Dorchester,4.0,primary,
-Dorchester,4.0,trunk,8895.440138679212
-Dorchester,4.0,trunk_link,374.67025697673125
-Dorchester,4.0,unclassified,328.43192102759724
+Dorchester,3.0,unclassified,4008.0920665144095
+Dorchester,4.0,primary,11930.926425683641
+Dorchester,4.0,secondary,587.1932203278503
+Dorchester,4.0,trunk,9536.825877429425
+Dorchester,4.0,trunk_link,
+Dorchester,4.0,unclassified,817.5141307092783
 Downtown,0.0,busway,1740.619738836252
-Downtown,0.0,construction,431.2065198988185
-Downtown,0.0,footway,97818.92144461416
+Downtown,0.0,construction,627.8784419469438
+Downtown,0.0,footway,95112.34748421778
 Downtown,0.0,path,255.02844253621546
-Downtown,0.0,pedestrian,2331.565650299966
+Downtown,0.0,pedestrian,5245.440416141325
+Downtown,0.0,primary,946.9953683834315
 Downtown,0.0,residential,88.63987387785792
-Downtown,0.0,service,2992.642367886113
-Downtown,1.0,cycleway,1275.283826041011
-Downtown,1.0,footway,28042.876168046627
-Downtown,1.0,path,2183.805364911546
-Downtown,1.0,pedestrian,2758.8666445376384
-Downtown,1.0,primary,
-Downtown,1.0,residential,388.8464537589558
-Downtown,1.0,secondary,
-Downtown,1.0,service,2068.511765629446
-Downtown,1.0,unclassified,84.3708960226186
-Downtown,2.0,living_street,147.7592087511249
-Downtown,2.0,primary,2881.2337250693545
-Downtown,2.0,residential,4888.561337702598
-Downtown,2.0,secondary,1400.2444205837853
-Downtown,2.0,service,4473.7174420464125
+Downtown,0.0,service,1134.3957824213928
+Downtown,1.0,cycleway,1439.3845047103962
+Downtown,1.0,footway,28814.04069610119
+Downtown,1.0,path,1974.5316827078568
+Downtown,1.0,residential,368.34379217740036
+Downtown,1.0,service,2842.455596987441
+Downtown,2.0,living_street,119.90224644666695
+Downtown,2.0,primary,399.0610605578734
+Downtown,2.0,residential,4914.2378132716185
+Downtown,2.0,secondary,947.6657541378866
+Downtown,2.0,service,7283.0471383311615
 Downtown,2.0,tertiary,121.24156190262477
-Downtown,2.0,unclassified,1182.818164126876
+Downtown,2.0,unclassified,1634.664123860793
 Downtown,3.0,living_street,
-Downtown,3.0,primary,12872.419370705516
-Downtown,3.0,primary_link,171.32927084331504
-Downtown,3.0,residential,1194.4841485401441
-Downtown,3.0,secondary,6234.355517043233
-Downtown,3.0,secondary_link,
+Downtown,3.0,primary,17536.847166799973
+Downtown,3.0,primary_link,129.67752515576043
+Downtown,3.0,residential,1170.4197090204543
+Downtown,3.0,secondary,7673.631635552321
+Downtown,3.0,secondary_link,73.27879333056346
 Downtown,3.0,tertiary,
-Downtown,3.0,unclassified,985.9295299766794
-Downtown,4.0,primary,477.07419466647946
-Downtown,4.0,unclassified,1224.955355324368
+Downtown,3.0,unclassified,390.5932715765271
+Downtown,4.0,primary,1210.030177389364
+Downtown,4.0,unclassified,898.4882054262036
 East Boston,0.0,construction,108.48672520331601
-East Boston,0.0,footway,262146.1271977471
+East Boston,0.0,footway,151348.70840147516
 East Boston,0.0,path,628.5182184589816
-East Boston,0.0,pedestrian,340.9401766055137
-East Boston,0.0,primary,8863.700474268144
-East Boston,0.0,primary_link,2180.5194530309805
-East Boston,0.0,residential,454.7460267551269
-East Boston,0.0,secondary,12069.80107318129
-East Boston,0.0,secondary_link,1229.970057127442
-East Boston,0.0,service,59790.304990210236
-East Boston,0.0,tertiary,492.08642105344956
-East Boston,0.0,unclassified,3021.592059880471
-East Boston,1.0,cycleway,17734.49802495795
-East Boston,1.0,footway,54334.386041933685
+East Boston,0.0,pedestrian,337.4564240870629
+East Boston,0.0,primary,24177.02721328365
+East Boston,0.0,primary_link,14508.083147264691
+East Boston,0.0,residential,454.74590868295877
+East Boston,0.0,secondary,3489.1712188965785
+East Boston,0.0,secondary_link,88.48225179071287
+East Boston,0.0,service,60957.58197486832
+East Boston,0.0,tertiary,423.1778228043919
+East Boston,0.0,tertiary_link,67.63502655998494
+East Boston,0.0,unclassified,2245.583398422885
+East Boston,1.0,cycleway,18217.7200154023
+East Boston,1.0,footway,54723.14459577139
 East Boston,1.0,living_street,245.0569270440627
-East Boston,1.0,path,9356.03120428807
-East Boston,1.0,residential,2204.91287262968
-East Boston,1.0,service,4385.329479983211
+East Boston,1.0,path,6258.445609525284
+East Boston,1.0,residential,2204.9128449818418
+East Boston,1.0,service,4388.690413459078
 East Boston,1.0,track,2070.9034323770047
 East Boston,2.0,living_street,556.7136230871378
-East Boston,2.0,primary,1562.9783079433926
-East Boston,2.0,residential,57050.53585403961
-East Boston,2.0,secondary,6434.80204787876
-East Boston,2.0,service,59268.097601000685
-East Boston,2.0,tertiary,7237.319978010685
+East Boston,2.0,residential,57196.13648871342
+East Boston,2.0,secondary,3522.318977295732
+East Boston,2.0,service,61095.460272091965
+East Boston,2.0,tertiary,17140.326365333323
 East Boston,2.0,tertiary_link,77.5671324715341
-East Boston,2.0,unclassified,3049.167375337184
-East Boston,3.0,primary,750.261343311963
+East Boston,2.0,unclassified,3315.148944473926
+East Boston,3.0,primary,
+East Boston,3.0,primary_link,
 East Boston,3.0,residential,
-East Boston,3.0,secondary,29134.681031562046
-East Boston,3.0,secondary_link,
-East Boston,3.0,tertiary,4161.3676846739445
+East Boston,3.0,secondary,15815.392080821126
+East Boston,3.0,tertiary,10550.823621593598
 East Boston,3.0,tertiary_link,
-East Boston,3.0,unclassified,378.3248450532413
-East Boston,4.0,secondary,2693.1139938263227
+East Boston,3.0,unclassified,882.4430892327865
+East Boston,4.0,primary,
+East Boston,4.0,secondary,3870.1329419796402
 East Boston,4.0,trunk,
 East Boston,4.0,trunk_link,
-East Boston,4.0,unclassified,244.43793435790997
-East Cambridge,0.0,busway,352.14972752985744
-East Cambridge,0.0,construction,3129.960076858249
-East Cambridge,0.0,footway,90100.48139253144
-East Cambridge,0.0,pedestrian,719.1577133511904
-East Cambridge,0.0,primary,443.0837081131308
-East Cambridge,0.0,service,605.0052025321459
-East Cambridge,1.0,cycleway,19080.223988089685
-East Cambridge,1.0,footway,19365.155996357178
-East Cambridge,1.0,path,2311.1446614528377
-East Cambridge,1.0,residential,1758.3726685883983
-East Cambridge,1.0,service,344.1582731669946
-East Cambridge,1.0,trunk,
-East Cambridge,2.0,living_street,
-East Cambridge,2.0,primary,
-East Cambridge,2.0,residential,21594.101197809432
-East Cambridge,2.0,secondary,3508.1565358347198
-East Cambridge,2.0,service,5441.048168670224
-East Cambridge,2.0,tertiary,6871.8655050029065
-East Cambridge,2.0,trunk,590.4252230496102
-East Cambridge,2.0,unclassified,208.75342234979337
-East Cambridge,3.0,primary,2318.4369254393578
-East Cambridge,3.0,primary_link,
-East Cambridge,3.0,residential,1189.1182802120613
-East Cambridge,3.0,secondary,3022.20586109285
-East Cambridge,3.0,tertiary,393.37058477596236
-East Cambridge,3.0,trunk,273.093692878558
-East Cambridge,3.0,trunk_link,
-East Cambridge,4.0,primary,230.8130770882678
-East Cambridge,4.0,secondary,314.1827086173162
-East Cambridge,4.0,trunk,
-East Cambridge,4.0,trunk_link,
-East Cambridge,4.0,unclassified,693.7850205888462
-Fenway-Kenmore,0.0,busway,835.7363395358898
-Fenway-Kenmore,0.0,construction,3642.1616610804904
-Fenway-Kenmore,0.0,cycleway,227.8286318860595
-Fenway-Kenmore,0.0,footway,100339.86608202955
-Fenway-Kenmore,0.0,pedestrian,26.42988812371175
-Fenway-Kenmore,0.0,primary,105.3625838649728
-Fenway-Kenmore,0.0,service,242.20266981231342
-Fenway-Kenmore,0.0,track,312.38755373628686
-Fenway-Kenmore,0.0,trunk,807.6774348220431
-Fenway-Kenmore,0.0,trunk_link,472.23813027001484
-Fenway-Kenmore,1.0,cycleway,17484.422681433392
-Fenway-Kenmore,1.0,footway,34101.34751051559
-Fenway-Kenmore,1.0,path,668.306040283036
-Fenway-Kenmore,1.0,pedestrian,283.736333370758
-Fenway-Kenmore,1.0,primary,1129.8589738602
-Fenway-Kenmore,1.0,residential,235.15080322899797
-Fenway-Kenmore,1.0,service,4279.090665345073
-Fenway-Kenmore,1.0,trunk_link,
-Fenway-Kenmore,1.0,unclassified,888.8511409363708
-Fenway-Kenmore,2.0,primary,3393.114842226768
-Fenway-Kenmore,2.0,residential,9732.694783176672
-Fenway-Kenmore,2.0,secondary,924.8742433542652
-Fenway-Kenmore,2.0,service,20847.513844867324
-Fenway-Kenmore,2.0,tertiary,789.2282349901178
-Fenway-Kenmore,2.0,trunk,1163.6398544017536
-Fenway-Kenmore,2.0,unclassified,4387.240490230136
-Fenway-Kenmore,3.0,primary,9417.798790687371
-Fenway-Kenmore,3.0,primary_link,
-Fenway-Kenmore,3.0,residential,770.2389350914409
-Fenway-Kenmore,3.0,secondary,3310.242236617267
-Fenway-Kenmore,3.0,tertiary,1147.7129335700079
-Fenway-Kenmore,3.0,trunk,2388.774032714369
+East Boston,4.0,unclassified,491.5857536087464
+East Cambridge,0.0,footway,314.55447847663476
+East Cambridge,1.0,footway,22.39517859111426
+East Cambridge,2.0,residential,72.42692884062656
+East Cambridge,2.0,trunk,
+Fenway-Kenmore,0.0,construction,5383.701451250151
+Fenway-Kenmore,0.0,footway,97067.45139679298
+Fenway-Kenmore,0.0,path,221.3447554232717
+Fenway-Kenmore,0.0,pedestrian,328.2882182566394
+Fenway-Kenmore,0.0,primary,172.06280942600551
+Fenway-Kenmore,0.0,service,1164.9171578427756
+Fenway-Kenmore,0.0,track,311.40702360138096
+Fenway-Kenmore,0.0,trunk,8253.241804398653
+Fenway-Kenmore,0.0,trunk_link,4855.525098559976
+Fenway-Kenmore,1.0,cycleway,18055.756763547906
+Fenway-Kenmore,1.0,footway,32977.45892495878
+Fenway-Kenmore,1.0,path,613.6060777987278
+Fenway-Kenmore,1.0,residential,464.9397289544134
+Fenway-Kenmore,1.0,service,3816.9522917007403
+Fenway-Kenmore,1.0,unclassified,340.46552384144417
+Fenway-Kenmore,2.0,primary,1293.0348656012152
+Fenway-Kenmore,2.0,residential,12390.446706868524
+Fenway-Kenmore,2.0,secondary,919.576186439473
+Fenway-Kenmore,2.0,service,19846.48108078301
+Fenway-Kenmore,2.0,tertiary,1984.8898835458945
+Fenway-Kenmore,2.0,trunk,475.269155105235
+Fenway-Kenmore,2.0,unclassified,2474.8433183304996
+Fenway-Kenmore,3.0,primary,11361.283802242422
+Fenway-Kenmore,3.0,primary_link,968.7853307989848
+Fenway-Kenmore,3.0,residential,844.3469346197803
+Fenway-Kenmore,3.0,secondary,2512.915218219356
+Fenway-Kenmore,3.0,tertiary,15.986306108119413
+Fenway-Kenmore,3.0,trunk,2104.6427932604506
 Fenway-Kenmore,3.0,trunk_link,
-Fenway-Kenmore,3.0,unclassified,1695.138021442785
-Fenway-Kenmore,4.0,trunk,2265.991337104955
-Fenway-Kenmore,4.0,trunk_link,
-Fenway-Kenmore,4.0,unclassified,262.89936247126377
-Harbor Islands,0.0,footway,337.8546222655586
+Fenway-Kenmore,3.0,unclassified,2297.0513471726827
+Fenway-Kenmore,4.0,primary,3709.018305370221
+Fenway-Kenmore,4.0,secondary,825.8554482590274
+Fenway-Kenmore,4.0,trunk,2216.9023663950547
+Fenway-Kenmore,4.0,trunk_link,351.7115690186539
+Fenway-Kenmore,4.0,unclassified,291.0643103764532
+Harbor Islands,0.0,footway,89.41718219234083
 Harbor Islands,0.0,service,49.08441323014744
-Harbor Islands,0.0,track,3244.7914407330036
 Harbor Islands,0.0,unclassified,3901.623120432686
-Harbor Islands,1.0,cycleway,13959.55271005139
-Harbor Islands,1.0,footway,25616.159789981044
-Harbor Islands,1.0,path,703.7396534121935
-Harbor Islands,2.0,service,18621.13750220889
-Harbor Islands,3.0,secondary,2088.8959359663595
-Hyde Park,0.0,construction,951.6725736881956
-Hyde Park,0.0,footway,124396.27983186394
-Hyde Park,0.0,pedestrian,206.29341940585815
+Harbor Islands,1.0,cycleway,13959.550631498007
+Harbor Islands,1.0,footway,25195.632643910958
+Harbor Islands,1.0,path,908.5886411479541
+Harbor Islands,1.0,track,2972.3199478220317
+Harbor Islands,2.0,residential,100.70293139066831
+Harbor Islands,2.0,service,18501.61371677464
+Harbor Islands,4.0,unclassified,2088.895935954777
+Hyde Park,0.0,footway,102760.78771879949
 Hyde Park,0.0,primary,100.98932170959029
-Hyde Park,0.0,service,54.659269129894675
-Hyde Park,1.0,cycleway,26424.94170559759
-Hyde Park,1.0,footway,11427.975314414618
-Hyde Park,1.0,path,13468.143424472077
-Hyde Park,1.0,primary,377.9622787987548
-Hyde Park,1.0,residential,6116.4579900366725
-Hyde Park,1.0,service,1893.8766803751812
-Hyde Park,1.0,track,528.6135790720685
-Hyde Park,2.0,primary,104.04566224077384
-Hyde Park,2.0,residential,155374.6685112794
-Hyde Park,2.0,secondary,1906.329250228785
-Hyde Park,2.0,service,69322.26397686859
-Hyde Park,2.0,tertiary,13495.592672246767
-Hyde Park,3.0,primary,12362.787322919103
-Hyde Park,3.0,primary_link,
+Hyde Park,0.0,service,48.30597601414282
+Hyde Park,1.0,cycleway,27646.15085150017
+Hyde Park,1.0,footway,9982.864331374281
+Hyde Park,1.0,path,13499.346795598181
+Hyde Park,1.0,residential,6374.692134203065
+Hyde Park,1.0,service,502.95044799205954
+Hyde Park,1.0,track,1773.1276727044208
+Hyde Park,2.0,primary,103.90772008405939
+Hyde Park,2.0,residential,155250.69446790498
+Hyde Park,2.0,secondary,685.406493974501
+Hyde Park,2.0,service,78614.51209552248
+Hyde Park,2.0,tertiary,13353.182321173728
+Hyde Park,3.0,primary,10816.152733265546
 Hyde Park,3.0,residential,
-Hyde Park,3.0,secondary,29660.871202713184
-Hyde Park,3.0,tertiary,440.69095806462093
-Hyde Park,3.0,unclassified,117.52112166549426
-Hyde Park,4.0,secondary,
-Hyde Park,4.0,unclassified,2551.409897196956
-Jamaica Plain,0.0,busway,1638.8258122772845
-Jamaica Plain,0.0,construction,510.9614938464301
-Jamaica Plain,0.0,footway,336923.1014265606
-Jamaica Plain,0.0,path,1974.514732998602
-Jamaica Plain,0.0,service,38339.91783191429
-Jamaica Plain,0.0,track,740.6611345314892
-Jamaica Plain,1.0,cycleway,17182.46908239422
-Jamaica Plain,1.0,footway,49271.39707775865
-Jamaica Plain,1.0,living_street,83.91381513178398
-Jamaica Plain,1.0,path,5469.747033625153
-Jamaica Plain,1.0,pedestrian,452.12562976851456
-Jamaica Plain,1.0,primary,
-Jamaica Plain,1.0,residential,8171.010592998682
-Jamaica Plain,1.0,secondary,2007.9711250162145
-Jamaica Plain,1.0,service,11614.007274615955
-Jamaica Plain,1.0,tertiary,
-Jamaica Plain,1.0,track,519.9629239561261
-Jamaica Plain,2.0,living_street,548.8970147565624
-Jamaica Plain,2.0,primary,4389.424514911272
-Jamaica Plain,2.0,residential,109931.19666785415
-Jamaica Plain,2.0,secondary,12834.363893085663
-Jamaica Plain,2.0,secondary_link,
-Jamaica Plain,2.0,service,50769.08427323779
-Jamaica Plain,2.0,tertiary,20426.0811032757
-Jamaica Plain,2.0,trunk,
-Jamaica Plain,2.0,unclassified,4334.903410009484
-Jamaica Plain,3.0,primary,5849.397956620078
+Hyde Park,3.0,secondary,30673.372424151672
+Hyde Park,3.0,secondary_link,
+Hyde Park,3.0,tertiary,377.60615439154986
+Hyde Park,4.0,primary,1876.7119363839076
+Hyde Park,4.0,secondary,313.69944606172106
+Hyde Park,4.0,unclassified,1709.2222576781292
+Jamaica Plain,0.0,busway,538.7479701594827
+Jamaica Plain,0.0,footway,326483.41528023663
+Jamaica Plain,0.0,service,2038.73875475763
+Jamaica Plain,1.0,cycleway,22148.78690760486
+Jamaica Plain,1.0,footway,44497.72339058936
+Jamaica Plain,1.0,living_street,71.09637991394229
+Jamaica Plain,1.0,path,4422.684048877428
+Jamaica Plain,1.0,residential,7774.623166455646
+Jamaica Plain,1.0,service,8498.544812277309
+Jamaica Plain,1.0,track,1741.9347496683874
+Jamaica Plain,2.0,primary,556.358280978405
+Jamaica Plain,2.0,residential,122725.302827354
+Jamaica Plain,2.0,secondary,12193.26032688933
+Jamaica Plain,2.0,service,90498.8562426072
+Jamaica Plain,2.0,tertiary,13753.198344831371
+Jamaica Plain,2.0,unclassified,4335.283155291201
+Jamaica Plain,3.0,primary,8828.76255041149
 Jamaica Plain,3.0,primary_link,134.29367516187534
-Jamaica Plain,3.0,residential,
-Jamaica Plain,3.0,secondary,3884.0514664355405
+Jamaica Plain,3.0,residential,5798.653403582102
+Jamaica Plain,3.0,secondary,5591.624441107113
 Jamaica Plain,3.0,secondary_link,
-Jamaica Plain,3.0,tertiary,2196.832482058876
-Jamaica Plain,3.0,trunk,12426.758404269887
-Jamaica Plain,3.0,unclassified,
-Jamaica Plain,4.0,trunk,
+Jamaica Plain,3.0,tertiary,316.015979501868
+Jamaica Plain,3.0,trunk,11421.21897338063
+Jamaica Plain,3.0,trunk_link,
+Jamaica Plain,4.0,primary,1410.4676015261862
+Jamaica Plain,4.0,secondary,133.68822189303071
+Jamaica Plain,4.0,trunk,3830.366196441799
 Jamaica Plain,4.0,trunk_link,
 Jamaica Plain,4.0,unclassified,488.12183319798436
 Leather District,0.0,busway,63.806178658820386
-Leather District,0.0,footway,5995.626466604715
-Leather District,1.0,footway,19.555775216127667
-Leather District,1.0,service,204.96025482912654
+Leather District,0.0,footway,6014.695621948186
+Leather District,1.0,footway,11.059216897575332
+Leather District,1.0,service,511.2010923635141
 Leather District,2.0,primary,
-Leather District,2.0,residential,829.5460160443895
+Leather District,2.0,residential,
 Leather District,2.0,service,487.2219360329839
-Leather District,3.0,primary,356.48363232766854
+Leather District,3.0,primary,355.9875385347382
 Leather District,3.0,secondary,
-Longwood,0.0,construction,1409.068686922612
-Longwood,0.0,footway,31604.06009230385
-Longwood,0.0,pedestrian,248.42478518696103
-Longwood,0.0,service,162.8761998270291
-Longwood,1.0,cycleway,2443.3870448052508
-Longwood,1.0,footway,9363.289104896368
-Longwood,1.0,service,122.11266778845933
-Longwood,2.0,primary,
-Longwood,2.0,residential,863.1431292717994
-Longwood,2.0,secondary,1187.7642402041133
-Longwood,2.0,service,6165.873009202815
-Longwood,2.0,trunk,
-Longwood,2.0,unclassified,3360.7100491505335
+Leather District,4.0,primary,
+Longwood,0.0,footway,27193.904140514944
+Longwood,0.0,pedestrian,827.0061487696921
+Longwood,0.0,service,69.37388325653664
+Longwood,1.0,cycleway,2480.140014958077
+Longwood,1.0,footway,10083.385601756307
+Longwood,1.0,service,293.9417205630637
+Longwood,2.0,residential,5178.548504251826
+Longwood,2.0,secondary,1290.723136413947
+Longwood,2.0,service,7944.649056466416
 Longwood,3.0,primary,
-Longwood,3.0,residential,
-Longwood,3.0,secondary,2958.019699584597
-Longwood,3.0,trunk,2355.1552726535674
-Longwood,3.0,unclassified,
-Longwood,4.0,trunk,1467.7270108633354
-Longwood,4.0,trunk_link,
-Longwood,4.0,unclassified,1066.750014538196
-MIT,0.0,construction,189.23856905136566
-MIT,0.0,footway,37682.209655643645
-MIT,0.0,pedestrian,975.6891175746247
-MIT,0.0,tertiary,63.72989812300651
-MIT,0.0,trunk,416.24307774586265
-MIT,0.0,trunk_link,379.68706051310494
-MIT,1.0,cycleway,14397.499648980394
-MIT,1.0,footway,24314.9873015935
-MIT,1.0,path,101.23214544681915
-MIT,1.0,pedestrian,422.8428893056601
-MIT,1.0,primary,384.17162834554836
-MIT,1.0,secondary,687.4253053540381
-MIT,1.0,service,208.7877324960475
-MIT,2.0,primary,3215.3253520893245
-MIT,2.0,residential,2479.146641385051
-MIT,2.0,secondary,2625.1301091761925
-MIT,2.0,service,4430.247540949568
-MIT,2.0,tertiary,829.7980175606108
-MIT,2.0,trunk,
-MIT,2.0,unclassified,1294.7844973515798
-MIT,3.0,primary,980.9321549351296
-MIT,3.0,residential,
-MIT,3.0,secondary,250.15540774265125
-MIT,3.0,tertiary,104.88826699816877
-MIT,3.0,trunk,821.52130653072
-MIT,3.0,trunk_link,
-MIT,3.0,unclassified,
-MIT,4.0,trunk,4310.9409705351
-MIT,4.0,trunk_link,
-MIT,4.0,unclassified,1368.735819601236
-Mattapan,0.0,busway,722.8132906348926
-Mattapan,0.0,construction,5292.868105413607
-Mattapan,0.0,footway,49281.7185155617
-Mattapan,0.0,service,38.70779194885597
-Mattapan,1.0,cycleway,6762.723040988962
-Mattapan,1.0,footway,12538.881661885333
-Mattapan,1.0,path,8184.030449970677
-Mattapan,1.0,residential,3252.408578669338
-Mattapan,1.0,service,1163.2405905049145
+Longwood,3.0,residential,226.13052087549016
+Longwood,3.0,secondary,2655.3965827107986
+Longwood,3.0,trunk,2460.8166496492404
+Longwood,4.0,primary,820.5831963573572
+Longwood,4.0,secondary,246.39995499402966
+Longwood,4.0,trunk,2063.606043780399
+Longwood,4.0,unclassified,1038.155655883256
+MIT,0.0,footway,1173.6962994071584
+MIT,2.0,primary,265.1265361580412
+Mattapan,0.0,construction,137.47787734000707
+Mattapan,0.0,footway,29560.165533925985
+Mattapan,1.0,cycleway,6852.839918481682
+Mattapan,1.0,footway,10167.116192671148
+Mattapan,1.0,path,7966.960384730167
+Mattapan,1.0,residential,3438.5410244536715
 Mattapan,1.0,track,195.68764733890458
-Mattapan,1.0,trunk,
-Mattapan,2.0,residential,74707.99812076645
-Mattapan,2.0,secondary,5474.876454336515
-Mattapan,2.0,service,33065.24188379021
-Mattapan,2.0,tertiary,4502.113878318838
-Mattapan,3.0,primary,3352.433394609765
+Mattapan,2.0,residential,73329.83540926057
+Mattapan,2.0,secondary,3816.3102522883205
+Mattapan,2.0,service,43582.45301520431
+Mattapan,2.0,tertiary,4522.041286397294
+Mattapan,3.0,primary,
 Mattapan,3.0,residential,
-Mattapan,3.0,secondary,11051.839169990071
+Mattapan,3.0,secondary,14349.494957804345
 Mattapan,3.0,tertiary,
 Mattapan,3.0,trunk,
-Mattapan,4.0,secondary,3739.1193718207705
-Mattapan,4.0,trunk,2220.8823769720116
-Mattapan,4.0,trunk_link,648.5425715507304
-Mid-Cambridge,0.0,construction,34.85908468825547
-Mid-Cambridge,0.0,footway,83491.1290994014
-Mid-Cambridge,0.0,pedestrian,58.4906172820265
-Mid-Cambridge,0.0,secondary,463.8684118383444
-Mid-Cambridge,0.0,service,122.01095665041366
-Mid-Cambridge,1.0,cycleway,1837.791582518871
-Mid-Cambridge,1.0,footway,7393.693122957313
-Mid-Cambridge,1.0,path,140.54331825748818
-Mid-Cambridge,1.0,primary,
-Mid-Cambridge,1.0,residential,1111.2597142387285
-Mid-Cambridge,1.0,secondary,1067.3009730104186
-Mid-Cambridge,1.0,service,78.21491277669836
-Mid-Cambridge,2.0,primary,1746.6477106339498
-Mid-Cambridge,2.0,residential,13397.356627876077
-Mid-Cambridge,2.0,secondary,5288.177112961191
-Mid-Cambridge,2.0,secondary_link,
-Mid-Cambridge,2.0,service,5963.272654520694
-Mid-Cambridge,2.0,tertiary,2661.827797816394
-Mid-Cambridge,3.0,primary,1192.1982143543883
-Mid-Cambridge,3.0,residential,239.72023181407147
-Mid-Cambridge,3.0,secondary,1941.3948288328054
-Mission Hill,0.0,footway,76178.12379372746
+Mattapan,4.0,primary,2685.0589065722024
+Mattapan,4.0,secondary,2168.856582844762
+Mattapan,4.0,trunk,2814.023810427081
+Mattapan,4.0,trunk_link,354.58135656499013
+Mission Hill,0.0,footway,58572.1924021343
 Mission Hill,0.0,path,183.62329601514702
+Mission Hill,0.0,pedestrian,96.43916635672564
 Mission Hill,0.0,service,40.09026455679462
-Mission Hill,1.0,cycleway,387.78253040654414
-Mission Hill,1.0,footway,6134.592537868937
-Mission Hill,1.0,path,2568.001495031194
-Mission Hill,1.0,pedestrian,96.4437476701967
+Mission Hill,1.0,cycleway,407.53373326376357
+Mission Hill,1.0,footway,7351.541605191517
+Mission Hill,1.0,path,2579.293298463099
 Mission Hill,1.0,residential,667.9282469974894
-Mission Hill,1.0,service,770.4244705534516
-Mission Hill,2.0,residential,23543.904010859063
-Mission Hill,2.0,secondary,1780.667174747593
-Mission Hill,2.0,service,9386.599013150995
-Mission Hill,2.0,tertiary,3202.034570910791
-Mission Hill,3.0,primary,2415.707688509924
-Mission Hill,3.0,primary_link,
+Mission Hill,1.0,service,518.5492997758098
+Mission Hill,2.0,residential,22997.112379622005
+Mission Hill,2.0,secondary,729.2662783225813
+Mission Hill,2.0,service,9194.964683472204
+Mission Hill,2.0,tertiary,3201.8409836047213
+Mission Hill,2.0,unclassified,251.87516925394183
+Mission Hill,3.0,primary,1298.2618707093893
 Mission Hill,3.0,residential,
-Mission Hill,3.0,secondary,2985.2463095331077
-Mission Hill,3.0,secondary_link,
+Mission Hill,3.0,secondary,4145.298638327107
+Mission Hill,3.0,secondary_link,94.76830028014537
 Mission Hill,3.0,tertiary,1377.191972880988
 Mission Hill,3.0,tertiary_link,
-Mission Hill,3.0,trunk,1356.451941411779
-Mission Hill,4.0,trunk_link,
+Mission Hill,3.0,trunk,1335.621828377217
+Mission Hill,4.0,primary,
+Mission Hill,4.0,secondary,176.88632086805617
+Mission Hill,4.0,trunk,
+Mission Hill,4.0,trunk_link,915.9809907966854
 Mission Hill,4.0,unclassified,136.18436735594517
-Neighborhood Nine,0.0,busway,553.2516065763203
-Neighborhood Nine,0.0,footway,88662.93858735656
-Neighborhood Nine,0.0,pedestrian,892.6214185249037
-Neighborhood Nine,1.0,cycleway,4676.1155991528
-Neighborhood Nine,1.0,footway,23492.90733651538
-Neighborhood Nine,1.0,path,955.9269467962897
-Neighborhood Nine,1.0,pedestrian,160.17780613998468
-Neighborhood Nine,1.0,primary,89.96216074917052
-Neighborhood Nine,1.0,residential,447.96222809177914
-Neighborhood Nine,1.0,service,174.69648685243456
-Neighborhood Nine,1.0,tertiary,219.08391101275419
-Neighborhood Nine,2.0,primary,1139.6797387731224
-Neighborhood Nine,2.0,primary_link,
-Neighborhood Nine,2.0,residential,28786.22746069493
-Neighborhood Nine,2.0,secondary,
-Neighborhood Nine,2.0,service,6228.979279249528
-Neighborhood Nine,2.0,tertiary,4178.519086410755
-Neighborhood Nine,3.0,primary,4229.136018596488
-Neighborhood Nine,3.0,primary_link,
-Neighborhood Nine,3.0,residential,
-Neighborhood Nine,3.0,secondary,
-Neighborhood Nine,3.0,tertiary,1649.8547910377838
-Neighborhood Nine,3.0,trunk,
-North Cambridge,0.0,busway,982.140960189722
-North Cambridge,0.0,construction,4333.298938400587
-North Cambridge,0.0,footway,95483.45193675361
-North Cambridge,0.0,residential,12.402044879488177
-North Cambridge,0.0,secondary,215.1584226981354
-North Cambridge,0.0,service,432.89405418277437
-North Cambridge,0.0,trunk,1205.8222328954043
-North Cambridge,0.0,trunk_link,288.5705353064012
-North Cambridge,1.0,cycleway,8683.301256072986
-North Cambridge,1.0,footway,11411.607544051307
-North Cambridge,1.0,living_street,225.03469523178595
-North Cambridge,1.0,path,2142.585284057881
-North Cambridge,1.0,pedestrian,85.72335766039318
-North Cambridge,1.0,primary,
-North Cambridge,1.0,residential,2495.214625974384
-North Cambridge,1.0,unclassified,492.80160422362013
-North Cambridge,2.0,living_street,56.21270296274241
-North Cambridge,2.0,primary,2068.5377604801697
-North Cambridge,2.0,residential,20776.928370628873
-North Cambridge,2.0,secondary,673.213612848444
-North Cambridge,2.0,service,24623.85787216284
-North Cambridge,2.0,tertiary,1846.1069370354573
-North Cambridge,3.0,primary,2756.8139791306808
-North Cambridge,3.0,primary_link,19.959961505866296
-North Cambridge,3.0,residential,
-North Cambridge,3.0,secondary,
-North Cambridge,3.0,tertiary,3313.5147109763748
-North Cambridge,3.0,trunk,
-North Cambridge,3.0,unclassified,2417.348543722179
-North Cambridge,4.0,primary,99.13187344007108
-North Cambridge,4.0,trunk,2561.7535787188444
-North Cambridge,4.0,trunk_link,
-North Cambridge,4.0,unclassified,1071.4627528288388
-North End,0.0,footway,38116.56947200631
+North End,0.0,construction,263.28981090222464
+North End,0.0,footway,38359.240827200396
 North End,0.0,path,942.3065042658103
-North End,0.0,pedestrian,1352.6752353528673
+North End,0.0,pedestrian,1428.8609426189118
 North End,0.0,residential,2.3117841167871216
-North End,0.0,service,359.98512011669175
-North End,1.0,cycleway,2079.229711846593
-North End,1.0,footway,7523.847172112727
+North End,0.0,service,363.0345269321062
+North End,1.0,cycleway,2550.9373153271054
+North End,1.0,footway,6754.10772064031
 North End,1.0,path,1.4830068902320803
-North End,1.0,pedestrian,76.18570726604463
-North End,1.0,residential,1079.8881431655973
+North End,1.0,residential,923.8428559290015
 North End,1.0,service,231.1973943651858
 North End,2.0,living_street,77.39449560759078
 North End,2.0,primary,
-North End,2.0,residential,8279.555780079949
-North End,2.0,secondary,1235.711061433022
-North End,2.0,service,1266.342270832584
-North End,2.0,unclassified,125.50968577501513
-North End,3.0,living_street,
-North End,3.0,primary,607.9114019764821
+North End,2.0,residential,8779.586177926263
+North End,2.0,secondary,1305.7842712933818
+North End,2.0,service,1826.046724366906
+North End,3.0,living_street,375.6216379718425
+North End,3.0,primary,758.0009801381369
 North End,3.0,primary_link,
-North End,3.0,secondary,3833.977269668587
-North End,4.0,unclassified,524.2403303090585
-Riverside,0.0,construction,219.8590916190386
-Riverside,0.0,footway,56681.40921712914
-Riverside,0.0,pedestrian,147.4069415358699
-Riverside,0.0,service,95.45656303039748
-Riverside,1.0,cycleway,4368.781009298655
-Riverside,1.0,footway,10825.951363892988
-Riverside,1.0,path,25.927863906653478
-Riverside,1.0,pedestrian,345.9930598215169
-Riverside,1.0,primary,
-Riverside,1.0,residential,2325.144492602302
-Riverside,2.0,primary,1362.6671728034676
-Riverside,2.0,residential,9482.066209883571
-Riverside,2.0,secondary,1994.4055831797311
-Riverside,2.0,service,3393.424915559864
-Riverside,2.0,tertiary,452.42788285299093
-Riverside,2.0,unclassified,135.45311766940748
-Riverside,3.0,primary,2982.4873457101903
-Riverside,3.0,residential,
-Riverside,3.0,secondary,
-Riverside,3.0,tertiary,
-Riverside,4.0,trunk,2645.8630561348446
-Roslindale,0.0,construction,1668.089671537485
-Roslindale,0.0,footway,207963.83441657526
-Roslindale,0.0,pedestrian,375.2455632429865
-Roslindale,0.0,service,14.48705728169211
-Roslindale,1.0,cycleway,5704.25152890537
-Roslindale,1.0,footway,5561.0382395716615
-Roslindale,1.0,path,1852.5257943143217
-Roslindale,1.0,pedestrian,146.68333004625453
-Roslindale,1.0,primary,1364.4342633373244
-Roslindale,1.0,residential,2879.4987906779243
-Roslindale,1.0,service,1900.1653147805375
-Roslindale,1.0,tertiary,
-Roslindale,2.0,primary,6500.623808596429
-Roslindale,2.0,residential,104020.31041097737
-Roslindale,2.0,secondary,2546.8143293308917
-Roslindale,2.0,service,59515.493284649085
-Roslindale,2.0,tertiary,12312.472245885454
-Roslindale,2.0,unclassified,15.92424751828749
-Roslindale,3.0,primary,8065.18217006252
-Roslindale,3.0,primary_link,352.3434537220746
+North End,3.0,secondary,3763.98926238136
+North End,4.0,unclassified,324.534464195635
+Riverside,0.0,footway,304.15127191625425
+Riverside,2.0,primary,86.26967259534483
+Riverside,4.0,primary,
+Roslindale,0.0,footway,204001.84792762293
+Roslindale,0.0,pedestrian,146.68333004625453
+Roslindale,0.0,service,52.68783606226138
+Roslindale,1.0,cycleway,8282.86214849031
+Roslindale,1.0,footway,4726.710202219669
+Roslindale,1.0,path,1542.900929279844
+Roslindale,1.0,residential,2648.9962427650107
+Roslindale,1.0,service,712.6763555423996
+Roslindale,1.0,track,377.17183263582274
+Roslindale,2.0,primary,6197.339893185148
+Roslindale,2.0,residential,104545.23149548324
+Roslindale,2.0,secondary,2504.379922928699
+Roslindale,2.0,service,63368.6913422209
+Roslindale,2.0,tertiary,12257.11201524067
+Roslindale,2.0,unclassified,780.3763672176935
+Roslindale,3.0,primary,5439.305642036936
+Roslindale,3.0,primary_link,220.60200195555274
 Roslindale,3.0,residential,
-Roslindale,3.0,secondary,5389.989983605612
-Roslindale,3.0,secondary_link,48.940819158424844
-Roslindale,3.0,tertiary,4076.7946817999737
+Roslindale,3.0,secondary,5544.950450706767
+Roslindale,3.0,tertiary,3546.320787573736
 Roslindale,3.0,tertiary_link,
 Roslindale,3.0,trunk,
-Roslindale,4.0,primary,1528.9698952308138
+Roslindale,4.0,primary,5818.637712165003
 Roslindale,4.0,secondary,
-Roslindale,4.0,unclassified,
-Roxbury,0.0,busway,3338.1672717992283
-Roxbury,0.0,construction,1427.6853855483894
-Roxbury,0.0,footway,167467.230193015
-Roxbury,0.0,pedestrian,1195.9026983507201
-Roxbury,0.0,service,2225.8261784141737
-Roxbury,1.0,cycleway,23873.776461424237
-Roxbury,1.0,footway,53907.092921658055
-Roxbury,1.0,path,15203.219063003875
-Roxbury,1.0,pedestrian,3847.783033540494
-Roxbury,1.0,primary,973.2013686589722
-Roxbury,1.0,residential,5630.830498999035
-Roxbury,1.0,secondary,295.5912029522912
-Roxbury,1.0,service,6125.951729160924
-Roxbury,1.0,track,548.9140165462841
-Roxbury,2.0,primary,4413.48079921982
-Roxbury,2.0,residential,100678.65226544761
-Roxbury,2.0,secondary,6596.80479272179
-Roxbury,2.0,service,46323.33596583444
-Roxbury,2.0,tertiary,11569.871567543081
-Roxbury,2.0,unclassified,3843.9925414842824
-Roxbury,3.0,primary,15527.290539202339
+Roslindale,4.0,unclassified,1065.4071258564964
+Roxbury,0.0,busway,1051.6739932200585
+Roxbury,0.0,construction,188.62250923204274
+Roxbury,0.0,footway,106702.50952053092
+Roxbury,0.0,pedestrian,993.268330332535
+Roxbury,0.0,service,4513.602803158634
+Roxbury,0.0,tertiary,77.66800305489106
+Roxbury,1.0,cycleway,27912.8788429565
+Roxbury,1.0,footway,52275.73034895057
+Roxbury,1.0,path,15904.604334785634
+Roxbury,1.0,residential,5649.887873982997
+Roxbury,1.0,service,5660.264981422025
+Roxbury,1.0,track,636.3657173382708
+Roxbury,2.0,primary,1183.0008916516151
+Roxbury,2.0,residential,100578.0252328954
+Roxbury,2.0,secondary,1418.2558487754598
+Roxbury,2.0,service,52754.666253784846
+Roxbury,2.0,tertiary,11956.935690493508
+Roxbury,2.0,unclassified,3289.6714047901846
+Roxbury,3.0,primary,10539.373444264302
 Roxbury,3.0,primary_link,
-Roxbury,3.0,residential,3226.923243619937
-Roxbury,3.0,secondary,28673.87349052103
-Roxbury,3.0,tertiary,821.0754315732222
-Roxbury,3.0,trunk,
-Roxbury,3.0,unclassified,229.8629918383615
-Roxbury,4.0,secondary,
+Roxbury,3.0,residential,2885.327078106321
+Roxbury,3.0,secondary,32616.26224935017
+Roxbury,3.0,tertiary,825.3836556290271
+Roxbury,3.0,unclassified,
+Roxbury,4.0,primary,13547.855284519725
+Roxbury,4.0,secondary,1764.7087887528073
 Roxbury,4.0,trunk,
-Roxbury,4.0,unclassified,547.6591344909896
-Seaport,0.0,busway,3701.9211968813233
-Seaport,0.0,footway,83945.18424104224
+Roxbury,4.0,unclassified,835.0675328049576
+Seaport,0.0,busway,3220.5993123830062
+Seaport,0.0,construction,307.77302583135815
+Seaport,0.0,footway,76818.35013870828
 Seaport,0.0,living_street,41.95588485217975
-Seaport,0.0,pedestrian,1011.619856548208
-Seaport,0.0,primary,3850.3535453275094
-Seaport,0.0,residential,180.10387559671787
-Seaport,0.0,service,994.8293704076011
-Seaport,1.0,cycleway,11074.045866037388
-Seaport,1.0,footway,17943.431258768873
-Seaport,1.0,path,3696.443665701311
+Seaport,0.0,pedestrian,38.59247943519769
+Seaport,0.0,residential,101.15435830780018
+Seaport,0.0,service,1214.1341113375142
+Seaport,1.0,cycleway,17378.406795162366
+Seaport,1.0,footway,18294.836061711983
+Seaport,1.0,path,3470.9333070014245
 Seaport,1.0,residential,180.32839336759105
-Seaport,1.0,secondary,1718.3055268018618
-Seaport,1.0,service,1319.1088518815639
+Seaport,1.0,service,948.367183298732
 Seaport,2.0,living_street,90.88895281729543
-Seaport,2.0,primary,
-Seaport,2.0,residential,19509.2410568114
-Seaport,2.0,secondary,1294.0635762448435
-Seaport,2.0,service,27869.944930823247
-Seaport,2.0,tertiary,5939.198564315427
-Seaport,2.0,unclassified,22.42971198080866
-Seaport,3.0,primary,4969.332219128331
+Seaport,2.0,residential,18071.21209789905
+Seaport,2.0,secondary,1939.486391282535
+Seaport,2.0,service,47018.926805635245
+Seaport,2.0,tertiary,5569.124345806719
+Seaport,2.0,unclassified,641.9546196851181
+Seaport,3.0,primary,3887.513730008265
 Seaport,3.0,primary_link,
-Seaport,3.0,residential,
-Seaport,3.0,secondary,5419.883752818387
-Seaport,3.0,tertiary,4063.393516345309
-Seaport,4.0,secondary,1507.669677056617
-Seaport,4.0,unclassified,3308.9866587099436
-South Boston,0.0,footway,225238.8639383681
+Seaport,3.0,residential,2696.7696244817375
+Seaport,3.0,secondary,7297.254521414133
+Seaport,3.0,tertiary,3170.287684845624
+Seaport,4.0,primary,6039.621388235471
+Seaport,4.0,secondary,2262.164861242343
+Seaport,4.0,unclassified,1165.635259430192
+South Boston,0.0,footway,90895.61651508948
 South Boston,0.0,path,2933.565671115811
-South Boston,0.0,pedestrian,99.01502778019334
-South Boston,0.0,primary,2917.8057824059274
 South Boston,0.0,primary_link,75.89386456438184
-South Boston,0.0,service,4535.464020093872
-South Boston,1.0,cycleway,18068.804495969052
-South Boston,1.0,footway,20443.943716182508
-South Boston,1.0,path,4568.448657917217
-South Boston,1.0,residential,5777.824184546951
-South Boston,1.0,service,832.5583850610979
-South Boston,2.0,primary,4662.029478461469
-South Boston,2.0,residential,65488.27823790785
-South Boston,2.0,secondary,3399.205373930803
-South Boston,2.0,service,44921.19860742401
-South Boston,2.0,tertiary,1427.0420034829988
-South Boston,2.0,unclassified,6109.770368857511
-South Boston,3.0,primary,17513.096226331294
+South Boston,0.0,service,4649.772976483406
+South Boston,1.0,cycleway,18226.397845042615
+South Boston,1.0,footway,21093.516484974778
+South Boston,1.0,path,4591.624225832962
+South Boston,1.0,residential,5714.603908612056
+South Boston,1.0,service,1103.5375298152353
+South Boston,2.0,primary,2121.2290457897934
+South Boston,2.0,residential,78638.33460899218
+South Boston,2.0,secondary,2794.863550867898
+South Boston,2.0,service,55863.3277876728
+South Boston,2.0,tertiary,1452.99439988269
+South Boston,2.0,unclassified,1940.201231197556
+South Boston,3.0,primary,5120.028859588157
 South Boston,3.0,primary_link,
-South Boston,3.0,residential,
-South Boston,3.0,secondary,21381.020264407656
-South Boston,3.0,tertiary,3109.85137317021
-South Boston,3.0,unclassified,
-South Boston,4.0,primary,
+South Boston,3.0,residential,2309.8206497393926
+South Boston,3.0,secondary,23718.846982614094
+South Boston,3.0,tertiary,3318.622831871
+South Boston,3.0,unclassified,184.06263066151217
+South Boston,4.0,primary,19121.078794555215
 South Boston,4.0,primary_link,
-South Boston,4.0,unclassified,397.7141845407706
+South Boston,4.0,secondary,2399.0710133659286
 South End,0.0,construction,431.3990893744215
-South End,0.0,footway,116450.50004571512
-South End,0.0,pedestrian,355.95026350480566
+South End,0.0,footway,113797.3671997499
+South End,0.0,pedestrian,507.499040048158
 South End,0.0,primary_link,80.9616236938082
-South End,0.0,residential,78.90240863011483
-South End,0.0,service,315.5155712358912
-South End,1.0,cycleway,4422.031952614958
-South End,1.0,footway,7910.674361298092
-South End,1.0,path,513.792225670504
-South End,1.0,pedestrian,77.13611298206511
-South End,1.0,primary,2016.8279453667196
-South End,1.0,residential,2493.4620175912078
-South End,1.0,service,6036.683478115366
-South End,2.0,primary,2563.6021462804993
-South End,2.0,residential,19459.28885924288
-South End,2.0,secondary,2519.750889502935
-South End,2.0,service,16923.436961613937
-South End,2.0,unclassified,582.0523921238682
-South End,3.0,primary,8576.263396754792
+South End,0.0,service,315.5109684477074
+South End,1.0,cycleway,4326.917854534596
+South End,1.0,footway,7296.118655983274
+South End,1.0,path,613.5451455853585
+South End,1.0,residential,2288.9182011043613
+South End,1.0,service,6395.431004803675
+South End,2.0,primary,3615.4212138739026
+South End,2.0,residential,20187.505648266742
+South End,2.0,secondary,971.6323402602428
+South End,2.0,service,19526.810655515306
+South End,2.0,unclassified,582.0504542568544
+South End,3.0,primary,5569.48875949412
 South End,3.0,primary_link,
 South End,3.0,residential,
-South End,3.0,secondary,10302.900283149433
-South End,4.0,primary,
-South End,4.0,unclassified,150.72026054135054
-Strawberry Hill,0.0,footway,18238.48679516945
-Strawberry Hill,0.0,service,1000.7121989053745
-Strawberry Hill,0.0,track,156.98989400592535
-Strawberry Hill,1.0,cycleway,4979.626184908666
-Strawberry Hill,1.0,footway,4568.711086047959
-Strawberry Hill,1.0,path,5489.841878533255
-Strawberry Hill,1.0,primary,259.1236123245761
-Strawberry Hill,1.0,residential,544.9835321368826
-Strawberry Hill,2.0,residential,4251.004736558923
-Strawberry Hill,2.0,service,968.8449413803904
-Strawberry Hill,2.0,tertiary,1973.8736420889898
-Strawberry Hill,3.0,primary,502.92460789496187
-Strawberry Hill,3.0,residential,
-Strawberry Hill,3.0,tertiary,
-The Port,0.0,construction,31.769174163227856
-The Port,0.0,footway,53241.52976268781
-The Port,0.0,pedestrian,1723.455486055379
-The Port,1.0,cycleway,799.1988511062287
-The Port,1.0,footway,10373.730940050136
-The Port,1.0,path,839.3955576870171
-The Port,1.0,primary,1223.678718567188
-The Port,1.0,residential,1482.2753220606787
-The Port,1.0,secondary,720.0930913797056
-The Port,2.0,primary,2884.7529298546788
-The Port,2.0,residential,8976.722972665837
-The Port,2.0,secondary,2559.32259430252
-The Port,2.0,service,3128.5259855421345
-The Port,2.0,tertiary,1276.2756732975827
-The Port,3.0,primary,975.1920390893748
-The Port,3.0,residential,
-The Port,3.0,secondary,2051.4227699580033
-The Port,4.0,unclassified,605.1148239367222
-Wellington-Harrington,0.0,footway,42961.64817939917
-Wellington-Harrington,0.0,pedestrian,130.4581494513221
-Wellington-Harrington,1.0,cycleway,1004.3889635245872
-Wellington-Harrington,1.0,footway,4178.931340863675
-Wellington-Harrington,1.0,path,11.788030147420798
-Wellington-Harrington,1.0,residential,193.04060206104737
-Wellington-Harrington,1.0,secondary,354.6890811584129
-Wellington-Harrington,2.0,primary,1436.1443575625437
-Wellington-Harrington,2.0,residential,9129.466211858424
-Wellington-Harrington,2.0,secondary,3348.24802597259
-Wellington-Harrington,2.0,service,2533.6192323123514
-Wellington-Harrington,2.0,tertiary,624.5699607258979
-Wellington-Harrington,3.0,primary,644.9068000562634
-Wellington-Harrington,3.0,residential,
-Wellington-Harrington,3.0,secondary,1408.0162130541084
-Wellington-Harrington,3.0,tertiary,
-Wellington-Harrington,4.0,unclassified,115.6816702353147
-West Cambridge,0.0,busway,1695.175910899644
-West Cambridge,0.0,footway,119960.71492434865
-West Cambridge,0.0,path,2013.1559682800835
-West Cambridge,0.0,pedestrian,55.99992894146617
-West Cambridge,0.0,secondary,387.8000076668968
-West Cambridge,0.0,service,3247.5508984980816
-West Cambridge,0.0,track,247.2880396712522
-West Cambridge,1.0,cycleway,19923.587531744437
-West Cambridge,1.0,footway,14674.836086380676
-West Cambridge,1.0,path,4831.058143061908
-West Cambridge,1.0,pedestrian,211.00342652680666
-West Cambridge,1.0,primary,
-West Cambridge,1.0,residential,1569.3041619188205
-West Cambridge,1.0,service,516.8265039962565
-West Cambridge,1.0,track,128.1640053961342
-West Cambridge,2.0,primary,2483.435861754517
-West Cambridge,2.0,primary_link,
-West Cambridge,2.0,residential,29903.956049607074
-West Cambridge,2.0,secondary,2245.0174036276103
-West Cambridge,2.0,service,25024.458974103294
-West Cambridge,2.0,tertiary,7742.643988401893
-West Cambridge,3.0,living_street,
-West Cambridge,3.0,primary,7237.22163977166
-West Cambridge,3.0,primary_link,
-West Cambridge,3.0,residential,
-West Cambridge,3.0,secondary,4824.01092553387
-West Cambridge,3.0,tertiary,383.45190200808605
-West Cambridge,3.0,trunk,3227.771720779083
-West Cambridge,4.0,primary,
-West Cambridge,4.0,secondary,209.98266167099084
-West Cambridge,4.0,trunk,4688.709724571978
-West Cambridge,4.0,trunk_link,
-West End,0.0,footway,34818.67951697466
+South End,3.0,secondary,11650.874552926703
+South End,3.0,tertiary_link,
+South End,4.0,primary,4610.406784893562
+South End,4.0,secondary,160.46146431666406
+South End,4.0,unclassified,150.47977573505707
+West Cambridge,0.0,footway,79.97413494359486
+West Cambridge,1.0,cycleway,493.52491599338373
+West Cambridge,4.0,trunk,
+West End,0.0,construction,515.7941377088947
+West End,0.0,footway,35612.66651718946
 West End,0.0,path,70.66785576595791
-West End,0.0,pedestrian,159.39274835705984
-West End,0.0,service,1484.5683102532387
+West End,0.0,service,1703.70218010424
 West End,0.0,track,19.58258314568367
-West End,0.0,trunk,333.7660312388224
-West End,0.0,unclassified,569.3415892241156
-West End,1.0,cycleway,5733.371509985661
-West End,1.0,footway,12007.752740332195
-West End,1.0,path,773.402933790519
-West End,1.0,pedestrian,885.9823438623839
-West End,1.0,service,537.1481569857526
-West End,1.0,unclassified,307.861270105149
-West End,2.0,primary,638.316695922851
-West End,2.0,residential,2536.0069816180594
-West End,2.0,secondary,257.42775245654633
-West End,2.0,service,5895.711640569194
+West End,0.0,trunk,3329.3897300119493
+West End,0.0,trunk_link,659.6451129492895
+West End,0.0,unclassified,342.9321625116406
+West End,1.0,cycleway,6673.300238057203
+West End,1.0,footway,11939.584888662373
+West End,1.0,path,495.924022595943
+West End,1.0,service,777.5496197302709
+West End,1.0,unclassified,305.7896650236181
+West End,2.0,primary,
+West End,2.0,residential,2545.1756737246014
+West End,2.0,secondary,257.40141351997494
+West End,2.0,service,6460.8256543814205
 West End,2.0,trunk,
 West End,2.0,trunk_link,
-West End,2.0,unclassified,758.3609095542583
-West End,3.0,primary,2974.09021823121
-West End,3.0,primary_link,
+West End,2.0,unclassified,852.817878274721
+West End,3.0,primary,5063.509882980525
+West End,3.0,primary_link,67.14866185885575
 West End,3.0,residential,
-West End,3.0,secondary,2036.9780476776655
-West End,3.0,trunk,
+West End,3.0,secondary,2785.7902537946884
+West End,3.0,secondary_link,
+West End,3.0,tertiary,
+West End,3.0,trunk,1253.2346913530266
+West End,3.0,trunk_link,117.24163141501187
 West End,3.0,unclassified,
-West End,4.0,trunk,
-West End,4.0,trunk_link,
-West Roxbury,0.0,construction,365.3352683931545
-West Roxbury,0.0,footway,421675.0741703442
-West Roxbury,0.0,pedestrian,215.8504215218311
+West End,4.0,primary,131.17441658222978
+West End,4.0,trunk,714.89759758322
+West Roxbury,0.0,footway,410254.7963958646
 West Roxbury,0.0,residential,48.57435957239718
-West Roxbury,0.0,service,8359.36173248442
-West Roxbury,0.0,track,2245.7613183155795
-West Roxbury,1.0,cycleway,18207.065676334943
-West Roxbury,1.0,footway,31638.48295866161
-West Roxbury,1.0,path,7983.851293328511
-West Roxbury,1.0,primary,168.45632513781476
-West Roxbury,1.0,residential,12060.524140390571
-West Roxbury,1.0,secondary,2305.8261648635516
-West Roxbury,1.0,service,2268.4010187302474
-West Roxbury,1.0,track,11117.461014785182
-West Roxbury,1.0,unclassified,98.71896693505327
-West Roxbury,2.0,primary,560.7635933867372
-West Roxbury,2.0,residential,189822.66155680967
-West Roxbury,2.0,secondary,106.5864573447837
-West Roxbury,2.0,service,82697.28776329488
-West Roxbury,2.0,tertiary,16424.31451585371
-West Roxbury,3.0,primary,8455.543866162141
+West Roxbury,0.0,service,8176.787122984585
+West Roxbury,1.0,cycleway,18267.95354677484
+West Roxbury,1.0,footway,34663.72825376606
+West Roxbury,1.0,path,7423.574324676297
+West Roxbury,1.0,residential,11975.754661015468
+West Roxbury,1.0,service,327.56104746200447
+West Roxbury,1.0,track,11216.166987974484
+West Roxbury,2.0,primary,822.3989864494541
+West Roxbury,2.0,residential,191194.98631132214
+West Roxbury,2.0,secondary,2154.4282885201087
+West Roxbury,2.0,service,94018.39975544685
+West Roxbury,2.0,tertiary,18255.704487995656
+West Roxbury,2.0,tertiary_link,60.15731864870007
+West Roxbury,3.0,primary,5429.946416912426
 West Roxbury,3.0,primary_link,
 West Roxbury,3.0,residential,
-West Roxbury,3.0,secondary,20933.563928622636
-West Roxbury,3.0,tertiary,1533.020743943658
+West Roxbury,3.0,secondary,18757.01135779018
 West Roxbury,3.0,trunk,
-West Roxbury,4.0,primary,889.5691234396326
-West Roxbury,4.0,residential,129.36489763206657
-West Roxbury,4.0,secondary,940.1402699414389
+West Roxbury,4.0,primary,3984.153080672627
+West Roxbury,4.0,secondary,3350.714911642104
 West Roxbury,4.0,trunk,
-West Roxbury,4.0,trunk_link,528.2965165745884
-West Roxbury,4.0,unclassified,1221.0154814674215
+West Roxbury,4.0,trunk_link,651.0187513454869
+West Roxbury,4.0,unclassified,88.2200948301566

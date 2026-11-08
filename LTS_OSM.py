@@ -52,7 +52,9 @@ elements = ['ways', 'nodes', 'relations']
 
 PUBLIC_OVERPASS_ENDPOINTS = [
     "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
     "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
 ]
 
 OVERWRITE = False
@@ -121,17 +123,32 @@ def download_osm(region):
             response_code = None
             while response_code != 200:
                 time.sleep(5)
-                response = requests.get(random.choice(PUBLIC_OVERPASS_ENDPOINTS),
-                                        headers=useragent,
-                                        params={'data': overpass_query},
-                                        timeout=60*5)
-                response_code = response.status_code
+                overpass_url = random.choice(PUBLIC_OVERPASS_ENDPOINTS)
+                print(f'Contacting {overpass_url}...')
                 try:
-                    data = response.json()
+                    response = requests.get(overpass_url,
+                                            headers=useragent,
+                                            params={'data': overpass_query},
+                                            timeout=60*5)
+                    response_code = response.status_code
+                    # print(f'\tRecieved response of {response_code} from server')
                 except Exception as e:
-                    print("Failed to decode JSON from overpass: ", file=sys.stderr)
-                    print(response, file=sys.stderr)
-                    print(response.text, file=sys.stderr)
+                    print(f'\tFailed in contacting the server: {e}')
+                    response_code = '[failed to get response]'
+
+                if response_code == 502:
+                    print(f'\tRecieved response of {response_code} from server')
+                elif response_code == 504:
+                    print(f'\tRecieved response of {response_code} from server')
+                else:
+                    print(f'\tRecieved response of {response_code} from server, trying to read data...')
+                    try:
+                        data = response.json()
+                    except Exception as e:
+                        print("Failed to decode JSON from overpass: ", file=sys.stderr)
+                        print(response, file=sys.stderr)
+                        print(response.text, file=sys.stderr)
+                        response_code = 'Failed to decode'
 
             print(f'\tDownloaded OSM {element} for {region}')
 
