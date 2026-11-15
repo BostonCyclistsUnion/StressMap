@@ -129,7 +129,7 @@ def download_osm(region):
                     response = requests.get(overpass_url,
                                             headers=useragent,
                                             params={'data': overpass_query},
-                                            timeout=60*5)
+                                            timeout=60*1)
                     response_code = response.status_code
                     # print(f'\tRecieved response of {response_code} from server')
                 except Exception as e:
@@ -143,7 +143,11 @@ def download_osm(region):
                 else:
                     print(f'\tRecieved response of {response_code} from server, trying to read data...')
                     try:
-                        data = response.json()
+                        if 'response' in locals():
+                            data = response.json()
+                        else:
+                            response_code = 'Nothing to decode'
+                            print(f'\t...{response_code}')                            
                     except Exception as e:
                         print("Failed to decode JSON from overpass: ", file=sys.stderr)
                         print(response, file=sys.stderr)
