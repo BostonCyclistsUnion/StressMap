@@ -235,15 +235,22 @@ def download_data(region):
     else:
         OVERWRITE = True
         print(f"Downloading {region} data (this may take some time)...")
-        G = ox.graph_from_place(
-            f"{region}, Massachusetts",
-            retain_all=True,
-            truncate_by_edge=True,
-            simplify=False,
-            custom_filter=osmfilter,
-        )
-        print(f"Saving {region} graph")
-        ox.save_graphml(G, filepath)
+        downloading = True
+        while downloading:
+            try:
+                G = ox.graph_from_place(
+                    f"{region}, Massachusetts",
+                    retain_all=True,
+                    truncate_by_edge=True,
+                    simplify=False,
+                    custom_filter=osmfilter,
+                )
+                print(f"Saving {region} graph")
+                ox.save_graphml(G, filepath)
+                downloading = False
+            except Exception as e:
+                print(f'...Failed to download {region}: \n{e}')
+                time.sleep(5)
 
         # plot downloaded graph - this is slow for a large area
         # fig, ax = ox.plot_graph(G, node_size=0, edge_color="w", edge_linewidth=0.2)
