@@ -1,4 +1,4 @@
-[timeout:60][out:json][maxsize:536870912];
+[timeout:60][out:json][maxsize:53687091];
 area["KEY"="VALUE"]->.search_area;
 .search_area out body;
 (
