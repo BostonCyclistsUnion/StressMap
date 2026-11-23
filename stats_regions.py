@@ -258,6 +258,17 @@ def plot_region(dfRegion, sumLTS, title, posData):
         pie_ax.set_title(f'{posRegion.name}', y=1.0, pad=-4, fontdict={'size': 7})
         # FIXME: add subtitle conditionally to plot
 
+        pie_ax.annotate(
+            posRegion['LTS_grade'],
+            xytext=(0.0, 0.0), textcoords='offset points',
+            xy=(0.5, 0.5), xycoords='axes fraction',
+            va='center', ha='center',
+            bbox=dict(boxstyle="circle,pad=0.3",
+                      fc="white")
+            )
+
+        
+
 def plot_layout_city(grades):
     title = 'Bike Stess by City'
 
