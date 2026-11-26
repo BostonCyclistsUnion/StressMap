@@ -9,6 +9,8 @@ Outputs:
 '''
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.colors
 import numpy as np
 import pandas as pd
 
@@ -17,6 +19,30 @@ import LTS_OSM
 CRS = 'EPSG:2805' # Massachusetts Mainland https://spatialreference.org/ref/epsg/2805/
 AREA_CONVERT = 3.861022e-7 # Convert from m^2 to mi^2
 COLOR_SCALE = ['#007191', '#62c8d3', '#f47a00', '#d31f11'] # From https://github.com/BostonCyclistsUnion/LabsWebsiteMap/blob/1caed6ebf02f19a3556ace58faef8e78382d86df/src/Map.jsx#L32
+
+def create_labs_colormap():
+    colors = COLOR_SCALE
+    colors = [COLOR_SCALE[0]] + COLOR_SCALE[:2] + ['#eeeeee'] + COLOR_SCALE[2:] + [COLOR_SCALE[-1]]
+    colors = colors[::-1]
+    colors = [matplotlib.colors.to_rgb(c) for c in colors]
+
+    colorPoints = [
+        0.0, 0.4, 
+        0.5, 
+        0.6, 
+        0.75, 
+        0.9, 1.0]
+    colors = list(zip(colorPoints, colors))
+
+    # print(colors)
+    # n_bin = (colorPoints[-1] - colorPoints[0]) * 100  # Discretizes the interpolation into bins
+    n_bin = 7 * len(colors)
+    cmap_name = 'labs'
+    cmap = LinearSegmentedColormap.from_list(cmap_name, colors, N=n_bin)
+    print('Created Labs colormap')
+    return cmap
+# CMAP = create_labs_colormap()
+
 
 # %% Load Data
 def load_lts_data(data='data/GreaterBoston_4_all_lts.csv'):
@@ -119,17 +145,24 @@ def ensure_four_lts(ltsLen):
     name = ltsLen[nameCol].unique()
 
     for v in name:
-        if len(ltsLen[ltsLen[nameCol] == v]) == 4:
-            pass
-        else:
-            newRows = []
-            for lts in ['1.0', '2.0', '3.0', '4.0']: # May want to remove other ratings e.g. 0.0 or 5.0 that could be placeholders and make their way into this stage
-                if lts not in ltsLen[ltsLen[nameCol] == v]['LTS'].to_list():
-                    newRows.append([lts, v, 0.0])
-            newRowsdf = pd.DataFrame(newRows, columns=['LTS',nameCol, 'length'])
-            ltsLen = pd.concat([ltsLen, newRowsdf])
-            print(ltsLen)
+        newRows = []
+        for lts in ['1.0', '2.0', '3.0', '4.0']: # May want to remove other ratings e.g. 0.0 or 5.0 that could be placeholders and make their way into this stage
+            if lts not in ltsLen[ltsLen[nameCol] == v]['LTS'].to_list():
+                newRows.append([lts, v, 0.0])
+                print(f'\tAdded LTS {lts} to {v}')
+        newRowsdf = pd.DataFrame(newRows, columns=['LTS',nameCol, 'length'])
+        ltsLen = pd.concat([ltsLen, newRowsdf])
+        # print(ltsLen)
     return ltsLen
+
+def ensure_four_lts_series(ltsSeries):
+    for lts in ['1.0', '2.0', '3.0', '4.0']:
+        if lts not in ltsSeries.index.to_list():
+            ltsSeries = pd.concat([ltsSeries, pd.Series([0], index=[lts])])
+
+    ltsSeries = ltsSeries.sort_index()
+
+    return ltsSeries
 
 def spatial_join(gdf, region, cols):
     print('\t...Conducting spatial join')
@@ -167,16 +200,17 @@ def get_stats(gdf, cols, outCSV, outFilter=False):
     sumLTS.drop(sumLTS[sumLTS['highway'].isin(highwayFilter)].index, inplace=True)
     print('\t\tnon 0.0')
     sumLTS = sumLTS[sumLTS['LTS']!='0.0']
+    sumLTS = ensure_four_lts(sumLTS)
     sumLTS.to_csv(f'{outCSV}_filtered.csv')
     print(f'\tSaved {outCSV}_filtered.csv, removing `highway`= {highwayFilter}')
 
     # Calculate an overall stress grade
     ltsWeights = [1.0, 0.8, 0.2, 0.0]
     col1 = sumLTS.columns[0]
-    print('\t\tltsLen')
+    # print('\t\tltsLen')
     ltsLen = sumLTS.groupby(['LTS', col1])['length'].sum().reset_index()
     ltsLen = ensure_four_lts(ltsLen)
-    print('\t\tregionLen')
+    # print('\t\tregionLen')
     regionLen = ltsLen.reset_index().groupby([col1])['length'].sum().reset_index()
     ltsGrades = []
     for i, rL in regionLen.iterrows():
@@ -184,8 +218,8 @@ def get_stats(gdf, cols, outCSV, outFilter=False):
         ltsLens = ltsLen[ltsLen[col1] == rL[col1]].sort_values(by='LTS')['length']
         totalLen = regionLen[regionLen[col1] == rL[col1]]['length'].iloc[0]
         ltsPercent = ltsLens / totalLen
-        print('\t\tltsGrade')
-        ltsGrade = int(np.floor(np.sum(ltsLens / totalLen * ltsWeights) * 100))
+        # print('\t\tltsGrade')
+        ltsGrade = int(np.floor(np.sum(ltsPercent * ltsWeights) * 100))
         ltsGrades.append([rL[col1], ltsGrade])
     ltsGrades = pd.DataFrame(ltsGrades, columns=['name', 'LTS_grade']).set_index('name')
     ltsGrades.to_csv(f'{outCSV}_grades.csv')
@@ -210,12 +244,27 @@ def plot_region(dfRegion, sumLTS, title, posData):
     # print(f'dfRegion before check entries in sumLTS: {dfRegion.shape}')
     dfRegion = dfRegion[dfRegion[sumLTS.columns[0]].isin(sumLTS.iloc[:,0])].reset_index().drop(columns=['level_0', 'index'])
     # print(f'dfRegion after remove entries missing from sumLTS: {dfRegion.shape}')
-    # print(dfRegion)
+    
+    dfRegion = pd.merge(
+        left=dfRegion, 
+        right=posData, 
+        left_on='name', 
+        right_index=True)
 
+    # print(dfRegion)
+    # print(dfRegion.columns)
+
+    CMAP = create_labs_colormap()
     dfRegion.plot(
-        cmap='Set3',
+        # cmap=CMAP,
+        # column=dfRegion['LTS_grade']/100,
+        color=dfRegion['color'],
+        edgecolor='black',
         ax=ax,
         aspect='equal',
+        # label='Stress Grades',
+        # legend=True,
+        # legend_kwds={"orientation": "horizontal"},
         )
     ax.axis(False)
     ax.set_title(title)
@@ -242,16 +291,19 @@ def plot_region(dfRegion, sumLTS, title, posData):
             posRegion['pie_annotation'],
             xytext=(coords), textcoords='data',
             xy=posRegion[['x_axes','y_axes']], xycoords='axes fraction',
-            arrowprops={
-                'arrowstyle': "-",
-                'connectionstyle': "arc3"
-                }
+            # arrowprops={
+            #     'arrowstyle': "-",
+            #     'connectionstyle': "arc3"
+            #     }
             )
 
         # print(f'Plotting pie chart for [{r}]')
         pie_ax = fig.add_axes([posRegion['x_fig'] - width/2, posRegion['y_fig'] - height/2, width, height], aspect='equal')
-        pie_ax.pie(
-            sumLTS[sumLTS[sumLTS.columns[0]] == r].groupby('LTS')['length'].sum(), 
+        pieData = sumLTS[sumLTS[sumLTS.columns[0]] == r].groupby('LTS')['length'].sum()
+        # pieData = pieData / pieData.sum()
+        pieData = list(pieData)
+        # print(pieData)
+        pie_ax.pie(pieData, 
             # labels=sumLTS[sumLTS['District']==region['District']]['LTS'],
             startangle=90, colors=COLOR_SCALE
             )
@@ -267,73 +319,125 @@ def plot_region(dfRegion, sumLTS, title, posData):
                       fc="white")
             )
 
-        
+def grades_to_cmap(df):
+    # print('adding colors to df')
+    CMAP = create_labs_colormap()
+    
+    gradeThresh = [40, 75, 80, 85, 98]
+
+    # df['color'] = CMAP(df['LTS_grade']/100)
+    cmapArray = CMAP(df['LTS_grade']/100)
+    df['color'] = [tuple(row) for row in cmapArray]
+    # print(df[['LTS_grade', 'color']].sort_values(by='LTS_grade'))
+
+    return df
+
+def pie_pos(x, y, style='all', width=0.14, height=0.15):
+    '''
+    Take a gridded position for a pie chart and return the xy coords to place on the map.
+
+    style: where to base the position grid. 
+        [all]: over the full figure
+        [right/left]: offset to the side of the figure
+    width/height: Axes percent size of pie chart
+    '''
+    hSlots = np.floor(1/width)
+    vSlots = np.floor(1/height)
+
+    height = 1/vSlots
+    width = 1/hSlots
+
+    if style == 'all':
+        xCoord = x*width + width/2
+        yCoord = y*height + height/2
+    elif style == 'left':
+        xCoord = -(x*width + width/2)
+        yCoord = y*height + height/2
+    elif style.startswith('left_'):
+        xCoord = (x*width + width/2) - width*int(style.replace('left_', ''))
+        yCoord = y*height + height/2
+    elif style == 'right':
+        xCoord = x*width + width/2 + 1
+        yCoord = y*height + height/2
+    else:
+        print(f'Unknown pie_pos() style: [{style}]')
+
+    # print(f'{hSlots=:.0f} | {vSlots=:.0f}')
+    # print(f'{xCoord:0.3f}, {yCoord:0.3f}')
+    # print(f'{hSlots}, {width:.3f}, {xCoord:0.3f} | {vSlots}, {height:.3f}, {yCoord:0.3f}')
+    return xCoord, yCoord
 
 def plot_layout_city(grades):
     title = 'Bike Stess by City'
+    style = 'all'
 
-    posLimitY = [0, 1.0]
-    posSideX = [0.0, 0.9]
-    sideCount = [2, 2]
     posData = pd.DataFrame(
         [
-            ['Somerville',  posSideX[1], 0.8, None, 'blue'],
-            ['Boston',      posSideX[1], 0.2, None, 'red'],
-            ['Cambridge',   posSideX[0], 0.8, None, 'orange'],
-            ['Brookline',   posSideX[0], 0.2, None, 'purple'],
-        ], columns=['pie_title', 'x_axes', 'y_axes', 'pie_annotation', 'color']
+            ['Somerville',  *pie_pos(-0.5,2), None],
+            ['Boston',      *pie_pos(-0.5,4), None],
+            ['Cambridge',   *pie_pos(-0.5,3), None],
+            ['Brookline',   *pie_pos(-0.5,1), None],
+        ], columns=['pie_title', 'x_axes', 'y_axes', 'pie_annotation']
         ).set_index('pie_title')
     posData = pd.concat([posData, grades], axis=1)
+    posData = grades_to_cmap(posData)
 
     return title, posData
 
 def plot_layout_neighborhood(grades):
     title = 'Bike Stess by Neighborhood'
+    cam = 'left_2'
+    bos = 'right'
+    height = 0.12
+    width = 0.14
 
     # print(grades)
     posData = pd.DataFrame(
         [
-            ['Allston',  0.0, 0.52, None],
-            ['Back Bay', 0.5, 0.8, None],
-            ['Baldwin', 0.4, 0.8, None],
-            ['Bay Village', 0.5, 0.8, None],
-            ['Beacon Hill', 0.4, 0.8, None],
-            ['Brighton', 0.0, 0.64, None],
-            ['Cambridge Highlands', 0.0, 1.0, None],
-            ['Cambridgeport', 0.4, 0.8, None],
-            ['Charlestown', 0.4, 0.8, None],
-            ['Chinatown', 0.4, 0.8, None],
-            ['Dorchester', 0.6, 0.2, None],
-            ['Downtown', 0.4, 0.8, None],
-            ['East Boston', 0.4, 0.8, None],
-            ['East Cambridge', 0.4, 0.8, None],
-            ['Fenway-Kenmore', 0.4, 0.8, None],
-            ['Harbor Islands', 0.8, 0.5, None],
-            ['Hyde Park', 0.2, 0.0, None],
-            ['Jamaica Plain', 0.0, 0.4, None],
-            ['Leather District', 0.4, 0.8, None],
-            ['Longwood', 0.4, 0.8, None],
-            ['MIT', 0.4, 0.8, None],
-            ['Mid-Cambridge', 0.4, 0.8, None],
-            ['Mission Hill', 0.4, 0.8, None],
-            ['Neighborhood Nine', 0.3, 0.95, None],
-            ['North Cambridge', 0.15, 1.0, None],
-            ['North End', 1.0, 0.8, None],
-            ['Riverside', 0.4, 0.8, None],
-            ['Roslindale', 0.4, 0.8, None],
-            ['Roxbury', 0.4, 0.8, None],
-            ['Seaport', 1.0, 0.6, None],
-            ['South Boston', 1.0, 0.5, None],
-            ['South End', 1.0, 0.5, None],
-            ['Strawberry Hill', 0.0, 0.88, None],
-            ['The Port', 0.4, 0.8, None],
-            ['Wellington-Harrington', 0.4, 0.8, None],
-            ['West Cambridge', 0.0, 0.76, None],
-            ['West End', 1.0, 0.9, None],
-            ['West Roxbury', 0.0, 0.1, None],
+            ['Allston',         *pie_pos(0,7, style=bos, height=height, width=width), None],
+            ['Back Bay',        *pie_pos(1,7, style=bos, height=height, width=width), None],
+            ['Bay Village',     *pie_pos(2,7, style=bos, height=height, width=width), None],
+            ['Beacon Hill',     *pie_pos(3,7, style=bos, height=height, width=width), None],
+            ['Brighton',        *pie_pos(0,6, style=bos, height=height, width=width), None],
+            ['Charlestown',     *pie_pos(1,6, style=bos, height=height, width=width), None],
+            ['Chinatown',       *pie_pos(2,6, style=bos, height=height, width=width), None],
+            ['Dorchester',      *pie_pos(3,6, style=bos, height=height, width=width), None],
+            ['Downtown',        *pie_pos(0,5, style=bos, height=height, width=width), None],
+            ['East Boston',     *pie_pos(1,5, style=bos, height=height, width=width), None],
+            ['Fenway-Kenmore',  *pie_pos(2,5, style=bos, height=height, width=width), None],
+            ['Harbor Islands',  *pie_pos(3,5, style=bos, height=height, width=width), None],
+            ['Hyde Park',       *pie_pos(0,4, style=bos, height=height, width=width), None],
+            ['Jamaica Plain',   *pie_pos(1,4, style=bos, height=height, width=width), None],
+            ['Leather District',*pie_pos(2,4, style=bos, height=height, width=width), None],
+            ['Longwood',        *pie_pos(3,4, style=bos, height=height, width=width), None],
+            ['Mattapan',        *pie_pos(0,3, style=bos, height=height, width=width), None],
+            ['Mission Hill',    *pie_pos(1,3, style=bos, height=height, width=width), None],
+            ['North End',       *pie_pos(2,3, style=bos, height=height, width=width), None],
+            ['Riverside',       *pie_pos(3,3, style=bos, height=height, width=width), None],
+            ['Roslindale',      *pie_pos(0,2, style=bos, height=height, width=width), None],
+            ['Roxbury',         *pie_pos(1,2, style=bos, height=height, width=width), None],
+            ['Seaport',         *pie_pos(2,2, style=bos, height=height, width=width), None],
+            ['South Boston',    *pie_pos(3,2, style=bos, height=height, width=width), None],
+            ['South End',       *pie_pos(0,1, style=bos, height=height, width=width), None],
+            ['West End',        *pie_pos(1,1, style=bos, height=height, width=width), None],
+            ['West Roxbury',    *pie_pos(2,1, style=bos, height=height, width=width), None],
+            
+            ['Baldwin',             *pie_pos(0,6, style=cam, height=height, width=width), None],
+            ['Cambridge Highlands', *pie_pos(1,6, style=cam, height=height, width=width), None],
+            ['Cambridgeport',       *pie_pos(0,5, style=cam, height=height, width=width), None],
+            ['East Cambridge',      *pie_pos(1,5, style=cam, height=height, width=width), None],
+            ['MIT',                 *pie_pos(0,4, style=cam, height=height, width=width), None],
+            ['Mid-Cambridge',       *pie_pos(1,4, style=cam, height=height, width=width), None],
+            ['Neighborhood Nine',   *pie_pos(0,3, style=cam, height=height, width=width), None],
+            ['North Cambridge',     *pie_pos(1,3, style=cam, height=height, width=width), None],
+            ['Strawberry Hill',     *pie_pos(0,2, style=cam, height=height, width=width), None],
+            ['The Port',            *pie_pos(1,2, style=cam, height=height, width=width), None],
+            ['Wellington-Harrington', *pie_pos(0,1, style=cam, height=height, width=width), None],
+            ['West Cambridge',      *pie_pos(1,1, style=cam, height=height, width=width), None],
         ], columns=['pie_title', 'x_axes', 'y_axes', 'pie_annotation']
         ).set_index('pie_title')
     posData = pd.concat([posData, grades], axis=1)
+    posData = grades_to_cmap(posData)
 
     return title, posData
 
@@ -357,6 +461,7 @@ def plot_layout_council(grades):
         ], columns=['pie_title', 'pie_subtitle', 'x_axes', 'y_axes', 'pie_annotation']
         ).set_index('pie_title')
     posData = pd.concat([posData, grades], axis=1)
+    posData = grades_to_cmap(posData)
     
     return title, posData
 
